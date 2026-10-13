@@ -1,0 +1,56 @@
+1
+00:00:00,500 --> 00:00:06,126
+The last software in the loop lessons connect Isaac Sim's cameras to Isaac ROS,
+
+2
+00:00:06,126 --> 00:00:10,897
+NVIDIA's GPU accelerated ROS packages, here for image segmentation.
+
+3
+00:00:11,797 --> 00:00:18,248
+The Hawk camera on Nova Carter publishes images on the r g b topic through a ROS 2 camera graph.
+
+4
+00:00:18,248 --> 00:00:21,676
+An Isaac ROS segmentation container processes them,
+
+5
+00:00:21,676 --> 00:00:27,522
+and you can view the result or let your own node react and send velocity commands back.
+
+6
+00:00:28,422 --> 00:00:32,204
+Only the Isaac Sim side changes in six point one.
+
+7
+00:00:32,204 --> 00:00:36,680
+Start from the Nova Carter scene of lesson four point one.
+
+8
+00:00:36,680 --> 00:00:40,307
+Open Tools, Robotics, ROS 2 OmniGraphs, Camera.
+
+9
+00:00:40,307 --> 00:00:43,934
+Pick the front Hawk left camera and tick R G B.
+
+10
+00:00:43,934 --> 00:00:50,339
+Press play and check the rate of the r g b topic, or view it with r q t image view.
+
+11
+00:00:51,239 --> 00:00:58,852
+One thing to watch: Isaac ROS containers often use ROS 2 Humble, while Isaac Sim publishes with Jazzy.
+
+12
+00:00:58,852 --> 00:01:05,495
+Standard messages usually still flow if both sides use the same middleware and domain id.
+
+13
+00:01:05,495 --> 00:01:10,122
+If they do not, start Isaac Sim with ROS distro set to humble.
+
+14
+00:01:10,122 --> 00:01:12,137
+Six point one bundles both.
+

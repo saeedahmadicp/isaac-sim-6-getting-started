@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 1.1 — from a mesh to a driving robot</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Geist', system-ui, sans-serif; background: #f5f5f5; color: #2d3142;
+       display: flex; justify-content: center; padding: 3rem 2rem; }
+.frame { max-width: 1280px; width: 100%; }
+.eyebrow { font-family: 'Geist Mono', monospace; font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em;
+           text-transform: uppercase; color: #4f5d75; margin-bottom: 0.5rem; }
+h1 { font-family: 'Instrument Serif', serif; font-size: 2rem; font-weight: 400; letter-spacing: -0.02em;
+     margin-bottom: 1.5rem; }
+svg { width: 100%; min-width: 900px; display: block; }
+.colophon { font-family: 'Geist Mono', monospace; font-size: 0.66rem; color: #7a8399; margin-top: 1rem;
+            border-top: 1px solid rgba(45,49,66,0.12); padding-top: 0.75rem; }
+</style>
+</head>
+<body>
+<div class="frame">
+<p class="eyebrow">Process · Lesson 1.1</p>
+<h1>Lesson 1.1 — from a mesh to a driving robot</h1>
+<svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="m1-build-ladder-title m1-build-ladder-desc">
+<title id="m1-build-ladder-title">Lesson 1.1 — from a mesh to a driving robot</title>
+<desc id="m1-build-ladder-desc">Six steps that turn plain meshes into a driving robot: meshes, physics scene, rigid bodies, revolute joints, angular drives and an articulation root.</desc>
+<defs>
+<marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+<marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+<marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#f5f5f5"/>
+<path d="M 232.0,344.0 L 260.0,344.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 428.0,344.0 L 456.0,344.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 624.0,344.0 L 652.0,344.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 820.0,344.0 L 848.0,344.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 1016.0,344.0 L 1044.0,344.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<rect x="64" y="288" width="168" height="112" rx="6" fill="#f5f5f5"/>
+<rect x="64" y="288" width="168" height="112" rx="6" fill="rgba(79,93,117,0.10)" stroke="#7a8399" stroke-width="1"/>
+<rect x="72" y="295" width="52" height="13" rx="2" fill="none" stroke="#7a8399" stroke-opacity="0.45" stroke-width="0.8"/><text x="98.0" y="304.5" fill="#7a8399" fill-opacity="0.85" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">STEP 1</text>
+<text x="148.0" y="338.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Meshes</text>
+<text x="148.0" y="357.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">Create &gt; Mesh</text>
+<text x="148.0" y="373.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">Cube + 4 Cylinders</text>
+<rect x="260" y="288" width="168" height="112" rx="6" fill="#f5f5f5"/>
+<rect x="260" y="288" width="168" height="112" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<rect x="268" y="295" width="52" height="13" rx="2" fill="none" stroke="#2d3142" stroke-opacity="0.45" stroke-width="0.8"/><text x="294.0" y="304.5" fill="#2d3142" fill-opacity="0.85" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">STEP 2</text>
+<text x="344.0" y="338.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Physics scene</text>
+<text x="344.0" y="357.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">gravity -Z 9.81</text>
+<text x="344.0" y="373.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">+ Ground Plane</text>
+<rect x="456" y="288" width="168" height="112" rx="6" fill="#f5f5f5"/>
+<rect x="456" y="288" width="168" height="112" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<rect x="464" y="295" width="52" height="13" rx="2" fill="none" stroke="#2d3142" stroke-opacity="0.45" stroke-width="0.8"/><text x="490.0" y="304.5" fill="#2d3142" fill-opacity="0.85" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">STEP 3</text>
+<text x="540.0" y="338.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Rigid bodies</text>
+<text x="540.0" y="357.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">Add &gt; Physics &gt;</text>
+<text x="540.0" y="373.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">Colliders Preset</text>
+<rect x="652" y="288" width="168" height="112" rx="6" fill="#f5f5f5"/>
+<rect x="652" y="288" width="168" height="112" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<rect x="660" y="295" width="52" height="13" rx="2" fill="none" stroke="#2d3142" stroke-opacity="0.45" stroke-width="0.8"/><text x="686.0" y="304.5" fill="#2d3142" fill-opacity="0.85" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">STEP 4</text>
+<text x="736.0" y="338.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Revolute joints</text>
+<text x="736.0" y="357.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">axis Y</text>
+<text x="736.0" y="373.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">rot1 = (-90, 0, 0)</text>
+<rect x="848" y="288" width="168" height="112" rx="6" fill="#f5f5f5"/>
+<rect x="848" y="288" width="168" height="112" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1"/>
+<rect x="856" y="295" width="52" height="13" rx="2" fill="none" stroke="#eb6c36" stroke-opacity="0.45" stroke-width="0.8"/><text x="882.0" y="304.5" fill="#eb6c36" fill-opacity="0.85" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">STEP 5</text>
+<text x="932.0" y="338.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Angular drives</text>
+<text x="932.0" y="357.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">damping 10000</text>
+<text x="932.0" y="373.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">target 50 °/s</text>
+<rect x="1044" y="288" width="168" height="112" rx="6" fill="#f5f5f5"/>
+<rect x="1044" y="288" width="168" height="112" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<rect x="1052" y="295" width="52" height="13" rx="2" fill="none" stroke="#2d3142" stroke-opacity="0.45" stroke-width="0.8"/><text x="1078.0" y="304.5" fill="#2d3142" fill-opacity="0.85" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">STEP 6</text>
+<text x="1128.0" y="338.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Articulation</text>
+<text x="1128.0" y="357.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">root on</text>
+<text x="1128.0" y="373.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">SimpleRobot</text>
+<text x="64" y="468" fill="#4f5d75" font-size="16" font-style="italic" font-family="'Instrument Serif', serif">Press Play after every step and watch what physics adds: nothing → falls → rests → wobbles → drives.</text>
+<line x1="40" y1="668" x2="1240" y2="668" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="40" y="688" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">LEGEND</text>
+<rect x="120" y="678" width="20" height="12" rx="2" fill="rgba(79,93,117,0.10)" stroke="#7a8399"/>
+<text x="148" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Input / user</text>
+<rect x="244" y="678" width="20" height="12" rx="2" fill="#ffffff" stroke="#2d3142"/>
+<text x="272" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Step / component</text>
+<rect x="396" y="678" width="20" height="12" rx="2" fill="rgba(235,108,54,0.08)" stroke="#eb6c36"/>
+<text x="424" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Focal (key idea)</text>
+<line x1="548" y1="684" x2="576" y2="684" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<text x="584" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Flow</text>
+</svg>
+<p class="colophon">Isaac Sim 6.1 learning resource · learning_resource/diagrams/m1-build-ladder.html</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,92 @@
+1
+00:00:00,500 --> 00:00:04,915
+Now put Carter into a scene, check its joints, and drive it with the keyboard.
+
+2
+00:00:05,815 --> 00:00:06,855
+First the scene.
+
+3
+00:00:06,855 --> 00:00:11,016
+Start a new stage and add a flat grid from Create, Environments.
+
+4
+00:00:11,016 --> 00:00:16,217
+Bring in Carter, either by dragging carter dot u s d a from the content browser,
+
+5
+00:00:16,217 --> 00:00:19,923
+or by importing again with add reference to stage ticked.
+
+6
+00:00:19,923 --> 00:00:24,995
+The variant choice is stored per reference, so select physx again on this one.
+
+7
+00:00:24,995 --> 00:00:27,596
+Lift it five centimeters and press play.
+
+8
+00:00:27,596 --> 00:00:29,351
+Carter drops onto the grid.
+
+9
+00:00:30,251 --> 00:00:33,773
+Before adding a controller, test the joints directly.
+
+10
+00:00:33,773 --> 00:00:37,229
+Set both wheel targets to twenty degrees per second.
+
+11
+00:00:37,229 --> 00:00:37,960
+Press play.
+
+12
+00:00:37,960 --> 00:00:42,213
+Carter rolls slowly forward, about eight centimeters per second.
+
+13
+00:00:42,213 --> 00:00:46,200
+Set one wheel back to zero while it plays, and Carter turns.
+
+14
+00:00:46,200 --> 00:00:50,653
+The course had an articulation root fix for version four point two.
+
+15
+00:00:50,653 --> 00:00:55,172
+You can skip it: the importer already puts the root on chassis link.
+
+16
+00:00:56,072 --> 00:01:01,112
+Now the differential controller with keyboard control, same menu as before.
+
+17
+00:01:01,112 --> 00:01:03,464
+Its two numbers come from the URDF.
+
+18
+00:01:03,464 --> 00:01:07,966
+The wheel radius is the wheel cylinder radius, zero point two four.
+
+19
+00:01:07,966 --> 00:01:13,543
+The distance between wheels is twice the joint offset of zero point three one four,
+
+20
+00:01:13,543 --> 00:01:15,559
+so about zero point six three.
+
+21
+00:01:16,459 --> 00:01:21,247
+Finally, the keyboard graph asks for big speeds and Carter gets erratic.
+
+22
+00:01:21,247 --> 00:01:27,364
+On the controller node set max linear speed to zero point five and max angular speed to one.
+
+23
+00:01:27,364 --> 00:01:34,013
+The m2 checkpoint script does this whole lesson automatically and checks that Carter drives forward.
+

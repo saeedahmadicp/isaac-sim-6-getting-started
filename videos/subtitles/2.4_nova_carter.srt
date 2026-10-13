@@ -1,0 +1,64 @@
+1
+00:00:00,500 --> 00:00:03,598
+You have now built a robot by hand twice.
+
+2
+00:00:03,598 --> 00:00:08,736
+In this short lesson you load one that NVIDIA prepared: Nova Carter,
+
+3
+00:00:08,736 --> 00:00:12,438
+with physics, drives and a complete sensor suite.
+
+4
+00:00:13,338 --> 00:00:14,621
+Loading it is easy.
+
+5
+00:00:14,621 --> 00:00:16,985
+Start a new stage with a flat grid.
+
+6
+00:00:16,985 --> 00:00:20,226
+Choose Create, Robots, Nova Carter with sensors.
+
+7
+00:00:20,226 --> 00:00:29,343
+If you like, also open Window, Browsers, Isaac Sim Assets and search for carter to find the finished version of the robot you imported.
+
+8
+00:00:29,343 --> 00:00:35,150
+The first load can take a few minutes, because the assets stream from NVIDIA's server.
+
+9
+00:00:36,050 --> 00:00:37,523
+Expand chassis link.
+
+10
+00:00:37,523 --> 00:00:42,826
+Under sensors you find two 2 D lidars, an RPLidar at the front and back,
+
+11
+00:00:42,826 --> 00:00:50,779
+a Hesai X T thirty two 3 D lidar on top, four Hawk stereo cameras with I M Us, and four Owl fisheye cameras.
+
+12
+00:00:50,779 --> 00:00:55,198
+Two driven wheel joints and two passive casters complete it.
+
+13
+00:00:55,198 --> 00:01:01,311
+Notice that every sensor sits under the chassis body, exactly the rule you learned.
+
+14
+00:01:02,211 --> 00:01:08,059
+In the console you may see warnings that the fisheye polynomial projection is deprecated.
+
+15
+00:01:08,059 --> 00:01:09,242
+They are harmless.
+
+16
+00:01:09,242 --> 00:01:12,660
+In module four you will drive this robot from ROS 2.
+

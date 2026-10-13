@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 3 — pallet-jack dataset with Replicator (6.1)</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Geist', system-ui, sans-serif; background: #f5f5f5; color: #2d3142;
+       display: flex; justify-content: center; padding: 3rem 2rem; }
+.frame { max-width: 1280px; width: 100%; }
+.eyebrow { font-family: 'Geist Mono', monospace; font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em;
+           text-transform: uppercase; color: #4f5d75; margin-bottom: 0.5rem; }
+h1 { font-family: 'Instrument Serif', serif; font-size: 2rem; font-weight: 400; letter-spacing: -0.02em;
+     margin-bottom: 1.5rem; }
+svg { width: 100%; min-width: 900px; display: block; }
+.colophon { font-family: 'Geist Mono', monospace; font-size: 0.66rem; color: #7a8399; margin-top: 1rem;
+            border-top: 1px solid rgba(45,49,66,0.12); padding-top: 0.75rem; }
+</style>
+</head>
+<body>
+<div class="frame">
+<p class="eyebrow">Data flow · Module 3</p>
+<h1>Module 3 — pallet-jack dataset with Replicator (6.1)</h1>
+<svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="m3-sdg-pipeline-title m3-sdg-pipeline-desc">
+<title id="m3-sdg-pipeline-title">Module 3 — pallet-jack dataset with Replicator (6.1)</title>
+<desc id="m3-sdg-pipeline-desc">Synthetic data pipeline: load the warehouse, add pallet jacks and distractors, keep labels only on pallet jacks, set up camera and KittiWriter, then per frame randomize with the functional API, step the orchestrator and write a KITTI dataset used to train a detector.</desc>
+<defs>
+<marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+<marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+<marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#f5f5f5"/>
+<path d="M 240.0,168.0 L 280.0,168.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 480.0,168.0 L 520.0,168.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 720.0,168.0 L 760.0,168.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 860.0,216.0 L 860.0,292.0 Q 860.0,300.0 852.0,300.0 L 388.0,300.0 Q 380.0,300.0 380.0,308.0 L 380.0,400.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 480.0,448.0 L 520.0,448.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 720.0,448.0 L 760.0,448.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 960.0,448.0 L 1000.0,448.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 620.0,496.0 L 620.0,552.0 Q 620.0,560.0 612.0,560.0 L 388.0,560.0 Q 380.0,560.0 380.0,552.0 L 380.0,496.0" fill="none" stroke="#4f5d75" stroke-width="1.4" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+<rect x="569.6" y="276.0" width="100.8" height="16" rx="2" fill="#f5f5f5"/><text x="620.0" y="288.0" fill="#7a8399" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.04em">FOR N FRAMES</text>
+<rect x="457.0" y="536.0" width="86.0" height="16" rx="2" fill="#f5f5f5"/><text x="500.0" y="548.0" fill="#7a8399" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.04em">NEXT FRAME</text>
+<rect x="40" y="120" width="200" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="40" y="120" width="200" height="96" rx="6" fill="rgba(79,93,117,0.10)" stroke="#7a8399" stroke-width="1"/>
+<text x="140.0" y="165.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">warehouse.usd</text>
+<text x="140.0" y="184.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">Simple_Warehouse</text>
+<rect x="280" y="120" width="200" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="280" y="120" width="200" height="96" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="380.0" y="157.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Add assets</text>
+<text x="380.0" y="176.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">6 pallet jacks</text>
+<text x="380.0" y="192.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">12 distractors</text>
+<rect x="520" y="120" width="200" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="520" y="120" width="200" height="96" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="620.0" y="157.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Fix labels</text>
+<text x="620.0" y="176.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">block warehouse</text>
+<text x="620.0" y="192.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">label palletjack</text>
+<rect x="760" y="120" width="200" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="760" y="120" width="200" height="96" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="860.0" y="157.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Camera + writer</text>
+<text x="860.0" y="176.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">KittiWriter</text>
+<text x="860.0" y="192.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">960 × 544</text>
+<rect x="280" y="400" width="200" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="280" y="400" width="200" height="96" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1"/>
+<text x="380.0" y="437.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">randomize()</text>
+<text x="380.0" y="456.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">camera · poses · lights</text>
+<text x="380.0" y="472.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">floor/wall textures</text>
+<rect x="520" y="400" width="200" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="520" y="400" width="200" height="96" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="620.0" y="445.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">orchestrator.step</text>
+<text x="620.0" y="464.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">rt_subframes=4</text>
+<rect x="760" y="400" width="200" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="760" y="400" width="200" height="96" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+<text x="860.0" y="437.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Camera/ dataset</text>
+<text x="860.0" y="456.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">rgb/ · object_detection/</text>
+<text x="860.0" y="472.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">palletjack rows only</text>
+<rect x="1000" y="400" width="232" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="1000" y="400" width="232" height="96" rx="6" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+<text x="1116.0" y="445.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Train detector</text>
+<text x="1116.0" y="464.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">TAO / PyTorch</text>
+<line x1="40" y1="668" x2="1240" y2="668" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="40" y="688" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">LEGEND</text>
+<rect x="120" y="678" width="20" height="12" rx="2" fill="rgba(79,93,117,0.10)" stroke="#7a8399"/>
+<text x="148" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Input / user</text>
+<rect x="244" y="678" width="20" height="12" rx="2" fill="#ffffff" stroke="#2d3142"/>
+<text x="272" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Step / component</text>
+<rect x="396" y="678" width="20" height="12" rx="2" fill="rgba(235,108,54,0.08)" stroke="#eb6c36"/>
+<text x="424" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Focal (key idea)</text>
+<rect x="548" y="678" width="20" height="12" rx="2" fill="rgba(45,49,66,0.05)" stroke="#4f5d75"/>
+<text x="576" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">File / state</text>
+<rect x="672" y="678" width="20" height="12" rx="2" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)"/>
+<text x="700" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">External system</text>
+<line x1="817" y1="684" x2="845" y2="684" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<text x="853" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Flow</text>
+<line x1="893" y1="684" x2="921" y2="684" stroke="#4f5d75" stroke-width="1.4" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+<text x="929" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Optional / async</text>
+</svg>
+<p class="colophon">Isaac Sim 6.1 learning resource · learning_resource/diagrams/m3-sdg-pipeline.html</p>
+</div>
+</body>
+</html>

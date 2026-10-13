@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 1 project · Isaac Sim 6.1 tutorial</title>
+<link rel="icon" href="static/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/site.css"><link rel="stylesheet" href="static/code.css">
+</head><body data-slug="m1">
+<button class="menu" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">☰</button>
+<nav class="side" id="side"><a class="brand" href="index.html"><span>Isaac Sim 6.1</span><small>Getting Started · learning path</small></a>
+<div class="search"><input id="q" type="search" placeholder="Search lessons…  ( / )" autocomplete="off"><div id="results"></div></div>
+<div class="progress"><div class="bar"><i id="pbar"></i></div><span id="ptext"></span></div>
+<p class="grp">Start</p><ul>
+<li><a href="index.html">Course home</a></li>
+<li><a href="whats-different.html">What changed in 6.1</a></li>
+<li><a href="setup-ros2.html">Set up ROS 2 Jazzy</a></li>
+</ul>
+<p class="grp">Module 1 · First robot</p><ul>
+<li><a class="on" href="m1.html">Module 1 project</a></li>
+<li><a href="m1-1.html"><b class="tick" data-slug="m1-1"></b>1.1 Building a simple robot</a></li>
+<li><a href="m1-2.html"><b class="tick" data-slug="m1-2"></b>1.2 Controlling the robot</a></li>
+<li><a href="m1-3.html"><b class="tick" data-slug="m1-3"></b>1.3 Adding sensors</a></li>
+<li><a href="m1-4.html"><b class="tick" data-slug="m1-4"></b>1.4 ROS 2 and RViz</a></li>
+</ul>
+<p class="grp">Module 2 · URDF &amp; Carter</p><ul>
+<li><a href="m2.html">Module 2 project</a></li>
+<li><a href="m2-1.html"><b class="tick" data-slug="m2-1"></b>2.1 Importing URDF</a></li>
+<li><a href="m2-2.html"><b class="tick" data-slug="m2-2"></b>2.2 Preparing the simulation</a></li>
+<li><a href="m2-3.html"><b class="tick" data-slug="m2-3"></b>2.3 Adding sensors</a></li>
+<li><a href="m2-4.html"><b class="tick" data-slug="m2-4"></b>2.4 Nova Carter</a></li>
+</ul>
+<p class="grp">Module 3 · Synthetic data</p><ul>
+<li><a href="m3.html">Module 3 project</a></li>
+<li><a href="m3-1.html"><b class="tick" data-slug="m3-1"></b>3 Generate a dataset</a></li>
+</ul>
+<p class="grp">Module 4 · Software-in-the-loop</p><ul>
+<li><a href="m4.html">Module 4 project</a></li>
+<li><a href="m4-1.html"><b class="tick" data-slug="m4-1"></b>4.1 Driving from /cmd_vel</a></li>
+<li><a href="m4-2.html"><b class="tick" data-slug="m4-2"></b>4.2 Python scripting</a></li>
+<li><a href="m4-3.html"><b class="tick" data-slug="m4-3"></b>4.3 Camera images for Isaac ROS</a></li>
+</ul>
+<p class="grp">Module 5 · Hardware-in-the-loop</p><ul>
+<li><a href="m5.html">5 Hardware-in-the-loop</a></li>
+</ul>
+<p class="grp">Materials</p><ul>
+<li><a href="videos.html">All videos</a></li>
+<li><a href="diagrams.html">All diagrams</a></li>
+<li><a href="scripts.html">Checkpoint scripts</a></li>
+</ul>
+<p class="grp">Project</p><ul><li><a href="https://github.com/saeedahmadicp/isaac-sim-6-getting-started" target="_blank" rel="noopener">View on GitHub ↗</a></li></ul>
+</nav>
+<main><article><h1 id="module-1-building-your-first-robot-project">Module 1 — Building Your First Robot (project)<a class="headerlink" href="#module-1-building-your-first-robot-project" title="Permanent link">#</a></h1>
+<figure class="diagram"><a href="../diagrams/course-map.png" target="_blank"><img alt="Course map" src="../diagrams/course-map.png" loading="lazy"></a></figure>
+<p><strong>Project goal:</strong> a four-wheeled robot you built from primitives, driven with the keyboard, whose 2D lidar
+streams to ROS 2 and shows up in RViz.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Lesson</th>
+<th>Video</th>
+<th>Diagram(s)</th>
+<th>Checkpoint</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.1</td>
+<td><a href="m1-1.html">Building a simple robot</a></td>
+<td><a href="../videos/1.1_building_a_simple_robot.mp4">▶ 1.1</a></td>
+<td><a href="../diagrams/m1-build-ladder.png">ladder</a> · <a href="../diagrams/m1-robot-structure.png">structure</a></td>
+<td><code>m1_build_simple_robot.py</code></td>
+</tr>
+<tr>
+<td>1.2</td>
+<td><a href="m1-2.html">Controlling the robot</a></td>
+<td><a href="../videos/1.2_controlling_the_robot.mp4">▶ 1.2</a></td>
+<td><a href="../diagrams/m1-diff-controller.png">controller graph</a></td>
+<td>(graph built by the menu tool)</td>
+</tr>
+<tr>
+<td>1.3</td>
+<td><a href="m1-3.html">Adding sensors</a></td>
+<td><a href="../videos/1.3_adding_sensors.mp4">▶ 1.3</a></td>
+<td><a href="../diagrams/m1-sensor-mount.png">sensor mounting</a></td>
+<td><code>m1_ros2_lidar.py</code></td>
+</tr>
+<tr>
+<td>1.4</td>
+<td><a href="m1-4.html">ROS 2 + RViz</a></td>
+<td><a href="../videos/1.4_ros2_and_rviz.mp4">▶ 1.4</a></td>
+<td><a href="../diagrams/m1-ros2-lidar.png">data path</a></td>
+<td><code>m1_ros2_lidar.py</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="project-milestones">Project milestones<a class="headerlink" href="#project-milestones" title="Permanent link">#</a></h2>
+<ul>
+<li>[ ] The robot drives straight on fixed drives (1.1) — <code>m1_build_simple_robot.py --headless --test</code> passes</li>
+<li>[ ] W A S D drives and turns it (1.2)</li>
+<li>[ ] Robot_Camera view follows the robot; RTX lidar sits on the chassis above the wheels (1.3)</li>
+<li>[ ] <code>ros2 topic hz /scan_lidar</code> ≈ 10 Hz and RViz shows the obstacles (1.4) — <code>m1_ros2_lidar.py --headless --test</code> passes</li>
+</ul>
+<p><strong>Stretch project:</strong> add a 3D lidar (Ouster OS1) and a second camera looking backwards, publish both, and
+build an RViz config that shows the robot's surroundings while you drive.</p>
+<h2 id="take-it-beyond-the-checklist">Take it beyond the checklist<a class="headerlink" href="#take-it-beyond-the-checklist" title="Permanent link">#</a></h2>
+<p>Drive toward an obstacle, then turn so the lidar sees a different part of the scene. Explain how the
+camera image and the scan represent the same surroundings differently. Save your scene and one
+observation you can reproduce.</p>
+<p>Next, <a href="m2.html">import Carter in Module 2</a>. You will reuse what you learned
+about bodies, joints, and drives while letting an importer construct the robot.</p><div class="pn"><a class="prev" href="setup-ros2.html"><small>Previous</small>Set up ROS 2 Jazzy</a><a class="next" href="m1-1.html"><small>Next</small>1.1 Building a simple robot</a></div></article></main>
+<script src="static/site.js"></script>
+</body></html>

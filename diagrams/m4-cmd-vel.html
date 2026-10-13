@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 4.1 — driving Nova Carter from /cmd_vel</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Geist', system-ui, sans-serif; background: #f5f5f5; color: #2d3142;
+       display: flex; justify-content: center; padding: 3rem 2rem; }
+.frame { max-width: 1280px; width: 100%; }
+.eyebrow { font-family: 'Geist Mono', monospace; font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em;
+           text-transform: uppercase; color: #4f5d75; margin-bottom: 0.5rem; }
+h1 { font-family: 'Instrument Serif', serif; font-size: 2rem; font-weight: 400; letter-spacing: -0.02em;
+     margin-bottom: 1.5rem; }
+svg { width: 100%; min-width: 900px; display: block; }
+.colophon { font-family: 'Geist Mono', monospace; font-size: 0.66rem; color: #7a8399; margin-top: 1rem;
+            border-top: 1px solid rgba(45,49,66,0.12); padding-top: 0.75rem; }
+</style>
+</head>
+<body>
+<div class="frame">
+<p class="eyebrow">Data flow · Lesson 4.1</p>
+<h1>Lesson 4.1 — driving Nova Carter from /cmd_vel</h1>
+<svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="m4-cmd-vel-title m4-cmd-vel-desc">
+<title id="m4-cmd-vel-title">Lesson 4.1 — driving Nova Carter from /cmd_vel</title>
+<desc id="m4-cmd-vel-desc">ROS 2 to Isaac Sim control loop: teleop_twist_keyboard publishes geometry_msgs/Twist on /cmd_vel, the Action Graph subscribes, splits linear.x and angular.z, the Differential Controller computes wheel speeds and the Articulation Controller drives joint_wheel_left and joint_wheel_right.</desc>
+<defs>
+<marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+<marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+<marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#f5f5f5"/>
+<rect x="40" y="48" width="296" height="560" rx="8" fill="#ececec" fill-opacity="0.6" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+<text x="56" y="70" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">ROS 2 JAZZY (SYSTEM)</text>
+<rect x="360" y="48" width="880" height="560" rx="8" fill="#ececec" fill-opacity="0.6" stroke="rgba(45,49,66,0.12)" stroke-width="1"/>
+<text x="376" y="70" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">ISAAC SIM · ACTION GRAPH</text>
+<path d="M 320.0,248.0 L 400.0,248.0" fill="none" stroke="#2e5aa8" stroke-width="1.4" marker-end="url(#arrow-link)"/>
+<path d="M 500.0,168.0 L 500.0,200.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 600.0,248.0 L 640.0,248.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 816.0,248.0 L 856.0,248.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 968.0,296.0 L 968.0,440.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 848.0,488.0 L 760.0,488.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<rect x="328.1" y="224.0" width="63.8" height="16" rx="2" fill="#f5f5f5"/><text x="360.0" y="236.0" fill="#7a8399" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.04em">cmd_vel</text>
+<rect x="768.4" y="464.0" width="71.2" height="16" rx="2" fill="#f5f5f5"/><text x="804.0" y="476.0" fill="#7a8399" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.04em">VELOCITY</text>
+<rect x="56" y="200" width="264" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="56" y="200" width="264" height="96" rx="6" fill="rgba(79,93,117,0.10)" stroke="#7a8399" stroke-width="1"/>
+<text x="188.0" y="245.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">teleop_twist_keyboard</text>
+<text x="188.0" y="264.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">i , j l k</text>
+<rect x="400" y="88" width="200" height="80" rx="6" fill="#f5f5f5"/>
+<rect x="400" y="88" width="200" height="80" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+<text x="500.0" y="133.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Tick + ROS2 Context</text>
+<rect x="400" y="200" width="200" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="400" y="200" width="200" height="96" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="500.0" y="245.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Subscribe Twist</text>
+<text x="500.0" y="264.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">topicName cmd_vel</text>
+<rect x="640" y="200" width="176" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="640" y="200" width="176" height="96" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="728.0" y="237.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Break 3-Vector ×2</text>
+<text x="728.0" y="256.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">linear.x</text>
+<text x="728.0" y="272.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">angular.z</text>
+<rect x="856" y="200" width="224" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="856" y="200" width="224" height="96" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1"/>
+<text x="968.0" y="237.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Diff. Controller</text>
+<text x="968.0" y="256.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">r 0.14 · d 0.413</text>
+<text x="968.0" y="272.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">max 2.0 / 3.0</text>
+<rect x="848" y="440" width="240" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="848" y="440" width="240" height="96" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="968.0" y="485.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Articulation Controller</text>
+<text x="968.0" y="504.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">target chassis_link</text>
+<rect x="440" y="440" width="320" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="440" y="440" width="320" height="96" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+<text x="600.0" y="485.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">joint_wheel_left / right</text>
+<text x="600.0" y="504.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">velocity targets</text>
+<line x1="40" y1="668" x2="1240" y2="668" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="40" y="688" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">LEGEND</text>
+<rect x="120" y="678" width="20" height="12" rx="2" fill="rgba(79,93,117,0.10)" stroke="#7a8399"/>
+<text x="148" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Input / user</text>
+<rect x="244" y="678" width="20" height="12" rx="2" fill="rgba(45,49,66,0.05)" stroke="#4f5d75"/>
+<text x="272" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">File / state</text>
+<rect x="368" y="678" width="20" height="12" rx="2" fill="#ffffff" stroke="#2d3142"/>
+<text x="396" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Step / component</text>
+<rect x="520" y="678" width="20" height="12" rx="2" fill="rgba(235,108,54,0.08)" stroke="#eb6c36"/>
+<text x="548" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Focal (key idea)</text>
+<line x1="672" y1="684" x2="700" y2="684" stroke="#2e5aa8" stroke-width="1.4" marker-end="url(#arrow-link)"/>
+<text x="708" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">ROS 2 / network</text>
+<line x1="825" y1="684" x2="853" y2="684" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<text x="861" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Flow</text>
+</svg>
+<p class="colophon">Isaac Sim 6.1 learning resource · learning_resource/diagrams/m4-cmd-vel.html</p>
+</div>
+</body>
+</html>

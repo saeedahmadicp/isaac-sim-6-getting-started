@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3 Generate a dataset · Isaac Sim 6.1 tutorial</title>
+<link rel="icon" href="static/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/site.css"><link rel="stylesheet" href="static/code.css">
+</head><body data-slug="m3-1">
+<button class="menu" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">☰</button>
+<nav class="side" id="side"><a class="brand" href="index.html"><span>Isaac Sim 6.1</span><small>Getting Started · learning path</small></a>
+<div class="search"><input id="q" type="search" placeholder="Search lessons…  ( / )" autocomplete="off"><div id="results"></div></div>
+<div class="progress"><div class="bar"><i id="pbar"></i></div><span id="ptext"></span></div>
+<p class="grp">Start</p><ul>
+<li><a href="index.html">Course home</a></li>
+<li><a href="whats-different.html">What changed in 6.1</a></li>
+<li><a href="setup-ros2.html">Set up ROS 2 Jazzy</a></li>
+</ul>
+<p class="grp">Module 1 · First robot</p><ul>
+<li><a href="m1.html">Module 1 project</a></li>
+<li><a href="m1-1.html"><b class="tick" data-slug="m1-1"></b>1.1 Building a simple robot</a></li>
+<li><a href="m1-2.html"><b class="tick" data-slug="m1-2"></b>1.2 Controlling the robot</a></li>
+<li><a href="m1-3.html"><b class="tick" data-slug="m1-3"></b>1.3 Adding sensors</a></li>
+<li><a href="m1-4.html"><b class="tick" data-slug="m1-4"></b>1.4 ROS 2 and RViz</a></li>
+</ul>
+<p class="grp">Module 2 · URDF &amp; Carter</p><ul>
+<li><a href="m2.html">Module 2 project</a></li>
+<li><a href="m2-1.html"><b class="tick" data-slug="m2-1"></b>2.1 Importing URDF</a></li>
+<li><a href="m2-2.html"><b class="tick" data-slug="m2-2"></b>2.2 Preparing the simulation</a></li>
+<li><a href="m2-3.html"><b class="tick" data-slug="m2-3"></b>2.3 Adding sensors</a></li>
+<li><a href="m2-4.html"><b class="tick" data-slug="m2-4"></b>2.4 Nova Carter</a></li>
+</ul>
+<p class="grp">Module 3 · Synthetic data</p><ul>
+<li><a href="m3.html">Module 3 project</a></li>
+<li><a class="on" href="m3-1.html"><b class="tick" data-slug="m3-1"></b>3 Generate a dataset</a></li>
+</ul>
+<p class="grp">Module 4 · Software-in-the-loop</p><ul>
+<li><a href="m4.html">Module 4 project</a></li>
+<li><a href="m4-1.html"><b class="tick" data-slug="m4-1"></b>4.1 Driving from /cmd_vel</a></li>
+<li><a href="m4-2.html"><b class="tick" data-slug="m4-2"></b>4.2 Python scripting</a></li>
+<li><a href="m4-3.html"><b class="tick" data-slug="m4-3"></b>4.3 Camera images for Isaac ROS</a></li>
+</ul>
+<p class="grp">Module 5 · Hardware-in-the-loop</p><ul>
+<li><a href="m5.html">5 Hardware-in-the-loop</a></li>
+</ul>
+<p class="grp">Materials</p><ul>
+<li><a href="videos.html">All videos</a></li>
+<li><a href="diagrams.html">All diagrams</a></li>
+<li><a href="scripts.html">Checkpoint scripts</a></li>
+</ul>
+<p class="grp">Project</p><ul><li><a href="https://github.com/saeedahmadicp/isaac-sim-6-getting-started" target="_blank" rel="noopener">View on GitHub ↗</a></li></ul>
+</nav>
+<main><article><h1 id="module-3-synthetic-data-generation-with-replicator-isaac-sim-61">Module 3: Synthetic Data Generation with Replicator (Isaac Sim 6.1)<a class="headerlink" href="#module-3-synthetic-data-generation-with-replicator-isaac-sim-61" title="Permanent link">#</a></h1>
+<p>Course pages: <em>Synthetic Data Generation for Perception Model Training in Isaac Sim</em></p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Course lesson</th>
+<th>Version-specific?</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Perception Models in Dynamic Robotic Tasks</td>
+<td>no (concepts)</td>
+<td>course site</td>
+</tr>
+<tr>
+<td>2. What Is Synthetic Data Generation?</td>
+<td>no</td>
+<td>course site</td>
+</tr>
+<tr>
+<td>3. Domain Randomization With Replicator</td>
+<td>no (concepts: object / lighting / texture randomization, the sim-to-real gap)</td>
+<td>course site</td>
+</tr>
+<tr>
+<td><strong>4. Generating a Synthetic Dataset Using Replicator</strong></td>
+<td><strong>yes</strong></td>
+<td><strong>this page</strong></td>
+</tr>
+<tr>
+<td>5. Fine-Tuning and Validating an AI Perception Model</td>
+<td>no (runs outside Isaac Sim, in TAO/PyTorch on the KITTI output)</td>
+<td>course repo <code>local/</code> notebooks</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Goal:</strong> generate a KITTI-format dataset of <strong>pallet jacks</strong> in a warehouse, with randomized camera,
+poses, colors, lights, floor/wall textures and distractor objects.</p>
+<p><strong>Your mission:</strong> make five images, inspect what changed, and decide whether their labels are usable
+before creating a larger dataset. Generating files is the first checkpoint; judging the data is the
+learning task.</p>
+<p><strong>Script:</strong> <code>scripts/m3_palletjack_sdg.py</code>, a 6.1 port of the course's
+<a href="https://github.com/NVIDIA-AI-IOT/synthetic_data_generation_training_workflow/blob/main/palletjack_sdg/standalone_palletjack_sdg.py"><code>standalone_palletjack_sdg.py</code></a>
+<strong>Expected result:</strong> <code>--headless --test</code> writes 5 different frames whose KITTI labels contain only
+<code>palletjack</code> (in <code>learning_resource/output/palletjack_data/warehouse/Camera/</code>).</p>
+<figure class="video"><video controls preload="metadata" src="../videos/3.1_synthetic_data.mp4"></video><figcaption>🎬 Narrated walkthrough · lesson ⏱ 1 h (+ generation time) · <a href="../videos/subtitles/3.1_synthetic_data.srt">caption text (.srt)</a> · <a href="../videos/3.1_synthetic_data.mp4" download>download .mp4</a></figcaption></figure>
+<p><strong>You will learn to</strong></p>
+<ul>
+<li>Explain <strong>domain randomization</strong> and the sim-to-real gap</li>
+<li>Drive Replicator with the <strong>functional API</strong> (the 6.1 pattern)</li>
+<li>Produce and inspect a <strong>KITTI</strong> detection dataset</li>
+</ul>
+<figure class="diagram"><a href="../diagrams/m3-sdg-pipeline.png" target="_blank" title="open full size"><img alt="Pallet-jack dataset pipeline (6.1)" src="../diagrams/m3-sdg-pipeline.png" loading="lazy"></a><figcaption>Pallet-jack dataset pipeline (6.1) — <a href="../diagrams/m3-sdg-pipeline.html">interactive HTML</a></figcaption></figure>
+<h2 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">#</a></h2>
+<p><strong>Why synthetic data?</strong> The simulator can generate annotations along with the rendered images,
+reducing manual labelling. You still need to inspect class assignments, bounding boxes, and visibility.
+Automatic annotation does not remove the need for dataset quality checks.</p>
+<p><strong>Domain randomization.</strong> Vary camera pose, lighting, textures, and distractors to discourage reliance
+on accidental visual cues such as one background or one colour. This aims to improve robustness;
+it does not guarantee transfer to real images. Two gaps to consider:
+<em>appearance</em> (rendering realism) and <em>content</em> (scene variety).</p>
+<p><strong>Replicator, two styles.</strong> <em>Graph</em> style (<code>with rep.trigger.on_frame(): rep.modify.pose(...)</code>) builds an
+OmniGraph that runs inside the orchestrator. <em>Functional</em> style (<code>rep.functional.modify.pose(prim, ...)</code>)
+changes the stage immediately in Python, then <code>rep.orchestrator.step()</code> renders and writes one frame.
+On this 6.1 build the functional style was the reliable one.</p>
+<p><strong>Writers and annotators.</strong> Annotators compute per-frame data (rgb, bounding boxes, segmentation);
+writers (KittiWriter, BasicWriter, …) save annotator outputs in a dataset format.</p>
+<hr />
+<h2 id="part-1-run-the-generator">Part 1: Run the generator<a class="headerlink" href="#part-1-run-the-generator" title="Permanent link">#</a></h2>
+<p>The course clones a repo and edits <code>generate_data.sh</code> to point at Isaac Sim. With 6.1 you can run the
+ported script directly:</p>
+<div class="hl"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/isaacsim<span class="w">   </span><span class="c1"># your Isaac Sim installation folder (contains isaac-sim.sh and python.sh)</span>
+
+<span class="c1"># quick look with a window, 20 frames</span>
+./python.sh<span class="w"> </span>learning_resource/scripts/m3_palletjack_sdg.py<span class="w"> </span>--num_frames<span class="w"> </span><span class="m">20</span>
+
+<span class="c1"># two supported dataset variants; inspect a small sample before these longer runs</span>
+./python.sh<span class="w"> </span>learning_resource/scripts/m3_palletjack_sdg.py<span class="w"> </span>--headless<span class="w"> </span>--num_frames<span class="w"> </span><span class="m">2000</span><span class="w"> </span>--distractors<span class="w"> </span>warehouse
+./python.sh<span class="w"> </span>learning_resource/scripts/m3_palletjack_sdg.py<span class="w"> </span>--headless<span class="w"> </span>--num_frames<span class="w"> </span><span class="m">1000</span><span class="w"> </span>--distractors<span class="w"> </span>None
+</code></pre></div>
+
+<p>Options: <code>--height 544 --width 960</code> (course defaults), <code>--num_frames</code>, <code>--distractors warehouse|None</code>,
+<code>--data_dir</code>, <code>--rt_subframes</code> (raise it if moving objects leave ghost trails).</p>
+<p>The first run downloads the warehouse and pallet jacks from NVIDIA's asset server and compiles shaders,
+so it's slow (minutes). Later runs are much faster.</p>
+<blockquote class="note">
+<p>The course's <code>--distractors additional</code> set (hospital and office props) isn't included, because those
+asset paths moved between versions. Add your own with <code>rep.create.from_usd(...)</code>.</p>
+</blockquote>
+<h2 id="part-2-what-the-script-does-and-what-changed">Part 2: What the script does (and what changed)<a class="headerlink" href="#part-2-what-the-script-does-and-what-changed" title="Permanent link">#</a></h2>
+<p>The <strong>randomizations are the course's</strong>, with the same ranges: camera anywhere in the warehouse looking at
+the centre, pallet jack colours and poses (×6, scale 0.01), distractor poses, RectLight colour/intensity/
+visibility, and floor/wall textures. <strong>How</strong> they are applied changed:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Course (4.2/4.5)</th>
+<th>6.1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Start app</td>
+<td><code>from omni.isaac.kit import SimulationApp</code>, <code>renderer: "RayTracedLighting"</code></td>
+<td><code>from isaacsim import SimulationApp</code>, <code>renderer: "RealTimePathTracing"</code></td>
+</tr>
+<tr>
+<td>Asset root</td>
+<td><code>omni.isaac.core.utils.nucleus.get_assets_root_path</code></td>
+<td><code>isaacsim.storage.native.get_assets_root_path</code> (→ <code>…/Assets/Isaac/6.1</code>)</td>
+</tr>
+<tr>
+<td>Open warehouse</td>
+<td><code>omni.isaac.core.utils.stage.open_stage</code></td>
+<td><code>omni.usd.get_context().open_stage</code></td>
+</tr>
+<tr>
+<td>Add pallet jacks / distractors</td>
+<td><code>rep.create.from_usd(url, semantics=…, count=2)</code> (graph API)</td>
+<td><code>rep.functional.create.reference(usd_path=url, semantics={"class": "palletjack"})</code></td>
+</tr>
+<tr>
+<td>Randomize</td>
+<td><code>with rep.trigger.on_frame(num_frames=N): rep.modify.pose(…)</code>, <code>rep.randomizer.color(…)</code>, <code>rep.create.material_omnipbr(…)</code></td>
+<td>🔄 a plain Python <code>randomize()</code> that calls <code>rep.functional.modify.pose / attribute / visibility</code> with NumPy random numbers</td>
+</tr>
+<tr>
+<td>Run</td>
+<td><code>rep.orchestrator.run()</code> + wait loops</td>
+<td>🔄 <code>for i in range(N): randomize(); rep.orchestrator.step(rt_subframes=4)</code></td>
+</tr>
+<tr>
+<td>Only label pallet jacks</td>
+<td>custom <code>update_semantics()</code>: <code>prim.RemoveProperty()</code> on every non-palletjack <code>pxr.Semantics</code> label</td>
+<td>🔄 the warehouse labels come from <strong>referenced</strong> layers, which <code>RemoveProperty</code> can't delete, so the script <strong>blocks</strong> them (<code>attr.Block()</code>), labels the pallet jacks with <code>rep.functional.modify.semantics</code>, and drops leftover <code>Unlabelled</code> rows from the KITTI files (<code>KittiWriter(semantic_filter_predicate=…)</code> isn't applied by its fast bbox annotators in this build)</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Why the functional API?</strong> It's the pattern the 6.1 SDG examples use (<code>sdg_ur10_palletizing.py</code>,
+<code>randomizing_textures.py</code>), and the graph pattern misbehaved on this 6.1 build:</p>
+<ul>
+<li><code>rep.create.material_omnipbr</code> + <code>rep.randomizer.materials</code> inside the trigger <strong>hung for more than 10 minutes</strong>;</li>
+<li>graph randomizers driven by <code>rep.orchestrator.step()</code> <strong>fired only on the first frame</strong>, so every image was the same.
+  (<code>on_frame(max_execs=N)</code> + <code>rep.orchestrator.run_until_complete()</code> does still randomize every frame.
+  That's the closest equivalent to the course's <code>orchestrator.run()</code>, if you want to keep graph randomizers.)</li>
+</ul>
+<h2 id="part-3-output">Part 3: Output<a class="headerlink" href="#part-3-output" title="Permanent link">#</a></h2>
+<div class="hl"><pre><span></span><code>learning_resource/output/palletjack_data/&lt;warehouse|None&gt;/
+├── metadata.txt
+└── Camera/
+    ├── rgb/                    ← training images (0.png, 1.png, …)
+    ├── object_detection/       ← KITTI labels, one .txt per image ("palletjack 0.00 0 0.00 x1 y1 x2 y2 …")
+    └── depth/ semantic/ semantic_segmentation/ instance_segmentation/   (extra annotators)
+</code></pre></div>
+
+<p>Look at a few images and label files, and check that each box surrounds a pallet jack. Many images are <strong>dark</strong>:
+that's the course's lighting randomization (each warehouse light is on only 1 time in 7). Lower the 7 in
+<code>randomize()</code> if you want brighter data.</p>
+<h3 id="a-sample-from-the-actual-run">A sample from the actual run<a class="headerlink" href="#a-sample-from-the-actual-run" title="Permanent link">#</a></h3>
+<figure class="diagram"><a href="../screenshots/synthetic_data/palletjacks-seed42-frame0.png" target="_blank" title="open full size"><img alt="A red pallet jack at the left and another partly visible at the top right in a randomized warehouse frame" src="../screenshots/synthetic_data/palletjacks-seed42-frame0.png" loading="lazy"></a><figcaption>Unmodified RGB output from Isaac Sim 6.1, seed 42, frame 0. The label file
+contains two pallet-jack boxes. Notice the partial object at the upper right: inspect the labels as
+well as the most obvious red object.</figcaption></figure>
+<p>A five-frame run with seed 42 gives five different images and only <code>palletjack</code> labels, but also
+one almost-black frame (mean RGB ≈ 5/255), one overexposed frame (≈ 253/255), and one frame with no
+labelled detections. <strong>Passing the smoke test does not make the data ready for training</strong> — review
+lighting, visibility and camera framing before a long run.</p>
+<h3 id="inspect-before-scaling-up">Inspect before scaling up<a class="headerlink" href="#inspect-before-scaling-up" title="Permanent link">#</a></h3>
+<p>Choose one bright frame, one dark frame, and one with an object partly hidden. Draw the KITTI boxes
+on each image (fields 5–8 are <code>x1, y1, x2, y2</code>, using one-based field numbering). Check that the class
+is correct, coordinates are within the image, and the boxes match the intended objects. Keep images
+with no detections visible in your review too: an empty label file deserves inspection.</p>
+<p><strong>Predict and compare:</strong> change one lighting parameter, generate another small sample, and explain
+what became easier or harder to see. Keep the seed and other settings fixed for the comparison.
+Decide what variation your intended camera actually needs before increasing the frame count.</p>
+<h2 id="part-4-semantic-labels-in-the-gui-optional-part-of-the-lesson">Part 4: Semantic labels in the GUI (optional part of the lesson)<a class="headerlink" href="#part-4-semantic-labels-in-the-gui-optional-part-of-the-lesson" title="Permanent link">#</a></h2>
+<ul>
+<li>🔄 <strong>Tools &gt; Replicator &gt; Semantics Schema Editor</strong> (4.2: enable it under Window &gt; Extensions).</li>
+<li><em>Selected objects</em>: set <strong>Type</strong> <code>class</code>, <strong>Data</strong> = your label.</li>
+<li><em>Prim names</em>: generate labels from prim names, stripping prefixes like <code>SM_</code> / <code>SK_</code>.</li>
+<li>In code (6.1):
+  <code>python
+  import omni.replicator.core as rep
+  rep.functional.modify.semantics(prim, {"class": "avocado"}, mode="add")   # new functional API
+  # graph API (still works inside rep.trigger blocks):  rep.modify.semantics([("class", "avocado")])</code></li>
+<li>Filters: <code>class:vehicle|person</code> (either), <code>!class:sports_car</code> (exclude).</li>
+</ul>
+<h2 id="part-5-train-validate-course-lesson-5">Part 5: Train / validate (course lesson 5)<a class="headerlink" href="#part-5-train-validate-course-lesson-5" title="Permanent link">#</a></h2>
+<p>This part runs <strong>outside Isaac Sim</strong>, so nothing changes for 6.1. Use the KITTI folders above as the
+dataset in the course repo's notebook (<code>synthetic_data_generation_training_workflow/local/</code>).</p>
+<h2 id="going-further-in-61">Going further in 6.1<a class="headerlink" href="#going-further-in-61" title="Permanent link">#</a></h2>
+<p><code>standalone_examples/api/isaacsim.replicator.examples/</code> has the current recommended patterns:
+<code>sdg_getting_started_01…05.py</code> (writers, annotators, functional API), <code>randomizing_textures.py</code>,
+<code>randomizing_light_sources.py</code>, <code>simready_assets_sdg.py</code>, <code>cosmos_writer_simple.py</code>.</p>
+<h2 id="check-your-result">Check your result<a class="headerlink" href="#check-your-result" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Do this</th>
+<th>You should see</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>m3_palletjack_sdg.py --headless --test</code></td>
+<td><code>PASS: randomized, palletjack-only KITTI data</code></td>
+</tr>
+<tr>
+<td><code>Camera/rgb/*.png</code></td>
+<td>different viewpoints, pallet jacks in varying colours/poses</td>
+</tr>
+<tr>
+<td><code>Camera/object_detection/*.txt</code></td>
+<td>only <code>palletjack</code> rows</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="exercises">Exercises<a class="headerlink" href="#exercises" title="Permanent link">#</a></h2>
+<ol>
+<li>Add a <strong>DomeLight</strong> with random intensity so fewer frames are dark.</li>
+<li>Add a second class (<code>class: cone</code> on the traffic cones) and keep both classes in the labels.</li>
+<li>Write a 10-line script that draws the KITTI boxes on <code>rgb/0.png</code> to check them visually.</li>
+</ol>
+<h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">#</a></h2>
+<ol>
+<li>
+<p>Why randomize the floor texture when we only care about pallet jacks?
+ <br />
+<details><summary>Answer</summary>To discourage dependence on one background. Test whether it helps on held-out images; randomization alone does not guarantee robustness.</details>
+</p>
+</li>
+<li>
+<p>What does <code>rep.orchestrator.step()</code> do?
+ <br />
+<details><summary>Answer</summary>Renders one frame and lets attached writers save it.</details>
+</p>
+</li>
+<li>
+<p>Why did the course's <code>update_semantics()</code> not remove the warehouse labels in 6.1?
+ <br />
+<details><summary>Answer</summary>They come from referenced layers; RemoveProperty can't delete those — the script blocks them.</details>
+</p>
+</li>
+</ol><label class="done"><input type="checkbox" data-slug="m3-1"> Mark this lesson as done</label><div class="pn"><a class="prev" href="m3.html"><small>Previous</small>Module 3 project</a><a class="next" href="m4.html"><small>Next</small>Module 4 project</a></div></article><aside class="toc"><p>On this page</p><ul><li class="l2"><a href="#concepts">Concepts</a></li><li class="l2"><a href="#part-1-run-the-generator">Part 1: Run the generator</a></li><li class="l2"><a href="#part-2-what-the-script-does-and-what-changed">Part 2: What the script does (and what changed)</a></li><li class="l2"><a href="#part-3-output">Part 3: Output</a></li><li class="l3"><a href="#a-sample-from-the-actual-run">A sample from the actual run</a></li><li class="l3"><a href="#inspect-before-scaling-up">Inspect before scaling up</a></li><li class="l2"><a href="#part-4-semantic-labels-in-the-gui-optional-part-of-the-lesson">Part 4: Semantic labels in the GUI (optional part of the lesson)</a></li><li class="l2"><a href="#part-5-train-validate-course-lesson-5">Part 5: Train / validate (course lesson 5)</a></li><li class="l2"><a href="#going-further-in-61">Going further in 6.1</a></li><li class="l2"><a href="#check-your-result">Check your result</a></li><li class="l2"><a href="#exercises">Exercises</a></li><li class="l2"><a href="#quiz">Quiz</a></li></ul></aside></main>
+<script src="static/site.js"></script>
+</body></html>

@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What changed in 6.1 · Isaac Sim 6.1 tutorial</title>
+<link rel="icon" href="static/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/site.css"><link rel="stylesheet" href="static/code.css">
+</head><body data-slug="whats-different">
+<button class="menu" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">☰</button>
+<nav class="side" id="side"><a class="brand" href="index.html"><span>Isaac Sim 6.1</span><small>Getting Started · learning path</small></a>
+<div class="search"><input id="q" type="search" placeholder="Search lessons…  ( / )" autocomplete="off"><div id="results"></div></div>
+<div class="progress"><div class="bar"><i id="pbar"></i></div><span id="ptext"></span></div>
+<p class="grp">Start</p><ul>
+<li><a href="index.html">Course home</a></li>
+<li><a class="on" href="whats-different.html">What changed in 6.1</a></li>
+<li><a href="setup-ros2.html">Set up ROS 2 Jazzy</a></li>
+</ul>
+<p class="grp">Module 1 · First robot</p><ul>
+<li><a href="m1.html">Module 1 project</a></li>
+<li><a href="m1-1.html"><b class="tick" data-slug="m1-1"></b>1.1 Building a simple robot</a></li>
+<li><a href="m1-2.html"><b class="tick" data-slug="m1-2"></b>1.2 Controlling the robot</a></li>
+<li><a href="m1-3.html"><b class="tick" data-slug="m1-3"></b>1.3 Adding sensors</a></li>
+<li><a href="m1-4.html"><b class="tick" data-slug="m1-4"></b>1.4 ROS 2 and RViz</a></li>
+</ul>
+<p class="grp">Module 2 · URDF &amp; Carter</p><ul>
+<li><a href="m2.html">Module 2 project</a></li>
+<li><a href="m2-1.html"><b class="tick" data-slug="m2-1"></b>2.1 Importing URDF</a></li>
+<li><a href="m2-2.html"><b class="tick" data-slug="m2-2"></b>2.2 Preparing the simulation</a></li>
+<li><a href="m2-3.html"><b class="tick" data-slug="m2-3"></b>2.3 Adding sensors</a></li>
+<li><a href="m2-4.html"><b class="tick" data-slug="m2-4"></b>2.4 Nova Carter</a></li>
+</ul>
+<p class="grp">Module 3 · Synthetic data</p><ul>
+<li><a href="m3.html">Module 3 project</a></li>
+<li><a href="m3-1.html"><b class="tick" data-slug="m3-1"></b>3 Generate a dataset</a></li>
+</ul>
+<p class="grp">Module 4 · Software-in-the-loop</p><ul>
+<li><a href="m4.html">Module 4 project</a></li>
+<li><a href="m4-1.html"><b class="tick" data-slug="m4-1"></b>4.1 Driving from /cmd_vel</a></li>
+<li><a href="m4-2.html"><b class="tick" data-slug="m4-2"></b>4.2 Python scripting</a></li>
+<li><a href="m4-3.html"><b class="tick" data-slug="m4-3"></b>4.3 Camera images for Isaac ROS</a></li>
+</ul>
+<p class="grp">Module 5 · Hardware-in-the-loop</p><ul>
+<li><a href="m5.html">5 Hardware-in-the-loop</a></li>
+</ul>
+<p class="grp">Materials</p><ul>
+<li><a href="videos.html">All videos</a></li>
+<li><a href="diagrams.html">All diagrams</a></li>
+<li><a href="scripts.html">Checkpoint scripts</a></li>
+</ul>
+<p class="grp">Project</p><ul><li><a href="https://github.com/saeedahmadicp/isaac-sim-6-getting-started" target="_blank" rel="noopener">View on GitHub ↗</a></li></ul>
+</nav>
+<main><article><h1 id="whats-different-course-42-45-isaac-sim-61">What's different: course (4.2 / 4.5) → Isaac Sim 6.1<a class="headerlink" href="#whats-different-course-42-45-isaac-sim-61" title="Permanent link">#</a></h1>
+<p>The menu paths below come from the 6.1 menu source code in this install (<code>exts/isaacsim.gui.menu</code>,
+<code>exts/*/ui</code>) and the module names from <code>exts/</code> and <code>extsDeprecated/</code>.</p>
+<h2 id="1-launching">1. Launching<a class="headerlink" href="#1-launching" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Course</th>
+<th>6.1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>./isaac-sim.selector.sh</code> → untick ROS bridge → Start</td>
+<td><code>./isaac-sim.sh</code> (the selector is gone)</td>
+</tr>
+<tr>
+<td>Source <code>/opt/ros/humble/setup.bash</code> <strong>before</strong> launching</td>
+<td>Not needed: <code>isaac-sim.sh</code> sources <code>setup_ros_env.sh</code>, which loads the <strong>bundled Jazzy</strong> libs (<code>ROS_DISTRO=jazzy</code>, <code>RMW_IMPLEMENTATION=rmw_fastrtps_cpp</code>)</td>
+</tr>
+<tr>
+<td>"Make sure the ROS bridge is not enabled"</td>
+<td>Leave it enabled. It loads at startup and does nothing until a ROS graph plays</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="2-menus">2. Menus<a class="headerlink" href="#2-menus" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>What</th>
+<th>4.2</th>
+<th>4.5</th>
+<th><strong>6.1</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Differential Controller graph</td>
+<td>Isaac Utils &gt; Common Omnigraphs</td>
+<td>Tools &gt; Robotics &gt; OmniGraph Controllers</td>
+<td><strong>Tools &gt; Robotics &gt; OmniGraph Controllers &gt; Differential Controller</strong> (unchanged from 4.5)</td>
+</tr>
+<tr>
+<td>ROS 2 graph shortcuts</td>
+<td>Isaac Utils &gt; ROS2 OmniGraphs</td>
+<td>Tools &gt; Robotics &gt; ROS 2 OmniGraphs</td>
+<td><strong>Tools &gt; Robotics &gt; ROS 2 OmniGraphs &gt; Camera / RTX Lidar / RTX Radar / TF Publisher / …</strong></td>
+</tr>
+<tr>
+<td>Flat grid</td>
+<td>Create &gt; Isaac &gt; Environments &gt; Flat Grid</td>
+<td>Create &gt; Environments &gt; Flat Grid</td>
+<td><strong>Create &gt; Environments &gt; Flat Grid</strong> (also <em>Black Grid</em>, <em>Simple Room</em>)</td>
+</tr>
+<tr>
+<td>Nova Carter</td>
+<td>Create &gt; Isaac &gt; Robots &gt; …</td>
+<td>Create &gt; Robots &gt; Nova Carter with Sensors</td>
+<td><strong>Create &gt; Robots &gt; Nova Carter with Sensors</strong></td>
+</tr>
+<tr>
+<td>Asset browser</td>
+<td>Content &gt; NVIDIA/Assets/Isaac/4.2</td>
+<td>Isaac Sim Assets [Beta]</td>
+<td><strong>Window &gt; Browsers &gt; Isaac Sim Assets</strong> (or <em>Asset Browser</em> at the bottom of Create &gt; Robots / Environments / Sensors)</td>
+</tr>
+<tr>
+<td>PhysX Lidar</td>
+<td>Create &gt; Isaac &gt; Sensors &gt; PhysX Lidar &gt; Rotating</td>
+<td>Create &gt; Sensors &gt; PhysX Lidar &gt; Rotating</td>
+<td>still at <strong>Create &gt; Sensors &gt; PhysX Lidar &gt; Rotating</strong>, but <strong>deprecated</strong></td>
+</tr>
+<tr>
+<td>RTX Lidar</td>
+<td>Create &gt; Isaac &gt; Sensors &gt; RTX Lidar</td>
+<td>Create &gt; Sensors &gt; RTX Lidar</td>
+<td><strong>Create &gt; Sensors &gt; RTX Lidar &gt; NVIDIA &gt; Example Rotary 2D</strong> (2D) / <em>Example Rotary</em> (3D) / vendor models</td>
+</tr>
+<tr>
+<td>2nd viewport</td>
+<td>Window &gt; Viewport &gt; Viewport 2</td>
+<td>Window &gt; Viewports</td>
+<td><strong>Window &gt; Viewports &gt; Viewport 2</strong></td>
+</tr>
+<tr>
+<td>URDF importer</td>
+<td>Isaac Utils &gt; Workflows &gt; URDF Importer</td>
+<td>File &gt; Import</td>
+<td><strong>File &gt; Import</strong> (new options panel, see §4)</td>
+</tr>
+<tr>
+<td>Semantics editor</td>
+<td>Window &gt; Extensions</td>
+<td>Tools &gt; Replicator &gt; Semantics Schema Editor</td>
+<td><strong>Tools &gt; Replicator &gt; Semantics Schema Editor</strong></td>
+</tr>
+<tr>
+<td>Script editor</td>
+<td>Window &gt; Script Editor</td>
+<td>same</td>
+<td><strong>Window &gt; Script Editor</strong></td>
+</tr>
+</tbody>
+</table></div>
+<p>Unchanged from the course: <em>Create &gt; Mesh &gt; Cube/Cylinder</em>, <em>Create &gt; Physics &gt; Physics Scene / Ground
+Plane / Joint &gt; Revolute Joint</em>, right-click <em>Add &gt; Physics &gt; Rigid Body with Colliders Preset</em>,
+<em>Add &gt; Physics &gt; Angular Drive</em>, <em>Add &gt; Physics &gt; Articulation Root</em>, <em>Create &gt; Camera</em>,
+<em>Create &gt; Visual Scripting &gt; Action Graph</em>.</p>
+<h2 id="3-sensors">3. Sensors<a class="headerlink" href="#3-sensors" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Course</th>
+<th>6.1</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PhysX Lidar + <code>Isaac Read Lidar Beams</code> → <code>ROS2 Publish Laser Scan</code></td>
+<td><strong>RTX Lidar <code>Example_Rotary_2D</code></strong> + <em>Tools &gt; Robotics &gt; ROS 2 OmniGraphs &gt; RTX Lidar</em> (tick <em>Laser Scan</em>)</td>
+<td><code>isaacsim.sensors.physx</code> moved to <code>extsDeprecated/</code>. It still loads in 6.1, but new work should use RTX sensors</td>
+</tr>
+<tr>
+<td>Lidar "Draw Lines / Draw Points" in Raw USD Properties</td>
+<td>RTX lidar: attach the <code>draw-point-cloud</code> writer, or check the point cloud in RViz</td>
+<td>RTX lidars are rendered with ray tracing, not PhysX raycasts</td>
+</tr>
+<tr>
+<td>Obstacles need <em>Rigid Body with Colliders</em> to block the PhysX lidar</td>
+<td>RTX lidar sees <strong>any rendered geometry</strong>, colliders not required (keep them for physics)</td>
+<td>ray-traced</td>
+</tr>
+<tr>
+<td><code>omni.isaac.sensor</code> / <code>isaacsim.sensors.camera.Camera</code></td>
+<td><code>isaacsim.sensors.experimental.rtx</code> (<code>RtxCamera</code>, <code>Lidar</code>, <code>LidarSensor</code>)</td>
+<td>new API</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="4-urdf-importer-file-import-urdf">4. URDF importer (File &gt; Import → .urdf)<a class="headerlink" href="#4-urdf-importer-file-import-urdf" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>4.5 options</th>
+<th>6.1 options</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Links: <em>Static / Moveable base</em></td>
+<td><strong>Options &gt; Base Type: Source / Fixed / Mobile</strong> → choose <strong>Mobile</strong></td>
+</tr>
+<tr>
+<td>Joints and Drives: <em>Natural Frequency</em>, per-joint target type (Velocity / None)</td>
+<td><strong>Not in the dialog.</strong> Set drives after import in the joint's Property panel (lesson 2.1)</td>
+</tr>
+<tr>
+<td>Output: one USD</td>
+<td><strong>A folder</strong> <code>carter/carter.usda</code> + <code>payloads/</code> with a <strong>Physics variant set</strong> (<code>physx</code>, <code>mujoco</code>, <code>physics</code>, <code>none</code>). <strong>Select <code>physx</code></strong> or the robot has no physics</td>
+</tr>
+<tr>
+<td>Joints under <code>chassis_link</code> (4.2) or a <code>joints</code> folder (4.5)</td>
+<td>Joints under <strong><code>/carter/Physics/</code></strong>, links under <strong><code>/carter/Geometry/</code></strong></td>
+</tr>
+<tr>
+<td>Imported into the open stage</td>
+<td>By default it <strong>opens the converted robot as a new stage</strong>. Tick <strong>Add Reference to Stage</strong> to drop it into your current scene</td>
+</tr>
+<tr>
+<td>—</td>
+<td>Writes the USD <strong>next to the .urdf</strong> unless you set <em>Model &gt; USD Output</em></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="5-python-api">5. Python API<a class="headerlink" href="#5-python-api" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Course (4.2/4.5)</th>
+<th>6.1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>from omni.isaac.kit import SimulationApp</code></td>
+<td><code>from isaacsim import SimulationApp</code></td>
+</tr>
+<tr>
+<td><code>omni.isaac.core.objects.DynamicCuboid</code></td>
+<td><code>isaacsim.core.experimental.objects.Cube</code> + <code>prims.RigidPrim</code> + <code>prims.GeomPrim(apply_collision_apis=True)</code></td>
+</tr>
+<tr>
+<td><code>omni.isaac.core.objects.ground_plane.GroundPlane</code></td>
+<td><code>isaacsim.core.experimental.objects.GroundPlane</code></td>
+</tr>
+<tr>
+<td><code>omni.isaac.core.physics_context.PhysicsContext()</code></td>
+<td><code>UsdPhysics.Scene.Define(stage, "/World/PhysicsScene")</code> (or <code>isaacsim.core.simulation_manager</code>)</td>
+</tr>
+<tr>
+<td><code>omni.isaac.core.utils.nucleus.get_assets_root_path</code></td>
+<td><code>isaacsim.storage.native.get_assets_root_path</code></td>
+</tr>
+<tr>
+<td><code>omni.isaac.core.utils.stage.open_stage</code></td>
+<td><code>omni.usd.get_context().open_stage(url)</code> or <code>isaacsim.core.experimental.utils.stage</code></td>
+</tr>
+<tr>
+<td><code>pxr.Semantics.SemanticsAPI</code></td>
+<td><code>UsdSemantics.LabelsAPI</code>, or <code>rep.functional.modify.semantics(...)</code></td>
+</tr>
+<tr>
+<td><code>isaacsim.core.api.World</code> (5.x)</td>
+<td>deprecated in 6.x (<code>extsDeprecated/isaacsim.core.api</code>)</td>
+</tr>
+<tr>
+<td>Raw <code>pxr</code> USD / <code>UsdPhysics</code> / <code>PhysxSchema</code> code</td>
+<td><strong>unchanged</strong>, still works</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>omni.isaac.*</code> names were renamed to <code>isaacsim.*</code> in 4.5 and removed later. Saved Action Graphs with old
+node types are auto-migrated by <code>isaacsim.core.deprecation_manager</code> when you open them.</p>
+<h2 id="6-omnigraph-node-types-used-in-the-course">6. OmniGraph node types used in the course<a class="headerlink" href="#6-omnigraph-node-types-used-in-the-course" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Node (UI name)</th>
+<th>6.1 type id</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>On Playback Tick</td>
+<td><code>omni.graph.action.OnPlaybackTick</code></td>
+</tr>
+<tr>
+<td>Differential Controller</td>
+<td><code>isaacsim.robot.wheeled_robots.DifferentialController</code></td>
+</tr>
+<tr>
+<td>Articulation Controller</td>
+<td><code>isaacsim.core.nodes.IsaacArticulationController</code></td>
+</tr>
+<tr>
+<td>ROS2 Context</td>
+<td><code>isaacsim.ros2.bridge.ROS2Context</code></td>
+</tr>
+<tr>
+<td>ROS2 Subscribe Twist</td>
+<td><code>isaacsim.ros2.bridge.ROS2SubscribeTwist</code></td>
+</tr>
+<tr>
+<td>ROS2 Publish Laser Scan</td>
+<td><code>isaacsim.ros2.bridge.ROS2PublishLaserScan</code></td>
+</tr>
+<tr>
+<td>ROS2 RTX Lidar Helper</td>
+<td><code>isaacsim.ros2.bridge.ROS2RtxLidarHelper</code></td>
+</tr>
+<tr>
+<td>Isaac Read Simulation Time</td>
+<td><code>isaacsim.core.nodes.IsaacReadSimulationTime</code></td>
+</tr>
+<tr>
+<td>Isaac Read Lidar Beams (PhysX, deprecated)</td>
+<td><code>isaacsim.sensors.physx.IsaacReadLidarBeams</code></td>
+</tr>
+<tr>
+<td>Scale To/From Stage Units</td>
+<td><code>isaacsim.core.nodes.OgnIsaacScaleToFromStageUnit</code></td>
+</tr>
+<tr>
+<td>Break 3-Vector</td>
+<td><code>omni.graph.nodes.BreakVector3</code></td>
+</tr>
+<tr>
+<td>Keyboard (Differential Controller tool)</td>
+<td><code>omni.graph.nodes.ReadKeyboardState</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="7-physics">7. Physics<a class="headerlink" href="#7-physics" title="Permanent link">#</a></h2>
+<ul>
+<li>6.1 also ships the <strong>Newton</strong> physics engine (<code>./isaac-sim.newton.sh</code>, <code>isaacsim.physics.newton</code>). The
+  course and these lessons use <strong>PhysX</strong> (the default <code>./isaac-sim.sh</code>).</li>
+<li>Units are unchanged: angular drive <em>Target Velocity</em> is in <strong>deg/s</strong>, damping in N·m·s/deg.</li>
+</ul>
+<h2 id="8-known-pitfalls-in-isaac-sim-61">8. Known pitfalls in Isaac Sim 6.1<a class="headerlink" href="#8-known-pitfalls-in-isaac-sim-61" title="Permanent link">#</a></h2>
+<p>Each one came up while writing the checkpoint scripts. The lessons already work around them.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Cause / fix</th>
+<th>Lesson</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RTX lidar's ROS topic exists but <strong>no messages arrive</strong></td>
+<td>The lidar was on a separate rigid body fixed-jointed to the chassis (the course's <em>Front_Sensor</em> pattern). Put the RTX lidar <strong>directly under the chassis body</strong>, as Nova Carter does</td>
+<td>1.3</td>
+</tr>
+<tr>
+<td>2D scan shows a close "obstacle" behind the robot</td>
+<td>Lidar below the wheel tops sees the robot itself. Raise it</td>
+<td>1.3</td>
+</tr>
+<tr>
+<td>Imported URDF robot doesn't move or fall</td>
+<td><strong>Physics variant</strong> not selected. Set <em>Variants &gt; Physics = physx</em></td>
+<td>2.1</td>
+</tr>
+<tr>
+<td>Imported URDF wheels don't drive</td>
+<td>6.1 importer leaves drive gains at 0. Set damping on the wheel joints</td>
+<td>2.1</td>
+</tr>
+<tr>
+<td>Replicator: every frame identical</td>
+<td>Graph randomizers (<code>rep.trigger.on_frame</code>) fired only on the first <code>rep.orchestrator.step()</code>. Use the functional API in a Python loop, or <code>on_frame(max_execs=N)</code> + <code>rep.orchestrator.run_until_complete()</code></td>
+<td>3</td>
+</tr>
+<tr>
+<td>Replicator: script hangs while building the randomization graph</td>
+<td><code>rep.create.material_omnipbr</code> + <code>rep.randomizer.materials</code> inside a trigger. Use <code>rep.functional.create_batch.material</code> + <code>rep.functional.modify.attribute</code></td>
+<td>3</td>
+</tr>
+<tr>
+<td>KITTI labels contain warehouse classes</td>
+<td>Referenced <code>SemanticsAPI</code> labels can't be removed with <code>RemoveProperty</code>. Block them (<code>attr.Block()</code>), and filter rows (<code>semantic_filter_predicate</code> isn't applied by the fast bbox annotators)</td>
+<td>3</td>
+</tr>
+<tr>
+<td>Script-created obstacle stays at the origin</td>
+<td><code>UsdGeom.XformCommonAPI.SetTranslate</code> silently fails on <em>Create &gt; Mesh</em> prims (they have an orient op). Set <code>xformOp:translate</code> directly</td>
+<td>1.3</td>
+</tr>
+<tr>
+<td>Standalone script crashes on its first <code>update()</code> after enabling the ROS 2 bridge</td>
+<td>Call <code>simulation_app.update()</code> right after enabling <code>isaacsim.ros2.bridge</code>, <strong>before</strong> opening or creating a stage</td>
+<td>1.4, 4.1</td>
+</tr>
+<tr>
+<td>Custom rclpy subscriber gets no lidar/camera data</td>
+<td>Sensor topics are best-effort. Subscribe with <code>rclpy.qos.qos_profile_sensor_data</code></td>
+<td>1.4</td>
+</tr>
+<tr>
+<td>Standalone RTX sensor scripts</td>
+<td>Start the app with <code>SimulationApp({..., "enable_motion_bvh": True})</code> (what the 6.1 examples do)</td>
+<td>1.4</td>
+</tr>
+</tbody>
+</table></div><div class="pn"><a class="prev" href="index.html"><small>Previous</small>Course home</a><a class="next" href="setup-ros2.html"><small>Next</small>Set up ROS 2 Jazzy</a></div></article><aside class="toc"><p>On this page</p><ul><li class="l2"><a href="#1-launching">1. Launching</a></li><li class="l2"><a href="#2-menus">2. Menus</a></li><li class="l2"><a href="#3-sensors">3. Sensors</a></li><li class="l2"><a href="#4-urdf-importer-file-import-urdf">4. URDF importer (File &amp;gt; Import → .urdf)</a></li><li class="l2"><a href="#5-python-api">5. Python API</a></li><li class="l2"><a href="#6-omnigraph-node-types-used-in-the-course">6. OmniGraph node types used in the course</a></li><li class="l2"><a href="#7-physics">7. Physics</a></li><li class="l2"><a href="#8-known-pitfalls-in-isaac-sim-61">8. Known pitfalls in Isaac Sim 6.1</a></li></ul></aside></main>
+<script src="static/site.js"></script>
+</body></html>

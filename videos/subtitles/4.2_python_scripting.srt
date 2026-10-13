@@ -1,0 +1,92 @@
+1
+00:00:00,500 --> 00:00:04,011
+Everything you clicked so far can be scripted.
+
+2
+00:00:04,011 --> 00:00:10,195
+This lesson shows three ways to create the same scene in Python: the raw USD API,
+
+3
+00:00:10,195 --> 00:00:14,240
+the Isaac Sim core API, and a standalone application.
+
+4
+00:00:15,140 --> 00:00:16,738
+Here are the layers.
+
+5
+00:00:16,738 --> 00:00:19,133
+At the bottom are the engines.
+
+6
+00:00:19,133 --> 00:00:24,803
+Above them, OpenUSD, the pxr modules, which are stable across versions.
+
+7
+00:00:24,803 --> 00:00:31,112
+Then Kit and the omni services, and on top the Isaac Sim core experimental API.
+
+8
+00:00:31,112 --> 00:00:35,824
+The course used omni dot isaac dot core, which was removed,
+
+9
+00:00:35,824 --> 00:00:40,296
+and its successor in version five is now deprecated too.
+
+10
+00:00:41,196 --> 00:00:43,222
+Start with the script editor.
+
+11
+00:00:43,222 --> 00:00:45,249
+Open it from the Window menu.
+
+12
+00:00:45,249 --> 00:00:51,048
+Control enter runs the whole tab, and run selected runs only the highlighted lines.
+
+13
+00:00:51,048 --> 00:00:55,240
+The course's USD API snippet still works exactly as written.
+
+14
+00:00:55,240 --> 00:00:58,174
+Paste it on an empty stage and press play.
+
+15
+00:00:58,174 --> 00:01:01,039
+The core API snippet had to be rewritten.
+
+16
+00:01:01,039 --> 00:01:04,602
+Its six point one version is in the scripts folder.
+
+17
+00:01:05,502 --> 00:01:07,211
+Four changes to remember.
+
+18
+00:01:07,211 --> 00:01:14,181
+Dynamic cuboid is split into a cube shape, a rigid prim for the body and a geom prim for the collider.
+
+19
+00:01:14,181 --> 00:01:19,238
+Arguments are plural, because every wrapper can handle many prims at once.
+
+20
+00:01:19,238 --> 00:01:22,245
+Colors come from a preview surface material.
+
+21
+00:01:22,245 --> 00:01:26,209
+And standalone scripts import SimulationApp from isaacsim.
+
+22
+00:01:26,209 --> 00:01:28,259
+That must be the first import.
+
+23
+00:01:28,259 --> 00:01:34,341
+Every checkpoint script in this course is such an app, so they are good examples to read.
+

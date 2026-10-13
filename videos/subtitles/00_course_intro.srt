@@ -1,0 +1,108 @@
+1
+00:00:00,500 --> 00:00:01,029
+Welcome.
+
+2
+00:00:01,029 --> 00:00:05,594
+This course is NVIDIA's Getting Started With Isaac Sim learning path,
+
+3
+00:00:05,594 --> 00:00:08,969
+rewritten step by step for Isaac Sim six point one.
+
+4
+00:00:08,969 --> 00:00:12,938
+The original course was written for version four point five,
+
+5
+00:00:12,938 --> 00:00:16,577
+so many menus, sensors and Python imports have changed.
+
+6
+00:00:16,577 --> 00:00:23,723
+Every change is marked in the lessons, and every lesson comes with a checkpoint script you can run yourself.
+
+7
+00:00:24,623 --> 00:00:26,607
+The course has five modules.
+
+8
+00:00:26,607 --> 00:00:32,347
+In module one you build a small robot from scratch and stream its lidar to ROS 2.
+
+9
+00:00:32,347 --> 00:00:36,457
+Module two imports a real robot, Carter, from a URDF file.
+
+10
+00:00:36,457 --> 00:00:40,638
+Module three generates a synthetic dataset with Replicator.
+
+11
+00:00:40,638 --> 00:00:44,890
+Module four closes the loop with ROS 2 software in the loop,
+
+12
+00:00:44,890 --> 00:00:51,268
+and module five explains how the same setup connects to a Jetson for hardware in the loop.
+
+13
+00:00:52,168 --> 00:00:54,424
+Here is the routine for every lesson.
+
+14
+00:00:54,424 --> 00:00:56,132
+First, read the lesson file.
+
+15
+00:00:56,132 --> 00:01:00,219
+It keeps the course structure and marks every six point one change.
+
+16
+00:01:00,219 --> 00:01:03,329
+Then do the steps yourself in the Isaac Sim window.
+
+17
+00:01:03,329 --> 00:01:06,196
+You learn the interface by clicking through it.
+
+18
+00:01:06,196 --> 00:01:09,429
+If you get stuck, run the matching checkpoint script.
+
+19
+00:01:09,429 --> 00:01:12,478
+It builds the finished result, so you can compare.
+
+20
+00:01:12,478 --> 00:01:18,578
+And every script has a headless test mode that prints pass or fail, which is handy after an upgrade.
+
+21
+00:01:19,478 --> 00:01:21,422
+Four changes matter most.
+
+22
+00:01:21,422 --> 00:01:24,765
+The RTX lidar replaces the old PhysX lidar.
+
+23
+00:01:24,765 --> 00:01:29,587
+The URDF importer was rewritten and now needs two extra steps.
+
+24
+00:01:29,587 --> 00:01:36,585
+ROS 2 Jazzy libraries ship inside Isaac Sim, so you no longer source ROS before launching.
+
+25
+00:01:36,585 --> 00:01:41,095
+And the old omni dot isaac dot core Python module is gone.
+
+26
+00:01:41,095 --> 00:01:44,128
+The cheat sheet file lists all of this.
+
+27
+00:01:44,128 --> 00:01:46,305
+Let's start with module one.
+

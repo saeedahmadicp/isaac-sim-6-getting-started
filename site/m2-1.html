@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2.1 Importing URDF · Isaac Sim 6.1 tutorial</title>
+<link rel="icon" href="static/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/site.css"><link rel="stylesheet" href="static/code.css">
+</head><body data-slug="m2-1">
+<button class="menu" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">☰</button>
+<nav class="side" id="side"><a class="brand" href="index.html"><span>Isaac Sim 6.1</span><small>Getting Started · learning path</small></a>
+<div class="search"><input id="q" type="search" placeholder="Search lessons…  ( / )" autocomplete="off"><div id="results"></div></div>
+<div class="progress"><div class="bar"><i id="pbar"></i></div><span id="ptext"></span></div>
+<p class="grp">Start</p><ul>
+<li><a href="index.html">Course home</a></li>
+<li><a href="whats-different.html">What changed in 6.1</a></li>
+<li><a href="setup-ros2.html">Set up ROS 2 Jazzy</a></li>
+</ul>
+<p class="grp">Module 1 · First robot</p><ul>
+<li><a href="m1.html">Module 1 project</a></li>
+<li><a href="m1-1.html"><b class="tick" data-slug="m1-1"></b>1.1 Building a simple robot</a></li>
+<li><a href="m1-2.html"><b class="tick" data-slug="m1-2"></b>1.2 Controlling the robot</a></li>
+<li><a href="m1-3.html"><b class="tick" data-slug="m1-3"></b>1.3 Adding sensors</a></li>
+<li><a href="m1-4.html"><b class="tick" data-slug="m1-4"></b>1.4 ROS 2 and RViz</a></li>
+</ul>
+<p class="grp">Module 2 · URDF &amp; Carter</p><ul>
+<li><a href="m2.html">Module 2 project</a></li>
+<li><a class="on" href="m2-1.html"><b class="tick" data-slug="m2-1"></b>2.1 Importing URDF</a></li>
+<li><a href="m2-2.html"><b class="tick" data-slug="m2-2"></b>2.2 Preparing the simulation</a></li>
+<li><a href="m2-3.html"><b class="tick" data-slug="m2-3"></b>2.3 Adding sensors</a></li>
+<li><a href="m2-4.html"><b class="tick" data-slug="m2-4"></b>2.4 Nova Carter</a></li>
+</ul>
+<p class="grp">Module 3 · Synthetic data</p><ul>
+<li><a href="m3.html">Module 3 project</a></li>
+<li><a href="m3-1.html"><b class="tick" data-slug="m3-1"></b>3 Generate a dataset</a></li>
+</ul>
+<p class="grp">Module 4 · Software-in-the-loop</p><ul>
+<li><a href="m4.html">Module 4 project</a></li>
+<li><a href="m4-1.html"><b class="tick" data-slug="m4-1"></b>4.1 Driving from /cmd_vel</a></li>
+<li><a href="m4-2.html"><b class="tick" data-slug="m4-2"></b>4.2 Python scripting</a></li>
+<li><a href="m4-3.html"><b class="tick" data-slug="m4-3"></b>4.3 Camera images for Isaac ROS</a></li>
+</ul>
+<p class="grp">Module 5 · Hardware-in-the-loop</p><ul>
+<li><a href="m5.html">5 Hardware-in-the-loop</a></li>
+</ul>
+<p class="grp">Materials</p><ul>
+<li><a href="videos.html">All videos</a></li>
+<li><a href="diagrams.html">All diagrams</a></li>
+<li><a href="scripts.html">Checkpoint scripts</a></li>
+</ul>
+<p class="grp">Project</p><ul><li><a href="https://github.com/saeedahmadicp/isaac-sim-6-getting-started" target="_blank" rel="noopener">View on GitHub ↗</a></li></ul>
+</nav>
+<main><article><h1 id="lesson-21-importing-urdf-assets-isaac-sim-61">Lesson 2.1: Importing URDF Assets (Isaac Sim 6.1)<a class="headerlink" href="#lesson-21-importing-urdf-assets-isaac-sim-61" title="Permanent link">#</a></h1>
+<p>Course page: <em>Ingesting Robot Assets and Simulating Your Robot → Importing URDF Assets</em>
+(<code>…/ingesting-robot-assets-and-simulating-your-robot-in-isaac-sim/01-importing-urdf-assets.html</code>)</p>
+<p><strong>Goal:</strong> import <strong>Carter</strong> (two drive wheels plus a passive caster) from <code>carter.urdf</code> and get a USD robot
+with correct drives.</p>
+<p><strong>Checkpoint script:</strong> <code>scripts/m2_import_carter.py</code> (lessons 2.1 + 2.2)
+<strong>Expected result:</strong> the imported Carter drives about <strong>0.6 m in 3 s</strong> at 0.2 m/s with a Differential Controller.</p>
+<figure class="video"><video controls preload="metadata" src="../videos/2.1_importing_urdf.mp4"></video><figcaption>🎬 Narrated walkthrough · lesson ⏱ 30 min · <a href="../videos/subtitles/2.1_importing_urdf.srt">caption text (.srt)</a> · <a href="../videos/2.1_importing_urdf.mp4" download>download .mp4</a></figcaption></figure>
+<p><strong>You will learn to</strong></p>
+<ul>
+<li>Import a <strong>URDF</strong> with the rewritten 6.1 importer</li>
+<li>Understand the generated asset: payloads, <strong>Physics variant set</strong>, Geometry vs Physics scopes</li>
+<li>Configure joint <strong>drives</strong> by hand (the 6.1 dialog no longer does it)</li>
+</ul>
+<figure class="diagram"><a href="../diagrams/m2-urdf-pipeline.png" target="_blank" title="open full size"><img alt="URDF → drivable USD robot in 6.1" src="../diagrams/m2-urdf-pipeline.png" loading="lazy"></a><figcaption>URDF → drivable USD robot in 6.1 — <a href="../diagrams/m2-urdf-pipeline.html">interactive HTML</a></figcaption></figure>
+<figure class="diagram"><a href="../diagrams/m2-carter-structure.png" target="_blank" title="open full size"><img alt="What the 6.1 importer writes" src="../diagrams/m2-carter-structure.png" loading="lazy"></a><figcaption>What the 6.1 importer writes — <a href="../diagrams/m2-carter-structure.html">interactive HTML</a></figcaption></figure>
+<h2 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">#</a></h2>
+<p><strong>URDF vs USD.</strong> URDF (ROS) describes <em>links</em> (rigid parts with visuals/collisions/inertia) and <em>joints</em>
+(how links move relative to each other). USD describes a <em>scene</em>. The importer maps links → rigid body
+Xforms under <code>Geometry</code>, joints → <code>PhysicsRevoluteJoint</code>/… under <code>Physics</code>.</p>
+<p><strong>Layered assets.</strong> The 6.1 converter writes <code>carter.usda</code> (the entry file) plus <code>payloads/</code>
+(<code>base</code>, <code>geometries</code>, <code>materials</code>, <code>Physics/physx|mujoco|physics</code>). Layers let one asset carry several
+physics descriptions; a <strong>variant set</strong> called <code>Physics</code> chooses which one is loaded. No selection = no
+physics layer = a robot that neither falls nor moves.</p>
+<p><strong>Drives after import.</strong> URDF has no notion of "this joint is motorised with gain X", so the importer
+creates angular drives with zero gains. You decide: wheels → velocity drives (stiffness 0, damping &gt; 0),
+casters → passive (both 0).</p>
+<hr />
+<h2 id="get-the-urdf">Get the URDF<a class="headerlink" href="#get-the-urdf" title="Permanent link">#</a></h2>
+<p>You don't need the course's <code>carter.zip</code>. The same Carter URDF ships with Isaac Sim 6.1. Copy it into
+the course folder once, so the importer writes its output next to your course files instead of inside
+Isaac Sim's own extension folder:</p>
+<div class="hl"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/isaacsim<span class="w">   </span><span class="c1"># your Isaac Sim installation folder</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>learning_resource/assets
+cp<span class="w"> </span>-r<span class="w"> </span>exts/isaacsim.asset.importer.urdf/data/urdf/robots/carter<span class="w"> </span>learning_resource/assets/
+</code></pre></div>
+
+<p>You now have <code>learning_resource/assets/carter/urdf/carter.urdf</code> and <code>…/carter/meshes/*.obj</code>.
+(The checkpoint script does this copy automatically if the folder is missing. The files are part of
+Isaac Sim and are not redistributed with this course.)</p>
+<h2 id="import-61-workflow">Import (6.1 workflow)<a class="headerlink" href="#import-61-workflow" title="Permanent link">#</a></h2>
+<blockquote class="change">
+<p>🔄 <strong>The 6.1 importer is a rewrite</strong> (<code>isaacsim.asset.importer.urdf</code> 3.x, based on the open-source
+<em>urdf-usd-converter</em>). The menu is still <strong>File &gt; Import</strong>, but the options changed:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>4.5</th>
+<th>6.1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><em>Links → Moveable base</em></td>
+<td><strong>Options → Base Type → Mobile</strong></td>
+</tr>
+<tr>
+<td><em>Joints and Drives → Natural Frequency</em> + per-joint <em>Target Type</em></td>
+<td><strong>gone from the dialog</strong>: set drives after import (Part 3)</td>
+</tr>
+<tr>
+<td>One <code>.usd</code> file, imported into your stage</td>
+<td>A <strong>folder</strong> <code>carter/carter.usda</code> + <code>payloads/</code>, <strong>opened as a new stage</strong> unless <em>Add Reference to Stage</em> is ticked</td>
+</tr>
+</tbody>
+</table></div>
+</blockquote>
+<ol>
+<li><code>./isaac-sim.sh</code>, then <strong>File &gt; New</strong>.</li>
+<li><strong>File &gt; Import</strong> → browse to <code>learning_resource/assets/carter/urdf/</code> → select <strong>carter.urdf</strong>.</li>
+<li>The options panel on the right:</li>
+</ol>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Section</th>
+<th>Option</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>USD Output</td>
+<td>leave <em>Same as Imported Model (Default)</em> → writes <code>assets/carter/urdf/carter/carter.usda</code>. Or pick <code>learning_resource/output/</code></td>
+</tr>
+<tr>
+<td>Model</td>
+<td>ROS Package List</td>
+<td>leave empty (the meshes use <code>package://carter/...</code>, found by scanning the folders)</td>
+</tr>
+<tr>
+<td>Colliders</td>
+<td>Collision From Visuals</td>
+<td>off (the URDF has its own collision shapes)</td>
+</tr>
+<tr>
+<td>Colliders</td>
+<td>Allow Self-Collision</td>
+<td><strong>off</strong></td>
+</tr>
+<tr>
+<td>Options</td>
+<td>Robot Type</td>
+<td><em>Default</em> (or <em>Wheeled Robot</em>, if listed)</td>
+</tr>
+<tr>
+<td>Options</td>
+<td><strong>Base Type</strong></td>
+<td><strong>Mobile</strong></td>
+</tr>
+<tr>
+<td>Options</td>
+<td>Add Reference to Stage</td>
+<td>off for now (the robot opens on its own, so you can inspect it)</td>
+</tr>
+<tr>
+<td>Options</td>
+<td>Merge Mesh / Debug Mode</td>
+<td>off</td>
+</tr>
+</tbody>
+</table></div>
+<ol start="4">
+<li>Click <strong>Import</strong>. After a few seconds the converted <code>carter.usda</code> opens as the current stage.</li>
+</ol>
+<h2 id="what-you-get-the-61-asset-structure">What you get: the 6.1 asset structure<a class="headerlink" href="#what-you-get-the-61-asset-structure" title="Permanent link">#</a></h2>
+<p>Expand <strong>carter</strong> in the Stage panel:</p>
+<div class="hl"><pre><span></span><code>carter                          (default prim, has a "Physics" variant set)
+├── Geometry
+│   └── chassis_link            (rigid body + ArticulationRoot)
+│       ├── left_wheel_link
+│       ├── right_wheel_link
+│       ├── rear_pivot_link
+│       │   └── rear_wheel_link
+│       ├── com_offset, imu
+├── Physics                     (joints live here, not under the links)
+│   ├── left_wheel   right_wheel   rear_pivot   rear_axle   (revolute)
+│   └── root_joint …
+├── Materials / VisualMaterials
+</code></pre></div>
+
+<h3 id="select-the-physics-variant">⚠️ Select the physics variant<a class="headerlink" href="#select-the-physics-variant" title="Permanent link">#</a></h3>
+<p>Select <strong>carter</strong> → <em>Property</em> panel → <strong>Variants</strong> → <strong>Physics</strong> = <strong>physx</strong>.</p>
+<p>The importer writes one physics layer per engine (<code>physx</code>, <code>mujoco</code>, <code>physics</code> = plain USD Physics,
+<code>none</code>). Until you pick one, the joints and rigid bodies aren't loaded, and the robot won't move.</p>
+<h2 id="part-3-set-the-drives-replaces-joints-and-drives-from-45">Part 3: Set the drives (replaces "Joints and Drives" from 4.5)<a class="headerlink" href="#part-3-set-the-drives-replaces-joints-and-drives-from-45" title="Permanent link">#</a></h2>
+<p>The importer gives every revolute joint an <em>Angular Drive</em> with <strong>stiffness 0 and damping 0</strong>, so nothing
+is driven yet. Set them by hand to match the course (wheels = Velocity, caster joints = None):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Joint (<code>/carter/Physics/…</code>)</th>
+<th>Course target type</th>
+<th>6.1 setting in <em>Property &gt; Drive &gt; Angular</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>left_wheel</code></td>
+<td>Velocity</td>
+<td><strong>Stiffness 0</strong>, <strong>Damping 10000</strong></td>
+</tr>
+<tr>
+<td><code>right_wheel</code></td>
+<td>Velocity</td>
+<td><strong>Stiffness 0</strong>, <strong>Damping 10000</strong></td>
+</tr>
+<tr>
+<td><code>rear_pivot</code></td>
+<td>None</td>
+<td>Stiffness 0, Damping 0 (passive)</td>
+</tr>
+<tr>
+<td><code>rear_axle</code></td>
+<td>None</td>
+<td>Stiffness 0, Damping 0 (passive)</td>
+</tr>
+</tbody>
+</table></div>
+<p><em>Velocity drive</em> = stiffness 0, damping &gt; 0: the joint tracks <em>Target Velocity</em>.
+<em>Position drive</em> = stiffness &gt; 0. <em>None</em> = both 0.</p>
+<p><strong>File &gt; Save</strong> (this saves into the <code>carter.usda</code> layer you have open).</p>
+<blockquote class="note">
+<p>Scripted alternative: <code>URDFImporterConfig</code> accepts <code>joint_target_type</code>, <code>override_joint_stiffness</code> and
+<code>override_joint_damping</code> (per joint via a dict). The GUI just doesn't expose them.</p>
+</blockquote>
+<h2 id="checkpoint">Checkpoint<a class="headerlink" href="#checkpoint" title="Permanent link">#</a></h2>
+<div class="hl"><pre><span></span><code>./python.sh<span class="w"> </span>learning_resource/scripts/m2_import_carter.py<span class="w">                     </span><span class="c1"># import + scene + drive, with a window</span>
+./python.sh<span class="w"> </span>learning_resource/scripts/m2_import_carter.py<span class="w"> </span>--headless<span class="w"> </span>--test<span class="w">   </span><span class="c1"># self-check</span>
+</code></pre></div>
+
+<p>The script writes <code>learning_resource/output/carter/carter.usda</code>. You can reference that file in later lessons.</p>
+<h2 id="check-your-result">Check your result<a class="headerlink" href="#check-your-result" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Do this</th>
+<th>You should see</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stage panel after import</td>
+<td><code>carter &gt; Geometry</code>, <code>Physics</code>, <code>Materials</code></td>
+</tr>
+<tr>
+<td>carter → Property → Variants</td>
+<td>Physics = <strong>physx</strong></td>
+</tr>
+<tr>
+<td>left_wheel → Drive</td>
+<td>stiffness 0, damping 10000</td>
+</tr>
+<tr>
+<td><code>m2_import_carter.py --headless --test</code></td>
+<td><code>[m2] PASS: Carter drove forward</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="exercises">Exercises<a class="headerlink" href="#exercises" title="Permanent link">#</a></h2>
+<ol>
+<li>Open <code>learning_resource/output/carter/payloads/Physics/physics.usda</code> in a text editor and find the <code>left_wheel</code> joint. Which body is body0?</li>
+<li>Switch the variant to <strong>mujoco</strong> and press Play. What happens with the PhysX engine running?</li>
+<li>Re-import with <em>Base Type = Fixed</em>. What changed in <code>Physics/</code>?</li>
+</ol>
+<h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">#</a></h2>
+<ol>
+<li>
+<p>The imported Carter doesn't fall when you press Play. First thing to check?
+ <br />
+<details><summary>Answer</summary>The Physics variant — select physx.</details>
+</p>
+</li>
+<li>
+<p>Where are the joints in the 6.1 asset?
+ <br />
+<details><summary>Answer</summary>Under `/carter/Physics/`.</details>
+</p>
+</li>
+<li>
+<p>Which gains make a joint a velocity drive?
+ <br />
+<details><summary>Answer</summary>Stiffness 0 and damping > 0.</details>
+</p>
+</li>
+</ol><label class="done"><input type="checkbox" data-slug="m2-1"> Mark this lesson as done</label><div class="pn"><a class="prev" href="m2.html"><small>Previous</small>Module 2 project</a><a class="next" href="m2-2.html"><small>Next</small>2.2 Preparing the simulation</a></div></article><aside class="toc"><p>On this page</p><ul><li class="l2"><a href="#concepts">Concepts</a></li><li class="l2"><a href="#get-the-urdf">Get the URDF</a></li><li class="l2"><a href="#import-61-workflow">Import (6.1 workflow)</a></li><li class="l2"><a href="#what-you-get-the-61-asset-structure">What you get: the 6.1 asset structure</a></li><li class="l3"><a href="#select-the-physics-variant">⚠️ Select the physics variant</a></li><li class="l2"><a href="#part-3-set-the-drives-replaces-joints-and-drives-from-45">Part 3: Set the drives (replaces &quot;Joints and Drives&quot; from 4.5)</a></li><li class="l2"><a href="#checkpoint">Checkpoint</a></li><li class="l2"><a href="#check-your-result">Check your result</a></li><li class="l2"><a href="#exercises">Exercises</a></li><li class="l2"><a href="#quiz">Quiz</a></li></ul></aside></main>
+<script src="static/site.js"></script>
+</body></html>

@@ -1,0 +1,108 @@
+1
+00:00:00,500 --> 00:00:03,948
+Perception models need thousands of labeled images.
+
+2
+00:00:03,948 --> 00:00:10,167
+In this module Isaac Sim produces them for you: a warehouse full of randomized pallet jacks,
+
+3
+00:00:10,167 --> 00:00:12,804
+written out as a labeled KITTI dataset.
+
+4
+00:00:13,704 --> 00:00:16,347
+The idea is called domain randomization.
+
+5
+00:00:16,347 --> 00:00:20,576
+You vary everything that should not matter: where the camera is,
+
+6
+00:00:20,576 --> 00:00:25,201
+how objects are placed and colored, the lights and the floor textures.
+
+7
+00:00:25,201 --> 00:00:28,505
+The object you care about, the pallet jack, stays.
+
+8
+00:00:28,505 --> 00:00:33,197
+So the model learns the object itself rather than one particular scene,
+
+9
+00:00:33,197 --> 00:00:36,699
+which narrows the gap between simulation and reality.
+
+10
+00:00:36,699 --> 00:00:42,778
+And because the renderer knows where everything is, every bounding box label comes for free.
+
+11
+00:00:43,678 --> 00:00:45,251
+Here is the pipeline.
+
+12
+00:00:45,251 --> 00:00:50,419
+Load the warehouse, add six pallet jacks and twelve distractor props,
+
+13
+00:00:50,419 --> 00:00:56,261
+keep labels only on the pallet jacks, and attach a camera with a KITTI writer.
+
+14
+00:00:56,261 --> 00:01:03,975
+Then, for every frame, randomize, step the orchestrator, and the writer saves the image and its labels.
+
+15
+00:01:04,875 --> 00:01:08,672
+The course script does not work unchanged in six point one.
+
+16
+00:01:08,672 --> 00:01:12,985
+On this build, the graph randomizers fired only on the first frame,
+
+17
+00:01:12,985 --> 00:01:18,713
+so every image was identical, and the material randomizer hung for more than ten minutes.
+
+18
+00:01:18,713 --> 00:01:21,351
+The port uses the functional API instead,
+
+19
+00:01:21,351 --> 00:01:24,569
+which is also what the six point one examples use,
+
+20
+00:01:24,569 --> 00:01:28,882
+and it blocks the warehouse labels that come from referenced files.
+
+21
+00:01:29,782 --> 00:01:31,496
+Running it is one command.
+
+22
+00:01:31,496 --> 00:01:35,584
+For a quick look, run the m3 pallet jack script with a window.
+
+23
+00:01:35,584 --> 00:01:37,100
+It makes twenty frames.
+
+24
+00:01:37,100 --> 00:01:41,254
+For the real dataset, run it headless with two thousand frames.
+
+25
+00:01:41,254 --> 00:01:45,738
+The images and KITTI labels land in the output folder, under Camera.
+
+26
+00:01:45,738 --> 00:01:48,903
+Training the detector happens outside Isaac Sim,
+
+27
+00:01:48,903 --> 00:01:54,441
+with the course repository's notebooks, and nothing there changes for six point one.
+

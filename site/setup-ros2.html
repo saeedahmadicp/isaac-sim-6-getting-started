@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Set up ROS 2 Jazzy · Isaac Sim 6.1 tutorial</title>
+<link rel="icon" href="static/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/site.css"><link rel="stylesheet" href="static/code.css">
+</head><body data-slug="setup-ros2">
+<button class="menu" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">☰</button>
+<nav class="side" id="side"><a class="brand" href="index.html"><span>Isaac Sim 6.1</span><small>Getting Started · learning path</small></a>
+<div class="search"><input id="q" type="search" placeholder="Search lessons…  ( / )" autocomplete="off"><div id="results"></div></div>
+<div class="progress"><div class="bar"><i id="pbar"></i></div><span id="ptext"></span></div>
+<p class="grp">Start</p><ul>
+<li><a href="index.html">Course home</a></li>
+<li><a href="whats-different.html">What changed in 6.1</a></li>
+<li><a class="on" href="setup-ros2.html">Set up ROS 2 Jazzy</a></li>
+</ul>
+<p class="grp">Module 1 · First robot</p><ul>
+<li><a href="m1.html">Module 1 project</a></li>
+<li><a href="m1-1.html"><b class="tick" data-slug="m1-1"></b>1.1 Building a simple robot</a></li>
+<li><a href="m1-2.html"><b class="tick" data-slug="m1-2"></b>1.2 Controlling the robot</a></li>
+<li><a href="m1-3.html"><b class="tick" data-slug="m1-3"></b>1.3 Adding sensors</a></li>
+<li><a href="m1-4.html"><b class="tick" data-slug="m1-4"></b>1.4 ROS 2 and RViz</a></li>
+</ul>
+<p class="grp">Module 2 · URDF &amp; Carter</p><ul>
+<li><a href="m2.html">Module 2 project</a></li>
+<li><a href="m2-1.html"><b class="tick" data-slug="m2-1"></b>2.1 Importing URDF</a></li>
+<li><a href="m2-2.html"><b class="tick" data-slug="m2-2"></b>2.2 Preparing the simulation</a></li>
+<li><a href="m2-3.html"><b class="tick" data-slug="m2-3"></b>2.3 Adding sensors</a></li>
+<li><a href="m2-4.html"><b class="tick" data-slug="m2-4"></b>2.4 Nova Carter</a></li>
+</ul>
+<p class="grp">Module 3 · Synthetic data</p><ul>
+<li><a href="m3.html">Module 3 project</a></li>
+<li><a href="m3-1.html"><b class="tick" data-slug="m3-1"></b>3 Generate a dataset</a></li>
+</ul>
+<p class="grp">Module 4 · Software-in-the-loop</p><ul>
+<li><a href="m4.html">Module 4 project</a></li>
+<li><a href="m4-1.html"><b class="tick" data-slug="m4-1"></b>4.1 Driving from /cmd_vel</a></li>
+<li><a href="m4-2.html"><b class="tick" data-slug="m4-2"></b>4.2 Python scripting</a></li>
+<li><a href="m4-3.html"><b class="tick" data-slug="m4-3"></b>4.3 Camera images for Isaac ROS</a></li>
+</ul>
+<p class="grp">Module 5 · Hardware-in-the-loop</p><ul>
+<li><a href="m5.html">5 Hardware-in-the-loop</a></li>
+</ul>
+<p class="grp">Materials</p><ul>
+<li><a href="videos.html">All videos</a></li>
+<li><a href="diagrams.html">All diagrams</a></li>
+<li><a href="scripts.html">Checkpoint scripts</a></li>
+</ul>
+<p class="grp">Project</p><ul><li><a href="https://github.com/saeedahmadicp/isaac-sim-6-getting-started" target="_blank" rel="noopener">View on GitHub ↗</a></li></ul>
+</nav>
+<main><article><h1 id="one-time-setup-ros-2-jazzy-on-ubuntu-2404">One-time setup: ROS 2 Jazzy on Ubuntu 24.04<a class="headerlink" href="#one-time-setup-ros-2-jazzy-on-ubuntu-2404" title="Permanent link">#</a></h1>
+<p><strong>Isaac Sim does not need this.</strong> 6.1 ships its own ROS 2 Jazzy libraries (<code>exts/isaacsim.ros2.core/jazzy</code>)
+and loads them automatically. Install system ROS 2 only for the tools you run <strong>outside</strong> Isaac Sim,
+which the course uses in lessons 1.4, 4.1 and 4.3:</p>
+<ul>
+<li><code>ros2 topic list / echo / pub</code></li>
+<li><code>rviz2</code></li>
+<li><code>teleop_twist_keyboard</code></li>
+</ul>
+<p>NVIDIA's original course installs <strong>Humble</strong> on Ubuntu 22.04. This adaptation's reference setup is
+<strong>Ubuntu 24.04</strong>, which pairs with <strong>Jazzy</strong>. If you are on Ubuntu 22.04, install Humble instead.</p>
+<div class="hl"><pre><span></span><code><span class="c1"># 1. Locale + repo (official instructions: https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html)</span>
+sudo<span class="w"> </span>apt<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>software-properties-common<span class="w"> </span>curl
+sudo<span class="w"> </span>add-apt-repository<span class="w"> </span>universe
+<span class="nb">export</span><span class="w"> </span><span class="nv">ROS_APT_SOURCE_VERSION</span><span class="o">=</span><span class="k">$(</span>curl<span class="w"> </span>-s<span class="w"> </span>https://api.github.com/repos/ros-infrastructure/ros-apt-source/releases/latest<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-F<span class="w"> </span><span class="s2">"tag_name"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span>-F<span class="se">\"</span><span class="w"> </span><span class="s1">'{print $4}'</span><span class="k">)</span>
+curl<span class="w"> </span>-L<span class="w"> </span>-o<span class="w"> </span>/tmp/ros2-apt-source.deb<span class="w"> </span><span class="s2">"https://github.com/ros-infrastructure/ros-apt-source/releases/download/</span><span class="si">${</span><span class="nv">ROS_APT_SOURCE_VERSION</span><span class="si">}</span><span class="s2">/ros2-apt-source_</span><span class="si">${</span><span class="nv">ROS_APT_SOURCE_VERSION</span><span class="si">}</span><span class="s2">.</span><span class="k">$(</span>.<span class="w"> </span>/etc/os-release<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$VERSION_CODENAME</span><span class="k">)</span><span class="s2">_all.deb"</span>
+sudo<span class="w"> </span>dpkg<span class="w"> </span>-i<span class="w"> </span>/tmp/ros2-apt-source.deb
+
+<span class="c1"># 2. ROS 2 Jazzy desktop (includes rviz2) + what the course uses</span>
+sudo<span class="w"> </span>apt<span class="w"> </span>update
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>ros-jazzy-desktop<span class="w"> </span>ros-jazzy-teleop-twist-keyboard<span class="w"> </span>ros-jazzy-vision-msgs
+</code></pre></div>
+
+<p>Use it in <strong>every new terminal</strong> that talks to Isaac Sim:</p>
+<div class="hl"><pre><span></span><code><span class="nb">source</span><span class="w"> </span>/opt/ros/jazzy/setup.bash
+<span class="nb">export</span><span class="w"> </span><span class="nv">RMW_IMPLEMENTATION</span><span class="o">=</span>rmw_fastrtps_cpp<span class="w">   </span><span class="c1"># same RMW as Isaac Sim's default</span>
+ros2<span class="w"> </span>topic<span class="w"> </span>list<span class="w">                               </span><span class="c1"># with Isaac Sim playing a ROS graph you should see its topics</span>
+</code></pre></div>
+
+<h2 id="rules-of-thumb">Rules of thumb<a class="headerlink" href="#rules-of-thumb" title="Permanent link">#</a></h2>
+<ul>
+<li>Keep <code>ROS_DOMAIN_ID</code> the same (or unset) in Isaac Sim's terminal and your ROS terminals.</li>
+<li>ROS topics only exist <strong>while the simulation is playing</strong>. Press Play first.</li>
+<li>To use your <strong>system</strong> Jazzy inside Isaac Sim (e.g. custom message packages), <code>source /opt/ros/jazzy/setup.bash</code>
+  <strong>before</strong> running <code>./isaac-sim.sh</code>. Never try to fix <code>LD_LIBRARY_PATH</code> in an already running Isaac Sim;
+  close it and relaunch from a correctly sourced terminal.</li>
+</ul><div class="pn"><a class="prev" href="whats-different.html"><small>Previous</small>What changed in 6.1</a><a class="next" href="m1.html"><small>Next</small>Module 1 project</a></div></article></main>
+<script src="static/site.js"></script>
+</body></html>

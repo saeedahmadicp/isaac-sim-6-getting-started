@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1.3 Adding sensors · Isaac Sim 6.1 tutorial</title>
+<link rel="icon" href="static/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/site.css"><link rel="stylesheet" href="static/code.css">
+</head><body data-slug="m1-3">
+<button class="menu" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">☰</button>
+<nav class="side" id="side"><a class="brand" href="index.html"><span>Isaac Sim 6.1</span><small>Getting Started · learning path</small></a>
+<div class="search"><input id="q" type="search" placeholder="Search lessons…  ( / )" autocomplete="off"><div id="results"></div></div>
+<div class="progress"><div class="bar"><i id="pbar"></i></div><span id="ptext"></span></div>
+<p class="grp">Start</p><ul>
+<li><a href="index.html">Course home</a></li>
+<li><a href="whats-different.html">What changed in 6.1</a></li>
+<li><a href="setup-ros2.html">Set up ROS 2 Jazzy</a></li>
+</ul>
+<p class="grp">Module 1 · First robot</p><ul>
+<li><a href="m1.html">Module 1 project</a></li>
+<li><a href="m1-1.html"><b class="tick" data-slug="m1-1"></b>1.1 Building a simple robot</a></li>
+<li><a href="m1-2.html"><b class="tick" data-slug="m1-2"></b>1.2 Controlling the robot</a></li>
+<li><a class="on" href="m1-3.html"><b class="tick" data-slug="m1-3"></b>1.3 Adding sensors</a></li>
+<li><a href="m1-4.html"><b class="tick" data-slug="m1-4"></b>1.4 ROS 2 and RViz</a></li>
+</ul>
+<p class="grp">Module 2 · URDF &amp; Carter</p><ul>
+<li><a href="m2.html">Module 2 project</a></li>
+<li><a href="m2-1.html"><b class="tick" data-slug="m2-1"></b>2.1 Importing URDF</a></li>
+<li><a href="m2-2.html"><b class="tick" data-slug="m2-2"></b>2.2 Preparing the simulation</a></li>
+<li><a href="m2-3.html"><b class="tick" data-slug="m2-3"></b>2.3 Adding sensors</a></li>
+<li><a href="m2-4.html"><b class="tick" data-slug="m2-4"></b>2.4 Nova Carter</a></li>
+</ul>
+<p class="grp">Module 3 · Synthetic data</p><ul>
+<li><a href="m3.html">Module 3 project</a></li>
+<li><a href="m3-1.html"><b class="tick" data-slug="m3-1"></b>3 Generate a dataset</a></li>
+</ul>
+<p class="grp">Module 4 · Software-in-the-loop</p><ul>
+<li><a href="m4.html">Module 4 project</a></li>
+<li><a href="m4-1.html"><b class="tick" data-slug="m4-1"></b>4.1 Driving from /cmd_vel</a></li>
+<li><a href="m4-2.html"><b class="tick" data-slug="m4-2"></b>4.2 Python scripting</a></li>
+<li><a href="m4-3.html"><b class="tick" data-slug="m4-3"></b>4.3 Camera images for Isaac ROS</a></li>
+</ul>
+<p class="grp">Module 5 · Hardware-in-the-loop</p><ul>
+<li><a href="m5.html">5 Hardware-in-the-loop</a></li>
+</ul>
+<p class="grp">Materials</p><ul>
+<li><a href="videos.html">All videos</a></li>
+<li><a href="diagrams.html">All diagrams</a></li>
+<li><a href="scripts.html">Checkpoint scripts</a></li>
+</ul>
+<p class="grp">Project</p><ul><li><a href="https://github.com/saeedahmadicp/isaac-sim-6-getting-started" target="_blank" rel="noopener">View on GitHub ↗</a></li></ul>
+</nav>
+<main><article><h1 id="lesson-13-adding-sensors-isaac-sim-61">Lesson 1.3: Adding Sensors (Isaac Sim 6.1)<a class="headerlink" href="#lesson-13-adding-sensors-isaac-sim-61" title="Permanent link">#</a></h1>
+<p>Course page: <em>Building Your First Robot → Adding Sensors</em> (<code>…/03-adding-sensors.html</code>)</p>
+<p><strong>Goal:</strong> mount an <strong>RGB camera</strong> and a <strong>2D lidar</strong> on the robot and look at what they see.</p>
+<p><strong>Checkpoint script:</strong> <code>scripts/m1_ros2_lidar.py</code> (also covers lesson 1.4)
+<strong>Expected result:</strong> an RTX 2D lidar on the chassis publishes <code>/scan_lidar</code> at ~10 Hz, and its forward beam reads 2.50 m to an obstacle placed 2.50 m ahead.</p>
+<blockquote class="change">
+<p>🔄 <strong>Biggest change in this module.</strong> The course uses a <strong>PhysX Lidar</strong> (<em>Create &gt; Sensors &gt; PhysX
+Lidar &gt; Rotating</em>). In 6.1 that extension is <strong>deprecated</strong> (<code>extsDeprecated/isaacsim.sensors.physx</code>).
+It still appears in the menu, but this lesson uses its replacement, an <strong>RTX Lidar</strong> with the 2D
+config <em>Example Rotary 2D</em>. If you want to follow the video exactly, the PhysX steps are in the
+collapsible section at the end.</p>
+</blockquote><figure class="video"><video controls preload="metadata" src="../videos/1.3_adding_sensors.mp4"></video><figcaption>🎬 Narrated walkthrough · lesson ⏱ 45 min · <a href="../videos/subtitles/1.3_adding_sensors.srt">caption text (.srt)</a> · <a href="../videos/1.3_adding_sensors.mp4" download>download .mp4</a></figcaption></figure>
+<p><strong>You will learn to</strong></p>
+<ul>
+<li>Mount a <strong>camera</strong> on a fixed-jointed sensor body</li>
+<li>Add an <strong>RTX lidar</strong> (the 6.1 replacement of the PhysX lidar) in a place where it works</li>
+<li>Understand how RTX sensors see the scene (rendering, not physics)</li>
+</ul>
+<figure class="diagram"><a href="../diagrams/m1-sensor-mount.png" target="_blank" title="open full size"><img alt="Where each sensor goes in Isaac Sim 6.1" src="../diagrams/m1-sensor-mount.png" loading="lazy"></a><figcaption>Where each sensor goes in Isaac Sim 6.1 — <a href="../diagrams/m1-sensor-mount.html">interactive HTML</a></figcaption></figure>
+<h2 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">#</a></h2>
+<p><strong>Two kinds of lidar.</strong> The course's <em>PhysX lidar</em> casts physics rays — it only hits <strong>colliders</strong>.
+Isaac Sim 6.1's <em>RTX lidar</em> is simulated by the RTX renderer — it hits <strong>everything rendered</strong>, models
+real sensor scan patterns (vendor configs like Ouster, Hesai, SICK) and outputs a <em>GenericModelOutput</em>
+buffer that helper nodes turn into <code>LaserScan</code> / <code>PointCloud2</code>.</p>
+<p><strong>Sensors ride on bodies.</strong> A sensor prim follows whatever body it is parented to. Under a rigid body it
+moves with that body; under a plain Xform beside the bodies it stays behind when the robot drives off.</p>
+<p><strong>The 6.1 trap.</strong> An RTX lidar under a <em>separate</em> rigid body that is fixed-jointed to the chassis produced
+no output in our tests (topic exists, zero messages). Under the chassis body itself it works. Nova Carter
+mounts all its sensors that way (<code>chassis_link/sensors/...</code>), so do the same.</p>
+<p><strong>Units under a scaled parent.</strong> <code>Cube</code> is scaled (2, 1, 0.5). A child's Translate is multiplied by that
+scale: <code>(0.45, 0, 1.0)</code> → 0.9 m forward, 0.5 m up. The ranges the lidar reports are still in metres
+(verified: an obstacle 2.50 m ahead reads 2.50 m).</p>
+<hr />
+<h2 id="part-1-sensor-mount-front_sensor">Part 1: Sensor mount (Front_Sensor)<a class="headerlink" href="#part-1-sensor-mount-front_sensor" title="Permanent link">#</a></h2>
+<ol>
+<li>Right-click <strong>SimpleRobot</strong> → <strong>Create &gt; Xform</strong>. Rename it <strong>Front_Sensor</strong>.</li>
+<li>Move it to the top front of the body: Translate <strong>(0.9, 0, 0.35)</strong> (relative to SimpleRobot).</li>
+<li>Right-click <strong>Front_Sensor</strong> → <strong>Add &gt; Physics &gt; Rigid Body</strong>.
+   <em>Known issue (also in the course):</em> if Rigid Body can't be added, temporarily move Front_Sensor's
+   children out, add it, then move them back.</li>
+<li>Fixed joint to the chassis: click <strong>Cube</strong>, <strong>Ctrl+click</strong> <strong>Front_Sensor</strong> → right-click →
+   <strong>Create &gt; Physics &gt; Joint &gt; Fixed Joint</strong>. Check <strong>Body 0 = Cube</strong> and <strong>Body 1 = Front_Sensor</strong>.
+   If they're swapped, fix them with the folder icon.</li>
+<li>Right-click <strong>Front_Sensor</strong> → <strong>Create &gt; Mesh &gt; Cube</strong>, set Scale <strong>(0.1, 0.1, 0.1)</strong>, and rename it <strong>Sensor_Mount</strong>.
+   (The course also adds <em>Rigid Body with Colliders Preset</em> to Sensor_Mount. A collider is enough. A second
+   rigid body nested inside Front_Sensor isn't needed.)</li>
+</ol>
+<h2 id="part-2-rgb-camera">Part 2: RGB camera<a class="headerlink" href="#part-2-rgb-camera" title="Permanent link">#</a></h2>
+<ol>
+<li>Right-click <strong>Sensor_Mount</strong> → <strong>Create &gt; Camera</strong>. Rename it <strong>Robot_Camera</strong>.</li>
+<li>Point it forward: Rotate <strong>Y = −90</strong> (the course value). If the image is upside down or sideways,
+   set Rotate to <strong>(90, −90, 0)</strong> instead (the value lesson 2.3 uses for Carter).</li>
+<li>Move it to the front edge of the mount.</li>
+<li>Look through it: at the top of the viewport, open the <strong>camera menu</strong> (shows <em>Perspective</em>) →
+   <strong>Cameras &gt; Robot_Camera</strong>. Switch back to <strong>Perspective</strong> when you're done.
+   <em>Tip:</em> while you look through Robot_Camera, RMB+WASD moves the <strong>camera prim</strong>. Switch back before navigating.</li>
+<li>Add some obstacles: <strong>Create &gt; Mesh &gt; Cube / Cone / Cylinder</strong>, spread out in front of the robot.</li>
+<li>Two views at once:<blockquote class="change">
+<p>🔄 <strong>Window &gt; Viewports &gt; Viewport 2</strong> (4.2: <em>Window &gt; Viewport &gt; Viewport 2</em>). Set Viewport 1 to
+<em>Perspective</em> and Viewport 2 to <em>Robot_Camera</em>.</p>
+</blockquote>
+</li>
+<li><strong>Play</strong> and drive with W A S D. The camera view follows the robot.</li>
+</ol>
+<h2 id="part-3-2d-lidar-rtx">Part 3: 2D lidar (RTX)<a class="headerlink" href="#part-3-2d-lidar-rtx" title="Permanent link">#</a></h2>
+<blockquote class="warn">
+<p>⚠️ <strong>6.1 trap, found while testing this lesson.</strong> The course puts the lidar on <strong>Front_Sensor</strong>,
+a separate rigid body held by a Fixed Joint. In 6.1 an <strong>RTX</strong> lidar mounted on a fixed-jointed body
+<strong>publishes nothing</strong> (no errors, just no data). It works when the lidar sits <strong>directly on the
+chassis body</strong>, which is also how NVIDIA's Nova Carter mounts its sensors. The camera from Part 2
+is fine on Front_Sensor.</p>
+</blockquote>
+<ol>
+<li>Select <strong>Cube</strong> (the chassis rigid body).</li>
+<li>🔄 <strong>Create &gt; Sensors &gt; RTX Lidar &gt; NVIDIA &gt; Example Rotary 2D</strong>
+   (4.5 course: <em>Create &gt; Sensors &gt; PhysX Lidar &gt; Rotating</em>). It's created as a child of Cube, named
+   <code>Example_Rotary_2D</code>.</li>
+<li>Set its <strong>Translate = (0.45, 0, 1.0)</strong>.
+   These are <strong>Cube-local</strong> units. Cube is scaled (2, 1, 0.5), so this means 0.9 m forward and
+   0.5 m above the chassis centre (≈ 0.875 m above the ground).
+   <em>Why this high?</em> The wheel tops are at 0.75 m. A lidar below that sees the robot's own wheels
+   (tested: at 0.725 m the closest "obstacle" was the rear wheel).</li>
+<li><strong>Seeing the beams.</strong> RTX lidars don't have the PhysX <em>Draw Lines / Draw Points</em> checkboxes.
+   Ways to see the data:
+   * <strong>lesson 1.4</strong>: publish to ROS 2 and view it in <strong>RViz</strong> (what the course does next anyway), or
+   * from Python: attach the <code>draw-point-cloud</code> writer:
+     <code>python
+     # Window &gt; Script Editor, with the simulation stopped
+     from isaacsim.sensors.experimental.rtx import Lidar, LidarSensor
+     lidar = Lidar("/World/SimpleRobot/Cube/Example_Rotary_2D")
+     sensor = LidarSensor(lidar, annotators=[])
+     sensor.attach_writer("draw-point-cloud", size=0.05, color=[1.0, 0.2, 0.2, 1.0])</code>
+     Then press <strong>Play</strong>. Red points appear where the beams hit.</li>
+<li><strong>Obstacle detection:</strong> an RTX lidar sees <strong>every rendered surface</strong>, so the obstacles show up even
+   <em>without</em> colliders. That's different from the PhysX lidar in the course. Still give them
+   <strong>Add &gt; Physics &gt; Rigid Body with Colliders Preset</strong>, so the robot can't drive through them.</li>
+<li><strong>File &gt; Save.</strong></li>
+</ol>
+<blockquote class="note">
+<p><strong>Placing prims by script?</strong> Prims made with <em>Create &gt; Mesh</em> have <em>translate / orient / scale</em> ops.
+<code>UsdGeom.XformCommonAPI(prim).SetTranslate(...)</code> <strong>silently does nothing</strong> on them. Set
+<code>prim.GetAttribute("xformOp:translate").Set(...)</code> instead. (This bit us while writing the checkpoint script.)</p>
+</blockquote>
+<details>
+<summary>Course-exact alternative: PhysX Lidar (deprecated in 6.1)</summary>
+<ol>
+<li>Select <strong>Front_Sensor</strong> → <strong>Create &gt; Sensors &gt; PhysX Lidar &gt; Rotating</strong> (the PhysX lidar is fine on Front_Sensor; the trap above is RTX-only).</li>
+<li>Stop the simulation, select the lidar, open <strong>Raw USD Properties</strong>, and tick <strong>drawLines</strong> and <strong>drawPoints</strong>.</li>
+<li><strong>Play</strong>. Gray beams mean no hit, red beams mean a hit. PhysX lidar beams only hit <strong>colliders</strong>,
+   so the obstacles need <em>Rigid Body with Colliders Preset</em>.</li>
+<li>Slow the rotation (<em>rotationRate</em>) to inspect the beams. Raise the lidar if it hits the wheels.</li>
+</ol>
+<p>Expect a deprecation warning in the console. The ROS 2 graph for this sensor (<em>Isaac Read Lidar Beams</em>,
+<code>isaacsim.sensors.physx.IsaacReadLidarBeams</code>) is also deprecated.</p>
+</details>
+<h2 id="check-your-result">Check your result<a class="headerlink" href="#check-your-result" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Do this</th>
+<th>You should see</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Viewport → Cameras → Robot_Camera</td>
+<td>you see the scene from the robot's front</td>
+</tr>
+<tr>
+<td>Drive with W while in Viewport 2 = Robot_Camera</td>
+<td>camera view moves with the robot</td>
+</tr>
+<tr>
+<td>Lidar prim type in Property panel</td>
+<td><code>OmniLidar</code>, under <code>/World/SimpleRobot/Cube</code></td>
+</tr>
+<tr>
+<td><code>m1_ros2_lidar.py --headless --test</code></td>
+<td><code>forward beam = 2.50 m … PASS</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="exercises">Exercises<a class="headerlink" href="#exercises" title="Permanent link">#</a></h2>
+<ol>
+<li>Lower the lidar to Translate z = 0.7 and look at the scan in RViz (lesson 1.4). Where do the extra close points come from?</li>
+<li>Swap <em>Example Rotary 2D</em> for <strong>Create &gt; Sensors &gt; RTX Lidar &gt; Ouster &gt; OS1</strong> and publish <em>Point Cloud</em> instead of <em>Laser Scan</em>.</li>
+<li>Put a cone behind a glass-like thin plane without a collider. Which lidar type would see the plane — PhysX or RTX?</li>
+</ol>
+<h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">#</a></h2>
+<ol>
+<li>
+<p>Does an RTX lidar need colliders on obstacles to detect them?
+ <br />
+<details><summary>Answer</summary>No — it renders the scene; colliders only matter for physical contact.</details>
+</p>
+</li>
+<li>
+<p>Where must the RTX lidar be mounted on SimpleRobot in 6.1?
+ <br />
+<details><summary>Answer</summary>Directly under the chassis rigid body (Cube), not on the fixed-jointed Front_Sensor.</details>
+</p>
+</li>
+<li>
+<p>Why place the lidar above 0.75 m?
+ <br />
+<details><summary>Answer</summary>Below the wheel tops the scan hits the robot's own wheels.</details>
+</p>
+</li>
+</ol><label class="done"><input type="checkbox" data-slug="m1-3"> Mark this lesson as done</label><div class="pn"><a class="prev" href="m1-2.html"><small>Previous</small>1.2 Controlling the robot</a><a class="next" href="m1-4.html"><small>Next</small>1.4 ROS 2 and RViz</a></div></article><aside class="toc"><p>On this page</p><ul><li class="l2"><a href="#concepts">Concepts</a></li><li class="l2"><a href="#part-1-sensor-mount-front_sensor">Part 1: Sensor mount (Front_Sensor)</a></li><li class="l2"><a href="#part-2-rgb-camera">Part 2: RGB camera</a></li><li class="l2"><a href="#part-3-2d-lidar-rtx">Part 3: 2D lidar (RTX)</a></li><li class="l2"><a href="#check-your-result">Check your result</a></li><li class="l2"><a href="#exercises">Exercises</a></li><li class="l2"><a href="#quiz">Quiz</a></li></ul></aside></main>
+<script src="static/site.js"></script>
+</body></html>

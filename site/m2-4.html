@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2.4 Nova Carter · Isaac Sim 6.1 tutorial</title>
+<link rel="icon" href="static/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/site.css"><link rel="stylesheet" href="static/code.css">
+</head><body data-slug="m2-4">
+<button class="menu" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">☰</button>
+<nav class="side" id="side"><a class="brand" href="index.html"><span>Isaac Sim 6.1</span><small>Getting Started · learning path</small></a>
+<div class="search"><input id="q" type="search" placeholder="Search lessons…  ( / )" autocomplete="off"><div id="results"></div></div>
+<div class="progress"><div class="bar"><i id="pbar"></i></div><span id="ptext"></span></div>
+<p class="grp">Start</p><ul>
+<li><a href="index.html">Course home</a></li>
+<li><a href="whats-different.html">What changed in 6.1</a></li>
+<li><a href="setup-ros2.html">Set up ROS 2 Jazzy</a></li>
+</ul>
+<p class="grp">Module 1 · First robot</p><ul>
+<li><a href="m1.html">Module 1 project</a></li>
+<li><a href="m1-1.html"><b class="tick" data-slug="m1-1"></b>1.1 Building a simple robot</a></li>
+<li><a href="m1-2.html"><b class="tick" data-slug="m1-2"></b>1.2 Controlling the robot</a></li>
+<li><a href="m1-3.html"><b class="tick" data-slug="m1-3"></b>1.3 Adding sensors</a></li>
+<li><a href="m1-4.html"><b class="tick" data-slug="m1-4"></b>1.4 ROS 2 and RViz</a></li>
+</ul>
+<p class="grp">Module 2 · URDF &amp; Carter</p><ul>
+<li><a href="m2.html">Module 2 project</a></li>
+<li><a href="m2-1.html"><b class="tick" data-slug="m2-1"></b>2.1 Importing URDF</a></li>
+<li><a href="m2-2.html"><b class="tick" data-slug="m2-2"></b>2.2 Preparing the simulation</a></li>
+<li><a href="m2-3.html"><b class="tick" data-slug="m2-3"></b>2.3 Adding sensors</a></li>
+<li><a class="on" href="m2-4.html"><b class="tick" data-slug="m2-4"></b>2.4 Nova Carter</a></li>
+</ul>
+<p class="grp">Module 3 · Synthetic data</p><ul>
+<li><a href="m3.html">Module 3 project</a></li>
+<li><a href="m3-1.html"><b class="tick" data-slug="m3-1"></b>3 Generate a dataset</a></li>
+</ul>
+<p class="grp">Module 4 · Software-in-the-loop</p><ul>
+<li><a href="m4.html">Module 4 project</a></li>
+<li><a href="m4-1.html"><b class="tick" data-slug="m4-1"></b>4.1 Driving from /cmd_vel</a></li>
+<li><a href="m4-2.html"><b class="tick" data-slug="m4-2"></b>4.2 Python scripting</a></li>
+<li><a href="m4-3.html"><b class="tick" data-slug="m4-3"></b>4.3 Camera images for Isaac ROS</a></li>
+</ul>
+<p class="grp">Module 5 · Hardware-in-the-loop</p><ul>
+<li><a href="m5.html">5 Hardware-in-the-loop</a></li>
+</ul>
+<p class="grp">Materials</p><ul>
+<li><a href="videos.html">All videos</a></li>
+<li><a href="diagrams.html">All diagrams</a></li>
+<li><a href="scripts.html">Checkpoint scripts</a></li>
+</ul>
+<p class="grp">Project</p><ul><li><a href="https://github.com/saeedahmadicp/isaac-sim-6-getting-started" target="_blank" rel="noopener">View on GitHub ↗</a></li></ul>
+</nav>
+<main><article><h1 id="lesson-24-accessing-a-prepared-robot-nova-carter-isaac-sim-61">Lesson 2.4: Accessing a Prepared Robot: Nova Carter (Isaac Sim 6.1)<a class="headerlink" href="#lesson-24-accessing-a-prepared-robot-nova-carter-isaac-sim-61" title="Permanent link">#</a></h1>
+<p>Course page: <em>Ingesting Robot Assets → Accessing a Prepared Robot</em> (<code>…/04-accessing-a-prepared-robot.html</code>)</p>
+<p><strong>Goal:</strong> load NVIDIA's ready-made <strong>Nova Carter</strong>, which already has physics, drives and a full sensor
+suite, and compare it with the Carter you built by hand.</p>
+<figure class="video"><video controls preload="metadata" src="../videos/2.4_nova_carter.mp4"></video><figcaption>🎬 Narrated walkthrough · lesson ⏱ 15 min · <a href="../videos/subtitles/2.4_nova_carter.srt">caption text (.srt)</a> · <a href="../videos/2.4_nova_carter.mp4" download>download .mp4</a></figcaption></figure>
+<p><strong>You will learn to</strong></p>
+<ul>
+<li>Load a production robot asset</li>
+<li>Read a real sensor suite and joint layout</li>
+</ul>
+<figure class="diagram"><a href="../diagrams/m2-nova-carter.png" target="_blank" title="open full size"><img alt="Nova Carter's ready-made sensor suite" src="../diagrams/m2-nova-carter.png" loading="lazy"></a><figcaption>Nova Carter's ready-made sensor suite — <a href="../diagrams/m2-nova-carter.html">interactive HTML</a></figcaption></figure>
+<h2 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">#</a></h2>
+<p><strong>Why prepared assets?</strong> Nova Carter took NVIDIA engineers tuned masses, drive gains, collision shapes,
+materials and calibrated sensor models. For real projects you start here and only build robots yourself
+when no asset exists (then via URDF → USD as in lesson 2.1).</p>
+<p><strong>Robot-type layout.</strong> Notice the pattern you will see in most 6.x robots: one articulation root body,
+<code>sensors/</code> as plain Xforms beneath it, joints named <code>joint_*</code>.</p>
+<hr />
+<ol>
+<li><strong>File &gt; New</strong>.</li>
+<li>🔄 <strong>Create &gt; Environments &gt; Flat Grid</strong> (4.2: <em>Create &gt; Isaac &gt; Environments &gt; FlatGrid</em>).</li>
+<li>Hide the environment light (👁 in the Stage panel) if you like.</li>
+<li>🔄 <strong>Create &gt; Robots &gt; Nova Carter with Sensors</strong> (same as 4.5).
+   It loads <code>/Isaac/Robots/NVIDIA/NovaCarter/nova_carter.usd</code> from the NVIDIA asset server. The first
+   load can take a few minutes.</li>
+<li>(Optional) The finished version of the URDF Carter, <em>Carter_v1</em>:
+   🔄 <strong>Window &gt; Browsers &gt; Isaac Sim Assets</strong> → search <strong>carter</strong> → drag <em>Carter_v1</em> (or <code>carter_v1</code>)
+   into the stage. (4.5: <em>Isaac Sim Assets [Beta]</em> panel.)</li>
+</ol>
+<h2 id="review-the-robot">Review the robot<a class="headerlink" href="#review-the-robot" title="Permanent link">#</a></h2>
+<p>Expand <strong>nova_carter &gt; chassis_link</strong> in the Stage panel:</p>
+<p>Checked in this install (6.1 <code>nova_carter.usd</code>). Everything below is under <code>chassis_link/sensors/</code>:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Sensor</th>
+<th>Prim</th>
+<th>Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2 × 2D lidar (front / rear)</td>
+<td><code>front_RPLidar/RPLidar_S2E</code>, <code>rear_RPLidar/RPLidar_S2E</code></td>
+<td>RTX <code>OmniLidar</code> (Slamtec RPLidar S2E)</td>
+</tr>
+<tr>
+<td>1 × 3D lidar on top</td>
+<td><code>XT_32/PandarXT_32_10hz</code></td>
+<td>RTX <code>OmniLidar</code> (Hesai XT-32, 10 Hz)</td>
+</tr>
+<tr>
+<td>4 × Hawk stereo cameras</td>
+<td><code>front_hawk</code>, <code>left_hawk</code>, <code>right_hawk</code>, <code>back_hawk</code>, each with <code>left</code>/<code>right</code> cameras + an IMU</td>
+<td>Camera + <code>IsaacImuSensor</code></td>
+</tr>
+<tr>
+<td>4 × Owl fisheye cameras</td>
+<td><code>front_owl</code>, <code>left_owl</code>, <code>right_owl</code>, <code>back_owl</code> → <code>camera</code></td>
+<td>Camera</td>
+</tr>
+<tr>
+<td>chassis IMU</td>
+<td><code>chassis_imu/Imu_Sensor</code></td>
+<td><code>IsaacImuSensor</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>Drive and joints (<code>nova_carter/…</code>):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Joints</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2 driven wheels (radius 0.14 m, track 0.413 m)</td>
+<td><code>joint_wheel_left</code>, <code>joint_wheel_right</code></td>
+</tr>
+<tr>
+<td>2 passive casters at the back</td>
+<td><code>joint_caster_base</code>, <code>joint_swing_left/right</code>, <code>joint_caster_left/right</code></td>
+</tr>
+<tr>
+<td>articulation root</td>
+<td><code>chassis_link</code>, the target for the Articulation Controller in lesson 4.1</td>
+</tr>
+</tbody>
+</table></div>
+<p>Notice that every sensor sits <strong>under the chassis body</strong> (<code>chassis_link/sensors/...</code>), not on a separate
+fixed-jointed body. That's the mounting that works for RTX lidars in 6.1 (see the trap in lesson 1.3).</p>
+<p>Compare with your URDF Carter: Nova Carter comes with tuned drives, collision shapes, materials and
+sensors, so there's no manual setup.</p>
+<blockquote class="note">
+<p>In 6.1 you may see <code>Projection type 'fisheyePolynomial' is deprecated</code> warnings for the Owl/Hawk cameras
+in the console. They're harmless. The asset still works.</p>
+</blockquote>
+<p>Next: drive Nova Carter from ROS 2 in <a href="m4-1.html">lesson 4.1</a>.</p>
+<h2 id="check-your-result">Check your result<a class="headerlink" href="#check-your-result" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Do this</th>
+<th>You should see</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create &gt; Robots &gt; Nova Carter with Sensors</td>
+<td><code>/World/nova_carter</code> appears</td>
+</tr>
+<tr>
+<td>Expand chassis_link/sensors</td>
+<td>front/rear RPLidar, XT_32, 4× Hawk, 4× Owl, chassis_imu</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="exercises">Exercises<a class="headerlink" href="#exercises" title="Permanent link">#</a></h2>
+<ol>
+<li>Look through <code>front_hawk/left/camera_left</code> (Viewport camera menu).</li>
+<li>Find the drive gains of <code>joint_wheel_left</code>. How do they compare with what you set on Carter?</li>
+</ol>
+<h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">#</a></h2>
+<ol>
+<li>
+<p>Which prim is Nova Carter's articulation root?
+ <br />
+<details><summary>Answer</summary>`chassis_link`.</details>
+</p>
+</li>
+<li>
+<p>What type is the XT-32 prim?
+ <br />
+<details><summary>Answer</summary>An RTX `OmniLidar`.</details>
+</p>
+</li>
+</ol><label class="done"><input type="checkbox" data-slug="m2-4"> Mark this lesson as done</label><div class="pn"><a class="prev" href="m2-3.html"><small>Previous</small>2.3 Adding sensors</a><a class="next" href="m3.html"><small>Next</small>Module 3 project</a></div></article><aside class="toc"><p>On this page</p><ul><li class="l2"><a href="#concepts">Concepts</a></li><li class="l2"><a href="#review-the-robot">Review the robot</a></li><li class="l2"><a href="#check-your-result">Check your result</a></li><li class="l2"><a href="#exercises">Exercises</a></li><li class="l2"><a href="#quiz">Quiz</a></li></ul></aside></main>
+<script src="static/site.js"></script>
+</body></html>

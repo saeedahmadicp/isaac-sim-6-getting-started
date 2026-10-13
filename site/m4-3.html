@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4.3 Camera images for Isaac ROS · Isaac Sim 6.1 tutorial</title>
+<link rel="icon" href="static/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/site.css"><link rel="stylesheet" href="static/code.css">
+</head><body data-slug="m4-3">
+<button class="menu" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">☰</button>
+<nav class="side" id="side"><a class="brand" href="index.html"><span>Isaac Sim 6.1</span><small>Getting Started · learning path</small></a>
+<div class="search"><input id="q" type="search" placeholder="Search lessons…  ( / )" autocomplete="off"><div id="results"></div></div>
+<div class="progress"><div class="bar"><i id="pbar"></i></div><span id="ptext"></span></div>
+<p class="grp">Start</p><ul>
+<li><a href="index.html">Course home</a></li>
+<li><a href="whats-different.html">What changed in 6.1</a></li>
+<li><a href="setup-ros2.html">Set up ROS 2 Jazzy</a></li>
+</ul>
+<p class="grp">Module 1 · First robot</p><ul>
+<li><a href="m1.html">Module 1 project</a></li>
+<li><a href="m1-1.html"><b class="tick" data-slug="m1-1"></b>1.1 Building a simple robot</a></li>
+<li><a href="m1-2.html"><b class="tick" data-slug="m1-2"></b>1.2 Controlling the robot</a></li>
+<li><a href="m1-3.html"><b class="tick" data-slug="m1-3"></b>1.3 Adding sensors</a></li>
+<li><a href="m1-4.html"><b class="tick" data-slug="m1-4"></b>1.4 ROS 2 and RViz</a></li>
+</ul>
+<p class="grp">Module 2 · URDF &amp; Carter</p><ul>
+<li><a href="m2.html">Module 2 project</a></li>
+<li><a href="m2-1.html"><b class="tick" data-slug="m2-1"></b>2.1 Importing URDF</a></li>
+<li><a href="m2-2.html"><b class="tick" data-slug="m2-2"></b>2.2 Preparing the simulation</a></li>
+<li><a href="m2-3.html"><b class="tick" data-slug="m2-3"></b>2.3 Adding sensors</a></li>
+<li><a href="m2-4.html"><b class="tick" data-slug="m2-4"></b>2.4 Nova Carter</a></li>
+</ul>
+<p class="grp">Module 3 · Synthetic data</p><ul>
+<li><a href="m3.html">Module 3 project</a></li>
+<li><a href="m3-1.html"><b class="tick" data-slug="m3-1"></b>3 Generate a dataset</a></li>
+</ul>
+<p class="grp">Module 4 · Software-in-the-loop</p><ul>
+<li><a href="m4.html">Module 4 project</a></li>
+<li><a href="m4-1.html"><b class="tick" data-slug="m4-1"></b>4.1 Driving from /cmd_vel</a></li>
+<li><a href="m4-2.html"><b class="tick" data-slug="m4-2"></b>4.2 Python scripting</a></li>
+<li><a class="on" href="m4-3.html"><b class="tick" data-slug="m4-3"></b>4.3 Camera images for Isaac ROS</a></li>
+</ul>
+<p class="grp">Module 5 · Hardware-in-the-loop</p><ul>
+<li><a href="m5.html">5 Hardware-in-the-loop</a></li>
+</ul>
+<p class="grp">Materials</p><ul>
+<li><a href="videos.html">All videos</a></li>
+<li><a href="diagrams.html">All diagrams</a></li>
+<li><a href="scripts.html">Checkpoint scripts</a></li>
+</ul>
+<p class="grp">Project</p><ul><li><a href="https://github.com/saeedahmadicp/isaac-sim-6-getting-started" target="_blank" rel="noopener">View on GitHub ↗</a></li></ul>
+</nav>
+<main><article><h1 id="lesson-43-publish-camera-images-for-isaac-ros">Lesson 4.3: Publish camera images for Isaac ROS<a class="headerlink" href="#lesson-43-publish-camera-images-for-isaac-ros" title="Permanent link">#</a></h1>
+<p>Your robot software needs to see the scene before it can interpret it. In this lesson, publish Nova
+Carter's camera and check that an external ROS 2 viewer receives the images.</p>
+<p><strong>Finish line for this page:</strong> a live camera image in <code>rqt_image_view</code>. Running a segmentation model
+is an external continuation, not a result established by this camera check. The existing video also
+introduces that wider workflow.</p>
+<figure class="video"><video controls preload="metadata" src="../videos/4.3_isaac_ros_segmentation.mp4"></video><figcaption>🎬 Narrated walkthrough · lesson ⏱ 20–30 min estimated for the camera check; allow additional time for external Isaac ROS setup · <a href="../videos/subtitles/4.3_isaac_ros_segmentation.srt">caption text (.srt)</a> · <a href="../videos/4.3_isaac_ros_segmentation.mp4" download>download .mp4</a></figcaption></figure>
+<p><strong>You will learn to</strong></p>
+<ul>
+<li>Publish simulated camera images to ROS 2</li>
+<li>Identify the camera feed needed by an external Isaac ROS pipeline</li>
+</ul>
+<figure class="diagram"><a href="../diagrams/m4-sil-segmentation.png" target="_blank" title="open full size"><img alt="Software-in-the-loop with Isaac ROS" src="../diagrams/m4-sil-segmentation.png" loading="lazy"></a><figcaption>Software-in-the-loop with Isaac ROS — <a href="../diagrams/m4-sil-segmentation.html">interactive HTML</a></figcaption></figure>
+<h2 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">#</a></h2>
+<p><strong>Camera graphs.</strong> A camera publisher needs a <em>render product</em> (the camera rendered at a resolution); the
+<em>ROS 2 Camera</em> tool creates it plus the publisher nodes for RGB, depth, segmentation or boxes.</p>
+<p><strong>Containers and distros.</strong> Isaac ROS runs in Docker, often on Humble. DDS lets Humble and Jazzy exchange
+standard messages if RMW and domain ID match; when in doubt, run Isaac Sim with the same distro.</p>
+<p>Course pages: <em>Developing Robots With SIL →</em>
+<em>Foundations of Image Segmentation, ROS 2, and Isaac ROS</em> · <em>Image Segmentation Without Simulation</em> ·
+<em>Image Segmentation With Simulation</em></p>
+<p>These lessons run <strong>Isaac ROS</strong> (a Docker-based ROS 2 workspace) next to Isaac Sim. Most of the work
+happens in Isaac ROS, so follow the course pages for that part. Only the Isaac Sim side changes:</p>
+<h2 id="what-changes-on-the-isaac-sim-side">What changes on the Isaac Sim side<a class="headerlink" href="#what-changes-on-the-isaac-sim-side" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Course</th>
+<th>6.1</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ROS 2 Humble everywhere</td>
+<td>Isaac Sim publishes with its bundled <strong>Jazzy</strong> libs. ROS 2 talks across distros at the DDS level for standard messages (<code>sensor_msgs/Image</code>, <code>CameraInfo</code>), but <strong>keep the same RMW</strong> (<code>rmw_fastrtps_cpp</code>) and <code>ROS_DOMAIN_ID</code> on both sides. If the Isaac ROS container is Humble and messages don't arrive, launch Isaac Sim with the container's distro: <code>export ROS_DISTRO=humble</code> before <code>./isaac-sim.sh</code> (6.1 bundles both <code>humble</code> and <code>jazzy</code> libs under <code>exts/isaacsim.ros2.core/</code>)</td>
+</tr>
+<tr>
+<td>Camera → ROS graph built by hand or via <em>Isaac Utils &gt; ROS2 OmniGraphs &gt; Camera</em></td>
+<td>🔄 <strong>Tools &gt; Robotics &gt; ROS 2 OmniGraphs &gt; Camera</strong>. Pick the camera prim and tick <strong>RGB</strong> (+ optional Depth, Semantic, Instance, BBox). Topics default to <code>rgb</code>, <code>depth</code>, … with Frame ID <code>sim_camera</code></td>
+</tr>
+<tr>
+<td>Nova Carter cameras</td>
+<td>Same asset (<em>Create &gt; Robots &gt; Nova Carter with Sensors</em>). Hawk/Owl cameras live under <code>chassis_link/sensors/…</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="quick-check-camera-to-ros-2">Quick check: camera to ROS 2<a class="headerlink" href="#quick-check-camera-to-ros-2" title="Permanent link">#</a></h2>
+<ol>
+<li>Scene from lesson 4.1 (Nova Carter in the Simple Room).</li>
+<li><strong>Tools &gt; Robotics &gt; ROS 2 OmniGraphs &gt; Camera</strong> → <em>Camera Prim</em> = e.g.
+   <code>/World/nova_carter/chassis_link/sensors/front_hawk/left/camera_left</code>, tick <strong>RGB</strong>, OK.</li>
+<li><strong>Play</strong>, then:
+   <code>bash
+   source /opt/ros/jazzy/setup.bash
+   ros2 topic hz /rgb
+   ros2 run rqt_image_view rqt_image_view /rgb</code></li>
+</ol>
+<p>A scripted version of this graph is in
+<code>standalone_examples/api/isaacsim.ros2.bridge/camera_periodic.py</code> (run it with <code>./python.sh</code>).</p>
+<h2 id="continue-to-model-inference">Continue to model inference<a class="headerlink" href="#continue-to-model-inference" title="Permanent link">#</a></h2>
+<p>Use the <em>Image Segmentation Without Simulation</em> and <em>Image Segmentation With Simulation</em> lessons
+in the <a href="https://docs.nvidia.com/learning/physical-ai/getting-started-with-isaac-sim/latest/">original NVIDIA learning path</a>
+for the Isaac ROS environment and model setup. Return to this feed once inference works on the
+example input used there.</p>
+<p>For that continuation, keep an RGB frame and the model's predicted mask side by side. Record the
+input/output topics and describe at least one visible mistake. Simulator-generated semantic labels
+are ground truth from the scene; they are not evidence that a segmentation model ran successfully.</p>
+<h2 id="check-your-result">Check your result<a class="headerlink" href="#check-your-result" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Do this</th>
+<th>You should see</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ros2 topic hz /rgb</code></td>
+<td>a steady rate while playing</td>
+</tr>
+<tr>
+<td><code>rqt_image_view /rgb</code></td>
+<td>the Hawk camera image</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="exercises">Exercises<a class="headerlink" href="#exercises" title="Permanent link">#</a></h2>
+<ol>
+<li>Also publish <code>depth</code> and view it in RViz as an Image display.</li>
+<li>Lower the camera resolution in the dialog and compare <code>/rgb</code> rates.</li>
+</ol>
+<h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">#</a></h2>
+<ol>
+<li>
+<p>What does a camera publisher need besides the camera prim?
+ <br />
+<details><summary>Answer</summary>A render product.</details>
+</p>
+</li>
+<li>
+<p>Isaac ROS on Humble, Isaac Sim on Jazzy, no messages — one fix?
+ <br />
+<details><summary>Answer</summary>Launch Isaac Sim with `ROS_DISTRO=humble` (bundled) and matching RMW/domain.</details>
+</p>
+</li>
+</ol><label class="done"><input type="checkbox" data-slug="m4-3"> Mark this lesson as done</label><div class="pn"><a class="prev" href="m4-2.html"><small>Previous</small>4.2 Python scripting</a><a class="next" href="m5.html"><small>Next</small>5 Hardware-in-the-loop</a></div></article><aside class="toc"><p>On this page</p><ul><li class="l2"><a href="#concepts">Concepts</a></li><li class="l2"><a href="#what-changes-on-the-isaac-sim-side">What changes on the Isaac Sim side</a></li><li class="l2"><a href="#quick-check-camera-to-ros-2">Quick check: camera to ROS 2</a></li><li class="l2"><a href="#continue-to-model-inference">Continue to model inference</a></li><li class="l2"><a href="#check-your-result">Check your result</a></li><li class="l2"><a href="#exercises">Exercises</a></li><li class="l2"><a href="#quiz">Quiz</a></li></ul></aside></main>
+<script src="static/site.js"></script>
+</body></html>

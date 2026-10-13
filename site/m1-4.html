@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1.4 ROS 2 and RViz · Isaac Sim 6.1 tutorial</title>
+<link rel="icon" href="static/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/site.css"><link rel="stylesheet" href="static/code.css">
+</head><body data-slug="m1-4">
+<button class="menu" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">☰</button>
+<nav class="side" id="side"><a class="brand" href="index.html"><span>Isaac Sim 6.1</span><small>Getting Started · learning path</small></a>
+<div class="search"><input id="q" type="search" placeholder="Search lessons…  ( / )" autocomplete="off"><div id="results"></div></div>
+<div class="progress"><div class="bar"><i id="pbar"></i></div><span id="ptext"></span></div>
+<p class="grp">Start</p><ul>
+<li><a href="index.html">Course home</a></li>
+<li><a href="whats-different.html">What changed in 6.1</a></li>
+<li><a href="setup-ros2.html">Set up ROS 2 Jazzy</a></li>
+</ul>
+<p class="grp">Module 1 · First robot</p><ul>
+<li><a href="m1.html">Module 1 project</a></li>
+<li><a href="m1-1.html"><b class="tick" data-slug="m1-1"></b>1.1 Building a simple robot</a></li>
+<li><a href="m1-2.html"><b class="tick" data-slug="m1-2"></b>1.2 Controlling the robot</a></li>
+<li><a href="m1-3.html"><b class="tick" data-slug="m1-3"></b>1.3 Adding sensors</a></li>
+<li><a class="on" href="m1-4.html"><b class="tick" data-slug="m1-4"></b>1.4 ROS 2 and RViz</a></li>
+</ul>
+<p class="grp">Module 2 · URDF &amp; Carter</p><ul>
+<li><a href="m2.html">Module 2 project</a></li>
+<li><a href="m2-1.html"><b class="tick" data-slug="m2-1"></b>2.1 Importing URDF</a></li>
+<li><a href="m2-2.html"><b class="tick" data-slug="m2-2"></b>2.2 Preparing the simulation</a></li>
+<li><a href="m2-3.html"><b class="tick" data-slug="m2-3"></b>2.3 Adding sensors</a></li>
+<li><a href="m2-4.html"><b class="tick" data-slug="m2-4"></b>2.4 Nova Carter</a></li>
+</ul>
+<p class="grp">Module 3 · Synthetic data</p><ul>
+<li><a href="m3.html">Module 3 project</a></li>
+<li><a href="m3-1.html"><b class="tick" data-slug="m3-1"></b>3 Generate a dataset</a></li>
+</ul>
+<p class="grp">Module 4 · Software-in-the-loop</p><ul>
+<li><a href="m4.html">Module 4 project</a></li>
+<li><a href="m4-1.html"><b class="tick" data-slug="m4-1"></b>4.1 Driving from /cmd_vel</a></li>
+<li><a href="m4-2.html"><b class="tick" data-slug="m4-2"></b>4.2 Python scripting</a></li>
+<li><a href="m4-3.html"><b class="tick" data-slug="m4-3"></b>4.3 Camera images for Isaac ROS</a></li>
+</ul>
+<p class="grp">Module 5 · Hardware-in-the-loop</p><ul>
+<li><a href="m5.html">5 Hardware-in-the-loop</a></li>
+</ul>
+<p class="grp">Materials</p><ul>
+<li><a href="videos.html">All videos</a></li>
+<li><a href="diagrams.html">All diagrams</a></li>
+<li><a href="scripts.html">Checkpoint scripts</a></li>
+</ul>
+<p class="grp">Project</p><ul><li><a href="https://github.com/saeedahmadicp/isaac-sim-6-getting-started" target="_blank" rel="noopener">View on GitHub ↗</a></li></ul>
+</nav>
+<main><article><h1 id="lesson-14-accessing-data-lidar-to-ros-2-and-rviz-isaac-sim-61">Lesson 1.4: Accessing Data — Lidar to ROS 2 and RViz (Isaac Sim 6.1)<a class="headerlink" href="#lesson-14-accessing-data-lidar-to-ros-2-and-rviz-isaac-sim-61" title="Permanent link">#</a></h1>
+<p>Course page: <em>Building Your First Robot → Accessing Data</em> (<code>…/04-accessing-data.html</code>)</p>
+<p><strong>Goal:</strong> publish the robot's 2D lidar as a ROS 2 <code>sensor_msgs/LaserScan</code> on <code>/scan_lidar</code> and view it in RViz.</p>
+<p><strong>Checkpoint script:</strong> <code>scripts/m1_ros2_lidar.py</code>
+<strong>Expected result:</strong> about 10 LaserScan messages per second on <code>/scan_lidar</code> (frame <code>sim_lidar</code>, 3600 beams).
+<strong>Prerequisite:</strong> system ROS 2 Jazzy for <code>ros2</code> and <code>rviz2</code>, see <a href="setup-ros2.html"><code>../01_setup_ros2_jazzy.md</code></a></p>
+<figure class="video"><video controls preload="metadata" src="../videos/1.4_ros2_and_rviz.mp4"></video><figcaption>🎬 Narrated walkthrough · lesson ⏱ 45 min (+ ROS 2 install) · <a href="../videos/subtitles/1.4_ros2_and_rviz.srt">caption text (.srt)</a> · <a href="../videos/1.4_ros2_and_rviz.mp4" download>download .mp4</a></figcaption></figure>
+<p><strong>You will learn to</strong></p>
+<ul>
+<li>Publish simulated sensor data on <strong>ROS 2</strong> topics</li>
+<li>Inspect topics with the <code>ros2</code> CLI and visualise them in <strong>RViz2</strong></li>
+<li>Understand frames, QoS and domain IDs — the three usual reasons for 'no data'</li>
+</ul>
+<figure class="diagram"><a href="../diagrams/m1-ros2-lidar.png" target="_blank" title="open full size"><img alt="RTX lidar → ROS 2 LaserScan → RViz" src="../diagrams/m1-ros2-lidar.png" loading="lazy"></a><figcaption>RTX lidar → ROS 2 LaserScan → RViz — <a href="../diagrams/m1-ros2-lidar.html">interactive HTML</a></figcaption></figure>
+<h2 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">#</a></h2>
+<p><strong>ROS 2 in one paragraph.</strong> Programs (<em>nodes</em>) exchange typed <em>messages</em> on named <em>topics</em> through DDS.
+Nodes find each other automatically when they share a <code>ROS_DOMAIN_ID</code> and a compatible middleware (RMW).
+Isaac Sim's bridge is just another node living inside the simulator.</p>
+<p><strong>Frames.</strong> Every sensor message carries <code>header.frame_id</code>. RViz draws data relative to its <em>Fixed
+Frame</em>; if no transform connects the two, nothing is drawn. With only one frame (<code>sim_lidar</code>), set the
+Fixed Frame to exactly that name.</p>
+<p><strong>QoS.</strong> Sensor streams are published <em>best-effort</em> (drop old data rather than queue it). <code>rviz2</code> and
+<code>ros2 topic echo</code> adapt automatically; your own subscriber must use <code>qos_profile_sensor_data</code>.</p>
+<p><strong>Bundled vs system ROS.</strong> Isaac Sim loads its own Jazzy libraries (<code>exts/isaacsim.ros2.core/jazzy</code>).
+System ROS is only needed for tools you run outside — and must be sourced in <em>those</em> terminals.</p>
+<hr />
+<h2 id="part-1-ros-2-what-changed">Part 1: ROS 2 (what changed)<a class="headerlink" href="#part-1-ros-2-what-changed" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Course (4.5, Ubuntu 22.04)</th>
+<th>6.1 reference setup (Ubuntu 24.04)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Install ROS 2 <strong>Humble</strong></td>
+<td>Install ROS 2 <strong>Jazzy</strong> (only for <code>rviz2</code> / <code>ros2</code> CLI)</td>
+</tr>
+<tr>
+<td><code>source /opt/ros/humble/setup.bash</code> <strong>before</strong> <code>./isaac-sim.sh</code></td>
+<td>Not needed. Isaac Sim loads its bundled Jazzy libs. Just run <code>./isaac-sim.sh</code></td>
+</tr>
+<tr>
+<td>Enable the <em>ROS2 Bridge</em> in Window &gt; Extensions</td>
+<td>Already enabled at startup (<code>isaacsim.ros2.bridge</code>). Check it under <strong>Window &gt; Extensions</strong> if unsure</td>
+</tr>
+<tr>
+<td>Install <code>vision_msgs</code></td>
+<td>Bundled. Install <code>ros-jazzy-vision-msgs</code> on the system side only if a ROS tool needs it</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="part-2-open-your-project">Part 2: Open your project<a class="headerlink" href="#part-2-open-your-project" title="Permanent link">#</a></h2>
+<ol>
+<li><code>./isaac-sim.sh</code> → <strong>File &gt; Open Recent</strong> → your robot from lesson 1.3.</li>
+<li>(Optional) <strong>Window &gt; Viewports &gt; Viewport 2</strong> for a robot-camera view.</li>
+</ol>
+<h2 id="part-3-build-the-lidar-ros-2-graph">Part 3: Build the lidar → ROS 2 graph<a class="headerlink" href="#part-3-build-the-lidar-ros-2-graph" title="Permanent link">#</a></h2>
+<blockquote class="change">
+<p>🔄 The course builds this by hand (<em>Isaac Read Lidar Beams → ROS2 Publish Laser Scan</em> +
+<em>Isaac Read Simulation Time</em>), and those nodes only work with the <strong>PhysX</strong> lidar. For the <strong>RTX</strong> lidar
+from lesson 1.3, 6.1 has a one-click graph builder.</p>
+</blockquote>
+<p><strong>Stop</strong> the simulation, then:</p>
+<ol>
+<li><strong>Tools &gt; Robotics &gt; ROS 2 OmniGraphs &gt; RTX Lidar</strong></li>
+<li>Fill in the dialog:</li>
+</ol>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Graph Path</td>
+<td><code>/World/ROS2_LidarStream</code> (the course's graph name)</td>
+</tr>
+<tr>
+<td>Frame ID</td>
+<td><code>sim_lidar</code> (remember this for RViz)</td>
+</tr>
+<tr>
+<td>Node Namespace</td>
+<td>empty</td>
+</tr>
+<tr>
+<td>LaserScan Topic</td>
+<td><code>scan_lidar</code></td>
+</tr>
+<tr>
+<td>Lidar Prim</td>
+<td>pick your RTX lidar, <code>/World/SimpleRobot/Cube/Example_Rotary_2D</code></td>
+</tr>
+<tr>
+<td>Laser Scan</td>
+<td>✅ ticked</td>
+</tr>
+<tr>
+<td>Point Cloud</td>
+<td>optional (publishes <code>/point_cloud</code> as PointCloud2)</td>
+</tr>
+</tbody>
+</table></div>
+<ol start="3">
+<li><strong>OK</strong>. Open the graph to see what it made: <em>On Playback Tick</em> → <em>Isaac Run One Simulation Frame</em> →
+   <em>Isaac Create Render Product</em> (the lidar) → <strong>ROS2 RTX Lidar Helper</strong> (type <em>laser_scan</em>), plus a
+   <em>ROS2 Context</em>. The helper does the work of the course's <em>Read Lidar Beams + Publish Laser Scan +
+   Read Simulation Time</em> chain.</li>
+</ol>
+<blockquote class="note">
+<p>The <em>Laser Scan</em> output only works with a <strong>2D</strong> lidar config (<em>Example Rotary 2D</em>). For a 3D lidar,
+publish <em>Point Cloud</em> instead.</p>
+</blockquote>
+<details>
+<summary>Course-exact manual graph (PhysX lidar only)</summary>
+<p><strong>Create &gt; Visual Scripting &gt; Action Graph</strong>, rename it <em>ROS2_LidarStream</em>, and add: <em>On Playback Tick</em>,
+<em>Isaac Read Lidar Beams Node</em>, <em>ROS2 Publish Laser Scan</em>, <em>Isaac Read Simulation Time</em>.
+Connect Tick → Read Lidar Beams (exec), Read Lidar Beams outputs → matching Publish Laser Scan inputs
+(exec, azimuthRange, depthRange, horizontalFov, horizontalResolution, intensitiesData, linearDepthData,
+numCols, numRows, rotationRate), and Read Simulation Time → Publish Laser Scan <em>timeStamp</em>. Set the
+lidar prim on Read Lidar Beams, <code>topicName = scan_lidar</code>, <code>frameId = sim_lidar</code>.</p>
+</details>
+<h2 id="part-4-run-and-view-in-rviz">Part 4: Run and view in RViz<a class="headerlink" href="#part-4-run-and-view-in-rviz" title="Permanent link">#</a></h2>
+<ol>
+<li><strong>Play</strong> in Isaac Sim.</li>
+<li>New terminal:
+   <code>bash
+   source /opt/ros/jazzy/setup.bash
+   ros2 topic list            # expect /scan_lidar, /rosout, /parameter_events
+   ros2 topic hz /scan_lidar  # ~10 Hz
+   rviz2</code></li>
+<li>In RViz: <strong>Global Options &gt; Fixed Frame</strong> = <strong><code>sim_lidar</code></strong>, typed in.
+   (The course text says to use the topic name. That's wrong: Fixed Frame must be the <strong>Frame ID</strong>.)</li>
+<li><strong>Add</strong> (bottom left) → <strong>By topic</strong> → <code>/scan_lidar</code> → <strong>LaserScan</strong> → OK.
+   Red points show the obstacles. Raise <em>Size (m)</em> to 0.05 if they're hard to see.</li>
+<li>Drive with <strong>W A S D</strong> in Isaac Sim. In RViz the world moves around the fixed robot, because the scan
+   is drawn in the lidar's own frame.</li>
+<li><strong>File &gt; Save</strong>.</li>
+</ol>
+<h2 id="checkpoint">Checkpoint<a class="headerlink" href="#checkpoint" title="Permanent link">#</a></h2>
+<div class="hl"><pre><span></span><code><span class="c1"># needs learning_resource/output/simple_robot.usd (from m1_build_simple_robot.py --save ...)</span>
+./python.sh<span class="w"> </span>learning_resource/scripts/m1_ros2_lidar.py<span class="w">                    </span><span class="c1"># leaves the sim running for RViz</span>
+./python.sh<span class="w"> </span>learning_resource/scripts/m1_ros2_lidar.py<span class="w"> </span>--headless<span class="w"> </span>--test<span class="w">  </span><span class="c1"># subscribes to /scan_lidar itself</span>
+</code></pre></div>
+
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No <code>/scan_lidar</code> in <code>ros2 topic list</code></td>
+<td>Simulation not <strong>playing</strong>, or different <code>ROS_DOMAIN_ID</code> in the two terminals</td>
+</tr>
+<tr>
+<td>Topic listed but <code>ros2 topic echo</code> prints nothing</td>
+<td>RMW mismatch. <code>export RMW_IMPLEMENTATION=rmw_fastrtps_cpp</code> in the ROS terminal</td>
+</tr>
+<tr>
+<td>RViz: "Frame [sim_lidar] does not exist" / nothing drawn</td>
+<td>Fixed Frame must be typed exactly <code>sim_lidar</code></td>
+</tr>
+<tr>
+<td>Scan shows a ring of points around the robot</td>
+<td>Lidar is too low and sees the wheels/body. Raise it</td>
+</tr>
+<tr>
+<td>"is not a valid RTX lidar prim" when creating the graph</td>
+<td>You picked the Xform/mount, not the lidar prim (type <em>OmniLidar</em>)</td>
+</tr>
+<tr>
+<td><code>/scan_lidar</code> is listed but <strong>no messages ever arrive</strong></td>
+<td>The RTX lidar is on a fixed-jointed sensor body (lesson 1.3 trap). Move it directly under the chassis body</td>
+</tr>
+<tr>
+<td>Messages arrive in <code>ros2 topic echo</code> but a custom subscriber gets none</td>
+<td>QoS: the scan is published best-effort. Subscribe with <code>qos_profile_sensor_data</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="check-your-result">Check your result<a class="headerlink" href="#check-your-result" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Do this</th>
+<th>You should see</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ros2 topic list</code> while playing</td>
+<td><code>/scan_lidar</code> is listed</td>
+</tr>
+<tr>
+<td><code>ros2 topic hz /scan_lidar</code></td>
+<td>≈ 10 Hz</td>
+</tr>
+<tr>
+<td><code>ros2 topic echo /scan_lidar --once</code></td>
+<td><code>frame_id: sim_lidar</code>, 3600 ranges</td>
+</tr>
+<tr>
+<td>RViz, Fixed Frame <code>sim_lidar</code>, LaserScan display</td>
+<td>points on your obstacles</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="exercises">Exercises<a class="headerlink" href="#exercises" title="Permanent link">#</a></h2>
+<ol>
+<li>Tick <em>Point Cloud</em> in the RTX Lidar graph dialog too and add a <strong>PointCloud2</strong> display in RViz.</li>
+<li>Run <code>export ROS_DOMAIN_ID=7</code> in the RViz terminal only. What happens? Fix it.</li>
+<li>Write a 15-line rclpy node that prints the closest range in front of the robot (remember <code>qos_profile_sensor_data</code>).</li>
+</ol>
+<h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">#</a></h2>
+<ol>
+<li>
+<p>RViz says 'Frame [sim_lidar] does not exist'. What do you change?
+ <br />
+<details><summary>Answer</summary>Set Global Options → Fixed Frame to `sim_lidar` (the frame id, not the topic).</details>
+</p>
+</li>
+<li>
+<p>Do you need to source /opt/ros/jazzy before ./isaac-sim.sh?
+ <br />
+<details><summary>Answer</summary>No — 6.1 uses its bundled Jazzy libraries.</details>
+</p>
+</li>
+<li>
+<p><code>ros2 topic echo</code> shows data but your node gets nothing. Likely cause?
+ <br />
+<details><summary>Answer</summary>QoS mismatch: subscribe with the sensor-data (best-effort) profile.</details>
+</p>
+</li>
+</ol><label class="done"><input type="checkbox" data-slug="m1-4"> Mark this lesson as done</label><div class="pn"><a class="prev" href="m1-3.html"><small>Previous</small>1.3 Adding sensors</a><a class="next" href="m2.html"><small>Next</small>Module 2 project</a></div></article><aside class="toc"><p>On this page</p><ul><li class="l2"><a href="#concepts">Concepts</a></li><li class="l2"><a href="#part-1-ros-2-what-changed">Part 1: ROS 2 (what changed)</a></li><li class="l2"><a href="#part-2-open-your-project">Part 2: Open your project</a></li><li class="l2"><a href="#part-3-build-the-lidar-ros-2-graph">Part 3: Build the lidar → ROS 2 graph</a></li><li class="l2"><a href="#part-4-run-and-view-in-rviz">Part 4: Run and view in RViz</a></li><li class="l2"><a href="#checkpoint">Checkpoint</a></li><li class="l2"><a href="#troubleshooting">Troubleshooting</a></li><li class="l2"><a href="#check-your-result">Check your result</a></li><li class="l2"><a href="#exercises">Exercises</a></li><li class="l2"><a href="#quiz">Quiz</a></li></ul></aside></main>
+<script src="static/site.js"></script>
+</body></html>

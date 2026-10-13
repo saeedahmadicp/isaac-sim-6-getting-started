@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2.2 Preparing the simulation · Isaac Sim 6.1 tutorial</title>
+<link rel="icon" href="static/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/site.css"><link rel="stylesheet" href="static/code.css">
+</head><body data-slug="m2-2">
+<button class="menu" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">☰</button>
+<nav class="side" id="side"><a class="brand" href="index.html"><span>Isaac Sim 6.1</span><small>Getting Started · learning path</small></a>
+<div class="search"><input id="q" type="search" placeholder="Search lessons…  ( / )" autocomplete="off"><div id="results"></div></div>
+<div class="progress"><div class="bar"><i id="pbar"></i></div><span id="ptext"></span></div>
+<p class="grp">Start</p><ul>
+<li><a href="index.html">Course home</a></li>
+<li><a href="whats-different.html">What changed in 6.1</a></li>
+<li><a href="setup-ros2.html">Set up ROS 2 Jazzy</a></li>
+</ul>
+<p class="grp">Module 1 · First robot</p><ul>
+<li><a href="m1.html">Module 1 project</a></li>
+<li><a href="m1-1.html"><b class="tick" data-slug="m1-1"></b>1.1 Building a simple robot</a></li>
+<li><a href="m1-2.html"><b class="tick" data-slug="m1-2"></b>1.2 Controlling the robot</a></li>
+<li><a href="m1-3.html"><b class="tick" data-slug="m1-3"></b>1.3 Adding sensors</a></li>
+<li><a href="m1-4.html"><b class="tick" data-slug="m1-4"></b>1.4 ROS 2 and RViz</a></li>
+</ul>
+<p class="grp">Module 2 · URDF &amp; Carter</p><ul>
+<li><a href="m2.html">Module 2 project</a></li>
+<li><a href="m2-1.html"><b class="tick" data-slug="m2-1"></b>2.1 Importing URDF</a></li>
+<li><a class="on" href="m2-2.html"><b class="tick" data-slug="m2-2"></b>2.2 Preparing the simulation</a></li>
+<li><a href="m2-3.html"><b class="tick" data-slug="m2-3"></b>2.3 Adding sensors</a></li>
+<li><a href="m2-4.html"><b class="tick" data-slug="m2-4"></b>2.4 Nova Carter</a></li>
+</ul>
+<p class="grp">Module 3 · Synthetic data</p><ul>
+<li><a href="m3.html">Module 3 project</a></li>
+<li><a href="m3-1.html"><b class="tick" data-slug="m3-1"></b>3 Generate a dataset</a></li>
+</ul>
+<p class="grp">Module 4 · Software-in-the-loop</p><ul>
+<li><a href="m4.html">Module 4 project</a></li>
+<li><a href="m4-1.html"><b class="tick" data-slug="m4-1"></b>4.1 Driving from /cmd_vel</a></li>
+<li><a href="m4-2.html"><b class="tick" data-slug="m4-2"></b>4.2 Python scripting</a></li>
+<li><a href="m4-3.html"><b class="tick" data-slug="m4-3"></b>4.3 Camera images for Isaac ROS</a></li>
+</ul>
+<p class="grp">Module 5 · Hardware-in-the-loop</p><ul>
+<li><a href="m5.html">5 Hardware-in-the-loop</a></li>
+</ul>
+<p class="grp">Materials</p><ul>
+<li><a href="videos.html">All videos</a></li>
+<li><a href="diagrams.html">All diagrams</a></li>
+<li><a href="scripts.html">Checkpoint scripts</a></li>
+</ul>
+<p class="grp">Project</p><ul><li><a href="https://github.com/saeedahmadicp/isaac-sim-6-getting-started" target="_blank" rel="noopener">View on GitHub ↗</a></li></ul>
+</nav>
+<main><article><h1 id="lesson-22-preparing-the-simulation-isaac-sim-61">Lesson 2.2: Preparing the Simulation (Isaac Sim 6.1)<a class="headerlink" href="#lesson-22-preparing-the-simulation-isaac-sim-61" title="Permanent link">#</a></h1>
+<p>Course page: <em>Ingesting Robot Assets → Preparing the Simulation</em> (<code>…/02-preparing-the-simulation.html</code>)</p>
+<p><strong>Goal:</strong> put Carter in an environment, check its joints, and drive it with <strong>W A S D</strong> through a
+Differential Controller.</p>
+<p><strong>Checkpoint script:</strong> <code>scripts/m2_import_carter.py</code></p>
+<figure class="video"><video controls preload="metadata" src="../videos/2.2_preparing_the_simulation.mp4"></video><figcaption>🎬 Narrated walkthrough · lesson ⏱ 30 min · <a href="../videos/subtitles/2.2_preparing_the_simulation.srt">caption text (.srt)</a> · <a href="../videos/2.2_preparing_the_simulation.mp4" download>download .mp4</a></figcaption></figure>
+<p><strong>You will learn to</strong></p>
+<ul>
+<li>Compose a scene from referenced assets</li>
+<li>Read controller parameters straight out of the URDF</li>
+<li>Limit speeds so a controller behaves</li>
+</ul>
+<figure class="diagram"><a href="../diagrams/m2-carter-drive.png" target="_blank" title="open full size"><img alt="Where the Differential Controller numbers come from" src="../diagrams/m2-carter-drive.png" loading="lazy"></a><figcaption>Where the Differential Controller numbers come from — <a href="../diagrams/m2-carter-drive.html">interactive HTML</a></figcaption></figure>
+<h2 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">#</a></h2>
+<p><strong>References.</strong> Dragging <code>carter.usda</code> into a stage creates a <em>reference</em>: the robot's data stays in its
+file, your scene stores only "load that file here" plus your overrides (position, variant choice, drive
+gains you change later). That's why the variant must be selected again per reference.</p>
+<p><strong>Parameters from the source.</strong> The controller needs wheel radius and track width. Don't guess — the URDF
+says: wheel <code>&lt;cylinder radius="0.240"&gt;</code> and wheel joints at <code>y = ±0.3142</code> → track 0.6284 m.</p>
+<p><strong>Saturation.</strong> Keyboard graphs command step changes; without <code>maxLinearSpeed</code> / <code>maxAngularSpeed</code> the
+wheels saturate, slip and the robot hops. Limits are a cheap way to keep a sim stable.</p>
+<hr />
+<h2 id="part-1-environment">Part 1: Environment<a class="headerlink" href="#part-1-environment" title="Permanent link">#</a></h2>
+<blockquote class="change">
+<p>🔄 The importer opened <code>carter.usda</code> as its own stage. Build a scene <strong>around</strong> it instead:</p>
+</blockquote>
+<ol>
+<li><strong>File &gt; New</strong>.</li>
+<li>🔄 <strong>Create &gt; Environments &gt; Flat Grid</strong> (4.2: <em>Create &gt; Isaac &gt; Environments &gt; Flat Grid</em>).</li>
+<li>Add the robot to this stage, either way works:
+   * drag <code>carter.usda</code> from the <strong>Content</strong> browser (bottom panel) into the viewport, or
+   * <strong>File &gt; Import</strong> <code>carter.urdf</code> again with <strong>Add Reference to Stage</strong> ticked.</li>
+<li>Select the new <strong>carter</strong> prim → <strong>Variants &gt; Physics = physx</strong> (the variant choice is stored per
+   reference, so set it again here).</li>
+<li>Turn off the scene's environment light by clicking the 👁 next to it in the Stage panel (optional, as in the course).</li>
+<li>Raise Carter a little: <em>Transform &gt; Translate Z</em> = <strong>0.05</strong>.</li>
+<li><strong>Play</strong>. Carter drops onto the grid. <strong>Stop</strong>.</li>
+<li>Hide collision outlines: viewport <strong>eye &gt; Physics &gt; Colliders &gt; None</strong>.</li>
+</ol>
+<h2 id="part-2-joint-review">Part 2: Joint review<a class="headerlink" href="#part-2-joint-review" title="Permanent link">#</a></h2>
+<p>All joints are under <strong>carter &gt; Physics</strong> (4.5: a <em>joints</em> folder, 4.2: under <em>chassis_link</em>):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Joint</th>
+<th>Body 0</th>
+<th>Body 1</th>
+<th>Axis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>left_wheel</td>
+<td>chassis_link</td>
+<td>left_wheel_link</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>right_wheel</td>
+<td>chassis_link</td>
+<td>right_wheel_link</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>rear_pivot</td>
+<td>chassis_link</td>
+<td>rear_pivot_link</td>
+<td>Z (caster swivel)</td>
+</tr>
+<tr>
+<td>rear_axle</td>
+<td>rear_pivot_link</td>
+<td>rear_wheel_link</td>
+<td>Y</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="part-3-quick-drive-test-no-controller">Part 3: Quick drive test (no controller)<a class="headerlink" href="#part-3-quick-drive-test-no-controller" title="Permanent link">#</a></h2>
+<ol>
+<li>Select <strong>left_wheel</strong> and <strong>right_wheel</strong> → <em>Drive &gt; Angular &gt; Target Velocity</em> = <strong>20</strong> (°/s).
+   (They need the velocity drive from lesson 2.1: stiffness 0, damping 10000.)</li>
+<li><strong>Play</strong>. Carter rolls forward slowly (20 °/s × 0.24 m ≈ 0.08 m/s).</li>
+<li>While it's playing, set one wheel back to <strong>0</strong>. Carter turns.</li>
+<li><strong>Stop</strong> and set both targets back to <strong>0</strong>.</li>
+</ol>
+<blockquote class="note">
+<p>The course's <em>"Articulation Root fix (4.2 only)"</em> is <strong>not needed</strong>: the 6.1 importer already puts
+the articulation root on <code>chassis_link</code> with self-collisions off.</p>
+</blockquote>
+<h2 id="part-4-differential-controller-with-keyboard">Part 4: Differential Controller with keyboard<a class="headerlink" href="#part-4-differential-controller-with-keyboard" title="Permanent link">#</a></h2>
+<ol>
+<li><strong>Tools &gt; Robotics &gt; OmniGraph Controllers &gt; Differential Controller</strong>:</li>
+</ol>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+<th>Where it comes from</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Robot Prim</td>
+<td><strong>carter</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>wheel radius</td>
+<td><strong>0.24</strong></td>
+<td>wheel collision cylinder radius in the URDF</td>
+</tr>
+<tr>
+<td>distance between wheels</td>
+<td><strong>0.62</strong> (exact: 0.6284)</td>
+<td>2 × the 0.3142 m wheel Y offset</td>
+</tr>
+<tr>
+<td>Left Joint Name</td>
+<td><strong>left_wheel</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>Right Joint Name</td>
+<td><strong>right_wheel</strong></td>
+<td></td>
+</tr>
+<tr>
+<td>Use Keyboard Control (WASD)</td>
+<td>✅</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<ol start="2">
+<li><strong>OK</strong> → Stage panel <strong>Graphs &gt; differential_controller</strong> → right-click → <strong>Open Graph</strong>.</li>
+<li><strong>Play</strong>, click the viewport, and drive with <strong>W A S D</strong>.</li>
+</ol>
+<h2 id="part-5-speed-limits">Part 5: Speed limits<a class="headerlink" href="#part-5-speed-limits" title="Permanent link">#</a></h2>
+<p>The keyboard graph commands large speeds, and Carter becomes erratic. Select the
+<strong>Differential Controller</strong> node in the graph and set:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>maxLinearSpeed</td>
+<td><strong>0.5</strong> m/s (the course used 0.2 in 4.5 and 0.5 in 4.2)</td>
+</tr>
+<tr>
+<td>maxAngularSpeed</td>
+<td><strong>1.0</strong> rad/s</td>
+</tr>
+</tbody>
+</table></div>
+<p>Check it: select <strong>chassis_link</strong> → <em>Property &gt; Rigid Body</em> velocity while holding <strong>W</strong>. It should stay under the limit.</p>
+<p><strong>File &gt; Save As…</strong> <code>learning_resource/output/carter_scene.usd</code>.</p>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Carter doesn't fall / doesn't react</td>
+<td><strong>Physics variant</strong> not set to <code>physx</code> on this reference</td>
+</tr>
+<tr>
+<td>Wheels spin but Carter doesn't move</td>
+<td>Wheels intersect the grid: raise Carter, or check the drives have damping</td>
+</tr>
+<tr>
+<td>Carter spins in place with W</td>
+<td>One of the joint names is wrong in the controller dialog</td>
+</tr>
+<tr>
+<td>Caster wheel fights the motion</td>
+<td>rear_pivot / rear_axle must be <strong>passive</strong> (stiffness 0, damping 0)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="check-your-result">Check your result<a class="headerlink" href="#check-your-result" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Do this</th>
+<th>You should see</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Play after adding the reference</td>
+<td>Carter drops onto the grid and rests</td>
+</tr>
+<tr>
+<td>Both wheel targets 20 °/s</td>
+<td>≈ 0.08 m/s straight</td>
+</tr>
+<tr>
+<td>Keyboard graph, hold W</td>
+<td>≤ 0.5 m/s (chassis_link → Rigid Body velocity)</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="exercises">Exercises<a class="headerlink" href="#exercises" title="Permanent link">#</a></h2>
+<ol>
+<li>Set <em>wheel radius</em> to 0.12 (half the real value) and drive forward at 0.2 m/s. Measure the real speed. Why is it double?</li>
+<li>Make the casters slightly damped (damping 10). Is turning smoother or worse?</li>
+<li>Save the scene, close Isaac Sim, edit <code>carter.usda</code>'s drive gains in a text editor and reopen — does your scene pick up the change? (That's what references buy you.)</li>
+</ol>
+<h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">#</a></h2>
+<ol>
+<li>
+<p>Why must the physics variant be selected again in a new scene?
+ <br />
+<details><summary>Answer</summary>The selection is an override stored on the referencing prim, not in carter.usda.</details>
+</p>
+</li>
+<li>
+<p>Where does wheelDistance 0.6284 come from?
+ <br />
+<details><summary>Answer</summary>2 × the wheel joint y-offset 0.3142 in the URDF.</details>
+</p>
+</li>
+<li>
+<p>Why limit maxLinearSpeed?
+ <br />
+<details><summary>Answer</summary>Keyboard steps saturate the wheels and make the robot slip and hop.</details>
+</p>
+</li>
+</ol><label class="done"><input type="checkbox" data-slug="m2-2"> Mark this lesson as done</label><div class="pn"><a class="prev" href="m2-1.html"><small>Previous</small>2.1 Importing URDF</a><a class="next" href="m2-3.html"><small>Next</small>2.3 Adding sensors</a></div></article><aside class="toc"><p>On this page</p><ul><li class="l2"><a href="#concepts">Concepts</a></li><li class="l2"><a href="#part-1-environment">Part 1: Environment</a></li><li class="l2"><a href="#part-2-joint-review">Part 2: Joint review</a></li><li class="l2"><a href="#part-3-quick-drive-test-no-controller">Part 3: Quick drive test (no controller)</a></li><li class="l2"><a href="#part-4-differential-controller-with-keyboard">Part 4: Differential Controller with keyboard</a></li><li class="l2"><a href="#part-5-speed-limits">Part 5: Speed limits</a></li><li class="l2"><a href="#troubleshooting">Troubleshooting</a></li><li class="l2"><a href="#check-your-result">Check your result</a></li><li class="l2"><a href="#exercises">Exercises</a></li><li class="l2"><a href="#quiz">Quiz</a></li></ul></aside></main>
+<script src="static/site.js"></script>
+</body></html>

@@ -1,0 +1,108 @@
+1
+00:00:00,500 --> 00:00:02,862
+Fixed motor speeds only drive straight.
+
+2
+00:00:02,862 --> 00:00:06,677
+In this lesson you replace them with a differential controller,
+
+3
+00:00:06,677 --> 00:00:09,826
+first set by hand and then driven from the keyboard.
+
+4
+00:00:10,726 --> 00:00:13,152
+This is the action graph you will create.
+
+5
+00:00:13,152 --> 00:00:16,941
+Every frame, the playback tick runs the differential controller.
+
+6
+00:00:16,941 --> 00:00:21,084
+It turns a forward speed and a turning speed into one speed per wheel,
+
+7
+00:00:21,084 --> 00:00:24,576
+using the wheel radius and the distance between the wheels.
+
+8
+00:00:24,576 --> 00:00:30,318
+The articulation controller then applies those speeds to the rear joints named in the array node.
+
+9
+00:00:31,218 --> 00:00:32,576
+Here are the steps.
+
+10
+00:00:32,576 --> 00:00:35,866
+First add an articulation root to SimpleRobot.
+
+11
+00:00:35,866 --> 00:00:38,941
+The controller finds the joints through it.
+
+12
+00:00:38,941 --> 00:00:43,875
+Open Tools, Robotics, OmniGraph Controllers, Differential Controller.
+
+13
+00:00:43,875 --> 00:00:46,950
+The path is the same as in four point five.
+
+14
+00:00:46,950 --> 00:00:54,101
+Enter a wheel radius of zero point three seven five and a distance between wheels of one point five.
+
+15
+00:00:54,101 --> 00:00:59,822
+Type the two rear joint names, pick SimpleRobot as the robot prim, and click OK.
+
+16
+00:01:00,722 --> 00:01:01,682
+Now drive it.
+
+17
+00:01:01,682 --> 00:01:02,495
+Press play.
+
+18
+00:01:02,495 --> 00:01:08,333
+The robot stays still until you set the linear velocity on the controller node.
+
+19
+00:01:08,333 --> 00:01:10,107
+Try one, then minus one.
+
+20
+00:01:10,107 --> 00:01:15,575
+Then delete the graph and create it again with the keyboard option ticked.
+
+21
+00:01:15,575 --> 00:01:21,561
+Click inside the viewport so it has keyboard focus, and drive with W, A, S and D.
+
+22
+00:01:21,561 --> 00:01:28,803
+If it is too fast or too slow, change the two constant nodes named scale linear and scale angular.
+
+23
+00:01:29,703 --> 00:01:31,366
+Three mistakes are common.
+
+24
+00:01:31,366 --> 00:01:35,650
+Without an articulation root, the controller silently does nothing.
+
+25
+00:01:35,650 --> 00:01:39,487
+If the old drive targets are still fifty degrees per second,
+
+26
+00:01:39,487 --> 00:01:42,684
+the robot wanders on its own, so set them to zero.
+
+27
+00:01:42,684 --> 00:01:48,120
+And if the left and right names are swapped, it turns when you ask it to go straight.
+

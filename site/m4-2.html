@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4.2 Python scripting · Isaac Sim 6.1 tutorial</title>
+<link rel="icon" href="static/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/site.css"><link rel="stylesheet" href="static/code.css">
+</head><body data-slug="m4-2">
+<button class="menu" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">☰</button>
+<nav class="side" id="side"><a class="brand" href="index.html"><span>Isaac Sim 6.1</span><small>Getting Started · learning path</small></a>
+<div class="search"><input id="q" type="search" placeholder="Search lessons…  ( / )" autocomplete="off"><div id="results"></div></div>
+<div class="progress"><div class="bar"><i id="pbar"></i></div><span id="ptext"></span></div>
+<p class="grp">Start</p><ul>
+<li><a href="index.html">Course home</a></li>
+<li><a href="whats-different.html">What changed in 6.1</a></li>
+<li><a href="setup-ros2.html">Set up ROS 2 Jazzy</a></li>
+</ul>
+<p class="grp">Module 1 · First robot</p><ul>
+<li><a href="m1.html">Module 1 project</a></li>
+<li><a href="m1-1.html"><b class="tick" data-slug="m1-1"></b>1.1 Building a simple robot</a></li>
+<li><a href="m1-2.html"><b class="tick" data-slug="m1-2"></b>1.2 Controlling the robot</a></li>
+<li><a href="m1-3.html"><b class="tick" data-slug="m1-3"></b>1.3 Adding sensors</a></li>
+<li><a href="m1-4.html"><b class="tick" data-slug="m1-4"></b>1.4 ROS 2 and RViz</a></li>
+</ul>
+<p class="grp">Module 2 · URDF &amp; Carter</p><ul>
+<li><a href="m2.html">Module 2 project</a></li>
+<li><a href="m2-1.html"><b class="tick" data-slug="m2-1"></b>2.1 Importing URDF</a></li>
+<li><a href="m2-2.html"><b class="tick" data-slug="m2-2"></b>2.2 Preparing the simulation</a></li>
+<li><a href="m2-3.html"><b class="tick" data-slug="m2-3"></b>2.3 Adding sensors</a></li>
+<li><a href="m2-4.html"><b class="tick" data-slug="m2-4"></b>2.4 Nova Carter</a></li>
+</ul>
+<p class="grp">Module 3 · Synthetic data</p><ul>
+<li><a href="m3.html">Module 3 project</a></li>
+<li><a href="m3-1.html"><b class="tick" data-slug="m3-1"></b>3 Generate a dataset</a></li>
+</ul>
+<p class="grp">Module 4 · Software-in-the-loop</p><ul>
+<li><a href="m4.html">Module 4 project</a></li>
+<li><a href="m4-1.html"><b class="tick" data-slug="m4-1"></b>4.1 Driving from /cmd_vel</a></li>
+<li><a class="on" href="m4-2.html"><b class="tick" data-slug="m4-2"></b>4.2 Python scripting</a></li>
+<li><a href="m4-3.html"><b class="tick" data-slug="m4-3"></b>4.3 Camera images for Isaac ROS</a></li>
+</ul>
+<p class="grp">Module 5 · Hardware-in-the-loop</p><ul>
+<li><a href="m5.html">5 Hardware-in-the-loop</a></li>
+</ul>
+<p class="grp">Materials</p><ul>
+<li><a href="videos.html">All videos</a></li>
+<li><a href="diagrams.html">All diagrams</a></li>
+<li><a href="scripts.html">Checkpoint scripts</a></li>
+</ul>
+<p class="grp">Project</p><ul><li><a href="https://github.com/saeedahmadicp/isaac-sim-6-getting-started" target="_blank" rel="noopener">View on GitHub ↗</a></li></ul>
+</nav>
+<main><article><h1 id="lesson-42-foundations-of-isaac-sim-scripting-with-python-isaac-sim-61">Lesson 4.2: Foundations of Isaac Sim Scripting With Python (Isaac Sim 6.1)<a class="headerlink" href="#lesson-42-foundations-of-isaac-sim-scripting-with-python-isaac-sim-61" title="Permanent link">#</a></h1>
+<p>Course page: <em>Developing Robots With SIL → Foundations of Isaac Sim Scripting With Python</em>
+(<code>…/04-foundations-of-isaac-sim-scripting-with-python.html</code>)</p>
+<p><strong>Goal:</strong> create the same scene (physics + ground + falling cube) three ways: USD API, the Isaac Sim
+Core API, and a standalone script.</p>
+<p><strong>Files:</strong> <code>scripts/m4_snippet_usd_api.py</code>, <code>scripts/m4_snippet_core_api.py</code>, <code>scripts/m4_run_snippet.py</code>
+<strong>Expected result:</strong> with either snippet the cube falls from z = 1.0 and rests at z = 0.25.</p>
+<figure class="video"><video controls preload="metadata" src="../videos/4.2_python_scripting.mp4"></video><figcaption>🎬 Narrated walkthrough · lesson ⏱ 45 min · <a href="../videos/subtitles/4.2_python_scripting.srt">caption text (.srt)</a> · <a href="../videos/4.2_python_scripting.mp4" download>download .mp4</a></figcaption></figure>
+<p><strong>You will learn to</strong></p>
+<ul>
+<li>Run code in the <strong>Script Editor</strong> and as a <strong>standalone app</strong></li>
+<li>Choose between raw <strong>USD</strong> and the <strong>6.1 core API</strong></li>
+<li>Port 4.x <code>omni.isaac.core</code> code</li>
+</ul>
+<figure class="diagram"><a href="../diagrams/m4-python-layers.png" target="_blank" title="open full size"><img alt="The Python layers you script against" src="../diagrams/m4-python-layers.png" loading="lazy"></a><figcaption>The Python layers you script against — <a href="../diagrams/m4-python-layers.html">interactive HTML</a></figcaption></figure>
+<h2 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">#</a></h2>
+<p><strong>Two ways to run Python.</strong> <em>Script Editor</em>: inside the running GUI, shares its stage — good for poking.
+<em>Standalone</em> (<code>./python.sh my.py</code>): your script owns the app loop via <code>SimulationApp</code>, can run headless,
+and is how tests, data generation and RL run.</p>
+<p><strong>Rule #1 of standalone scripts.</strong> Create <code>SimulationApp(...)</code> <strong>before</strong> importing anything from
+<code>isaacsim.*</code>/<code>omni.*</code> (those modules only exist once Kit is running).</p>
+<p><strong>Which API?</strong> Raw <code>pxr</code> USD is verbose but never changes between versions. <code>isaacsim.core.experimental</code>
+is concise and batched (operate on many prims at once, NumPy/Torch/Warp arrays) — the 6.x way.</p>
+<hr />
+<h2 id="part-1-script-editor-unchanged">Part 1: Script Editor (unchanged)<a class="headerlink" href="#part-1-script-editor-unchanged" title="Permanent link">#</a></h2>
+<p><strong>Window &gt; Script Editor.</strong></p>
+<ul>
+<li><strong>Run</strong> or <strong>Ctrl+Enter</strong> runs the whole tab. Select some lines and use <strong>Run Selected</strong> to run only those.</li>
+<li><strong>Tab &gt; Add Tab</strong> opens more tabs. All tabs share one Python environment, so a variable defined in
+  one tab is visible in the others.</li>
+</ul>
+<h2 id="part-2-usd-api-workflow-course-code-works-as-is">Part 2: USD API workflow (course code works as-is ✅)<a class="headerlink" href="#part-2-usd-api-workflow-course-code-works-as-is" title="Permanent link">#</a></h2>
+<ol>
+<li><strong>File &gt; New</strong>.</li>
+<li>Paste <a href="scripts.html#m4_snippet_usd_api.py"><code>scripts/m4_snippet_usd_api.py</code></a> into the Script Editor → <strong>Ctrl+Enter</strong>.</li>
+<li>A ground plane and a cube appear. <strong>Play</strong>, and the cube falls.</li>
+</ol>
+<p><code>pxr</code> (<code>Usd</code>, <code>UsdGeom</code>, <code>UsdPhysics</code>, <code>PhysxSchema</code>) is the stable foundation under Isaac Sim. Code
+written against it keeps working across versions. Run it <strong>once per empty stage</strong>.</p>
+<h2 id="part-3-isaac-sim-core-api-workflow-rewritten-for-61">Part 3: Isaac Sim Core API workflow (🔄 rewritten for 6.1)<a class="headerlink" href="#part-3-isaac-sim-core-api-workflow-rewritten-for-61" title="Permanent link">#</a></h2>
+<p>The course's code <strong>doesn't run in 6.1</strong>:</p>
+<div class="hl"><pre><span></span><code><span class="c1"># ❌ 4.2 course code: omni.isaac.core no longer exists in 6.1</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">omni.isaac.core.objects</span><span class="w"> </span><span class="kn">import</span> <span class="n">DynamicCuboid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">omni.isaac.core.objects.ground_plane</span><span class="w"> </span><span class="kn">import</span> <span class="n">GroundPlane</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">omni.isaac.core.physics_context</span><span class="w"> </span><span class="kn">import</span> <span class="n">PhysicsContext</span>
+</code></pre></div>
+
+<p>The 6.1 equivalent (<a href="scripts.html#m4_snippet_core_api.py"><code>scripts/m4_snippet_core_api.py</code></a>):</p>
+<div class="hl"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">isaacsim.core.experimental.materials</span><span class="w"> </span><span class="kn">import</span> <span class="n">PreviewSurfaceMaterial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">isaacsim.core.experimental.objects</span><span class="w"> </span><span class="kn">import</span> <span class="n">Cube</span><span class="p">,</span> <span class="n">GroundPlane</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">isaacsim.core.experimental.prims</span><span class="w"> </span><span class="kn">import</span> <span class="n">GeomPrim</span><span class="p">,</span> <span class="n">RigidPrim</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pxr</span><span class="w"> </span><span class="kn">import</span> <span class="n">UsdPhysics</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">omni.usd</span>
+
+<span class="n">stage</span> <span class="o">=</span> <span class="n">omni</span><span class="o">.</span><span class="n">usd</span><span class="o">.</span><span class="n">get_context</span><span class="p">()</span><span class="o">.</span><span class="n">get_stage</span><span class="p">()</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">IsA</span><span class="p">(</span><span class="n">UsdPhysics</span><span class="o">.</span><span class="n">Scene</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">stage</span><span class="o">.</span><span class="n">Traverse</span><span class="p">()):</span>   <span class="c1"># = PhysicsContext()</span>
+    <span class="n">UsdPhysics</span><span class="o">.</span><span class="n">Scene</span><span class="o">.</span><span class="n">Define</span><span class="p">(</span><span class="n">stage</span><span class="p">,</span> <span class="s2">"/World/PhysicsScene"</span><span class="p">)</span>
+
+<span class="n">GroundPlane</span><span class="p">(</span><span class="s2">"/World/groundPlane"</span><span class="p">,</span> <span class="n">sizes</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+<span class="n">cube</span> <span class="o">=</span> <span class="n">Cube</span><span class="p">(</span><span class="s2">"/World/cube"</span><span class="p">,</span> <span class="n">sizes</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">positions</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="n">scales</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">])</span>
+<span class="n">material</span> <span class="o">=</span> <span class="n">PreviewSurfaceMaterial</span><span class="p">(</span><span class="s2">"/World/Looks/cube_color"</span><span class="p">)</span>
+<span class="n">material</span><span class="o">.</span><span class="n">set_input_values</span><span class="p">(</span><span class="s2">"diffuseColor"</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+<span class="n">cube</span><span class="o">.</span><span class="n">apply_visual_materials</span><span class="p">(</span><span class="n">material</span><span class="p">)</span>
+<span class="n">RigidPrim</span><span class="p">(</span><span class="n">cube</span><span class="o">.</span><span class="n">paths</span><span class="p">)</span>                              <span class="c1"># makes it dynamic (= "DynamicCuboid")</span>
+<span class="n">GeomPrim</span><span class="p">(</span><span class="n">cube</span><span class="o">.</span><span class="n">paths</span><span class="p">,</span> <span class="n">apply_collision_apis</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>    <span class="c1"># gives it a collider</span>
+</code></pre></div>
+
+<p>What changed:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>4.2 / 4.5</th>
+<th>6.1</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DynamicCuboid(...)</code> (shape + physics in one)</td>
+<td><code>Cube(...)</code> + <code>RigidPrim(...)</code> + <code>GeomPrim(..., apply_collision_apis=True)</code></td>
+<td>6.1 splits <em>geometry</em>, <em>rigid body</em> and <em>collider</em> into separate wrappers</td>
+</tr>
+<tr>
+<td><code>position=np.array([...])</code></td>
+<td><code>positions=[...]</code></td>
+<td>6.1 wrappers are <strong>batched</strong>: plural argument names, and they accept lists of paths</td>
+</tr>
+<tr>
+<td><code>color=np.array([...])</code></td>
+<td>a <code>PreviewSurfaceMaterial</code> + <code>apply_visual_materials</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>PhysicsContext()</code></td>
+<td>a <code>UsdPhysics.Scene</code> prim (or <code>isaacsim.core.simulation_manager.SimulationManager</code>)</td>
+<td></td>
+</tr>
+</tbody>
+</table></div>
+<p>Steps: <strong>File &gt; New From Stage Template &gt; Empty</strong> → <em>Don't Save</em> → paste → <strong>Ctrl+Enter</strong> → <strong>Play</strong>.</p>
+<h2 id="part-4-standalone-python-bonus-not-in-the-course">Part 4: Standalone Python (bonus, not in the course)<a class="headerlink" href="#part-4-standalone-python-bonus-not-in-the-course" title="Permanent link">#</a></h2>
+<p>Real SIL setups usually run Isaac Sim from a script, not the GUI. Every file in <code>scripts/</code> is a
+standalone app:</p>
+<div class="hl"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">isaacsim</span><span class="w"> </span><span class="kn">import</span> <span class="n">SimulationApp</span>                  <span class="c1"># 4.2: from omni.isaac.kit import SimulationApp</span>
+<span class="n">simulation_app</span> <span class="o">=</span> <span class="n">SimulationApp</span><span class="p">({</span><span class="s2">"headless"</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>  <span class="c1"># must come BEFORE any other isaacsim/omni import</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">omni.timeline</span>
+<span class="c1"># ... build the stage ...</span>
+<span class="n">omni</span><span class="o">.</span><span class="n">timeline</span><span class="o">.</span><span class="n">get_timeline_interface</span><span class="p">()</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+<span class="k">while</span> <span class="n">simulation_app</span><span class="o">.</span><span class="n">is_running</span><span class="p">():</span>
+    <span class="n">simulation_app</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>                          <span class="c1"># one rendered + simulated frame</span>
+<span class="n">simulation_app</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div>
+
+<p>Run a Script Editor snippet as a standalone app:</p>
+<div class="hl"><pre><span></span><code>./python.sh<span class="w"> </span>learning_resource/scripts/m4_run_snippet.py<span class="w"> </span>learning_resource/scripts/m4_snippet_core_api.py
+./python.sh<span class="w"> </span>learning_resource/scripts/m4_run_snippet.py<span class="w"> </span>learning_resource/scripts/m4_snippet_usd_api.py<span class="w"> </span>--headless<span class="w"> </span>--test
+</code></pre></div>
+
+<p>More 6.1 examples to read next:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>File (under <code>standalone_examples/</code>)</th>
+<th>Shows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>api/isaacsim.simulation_app/hello_world.py</code></td>
+<td>the smallest possible app</td>
+</tr>
+<tr>
+<td><code>api/isaacsim.core.experimental.api/add_cubes.py</code></td>
+<td>rigid bodies, materials, resetting state</td>
+</tr>
+<tr>
+<td><code>api/isaacsim.core.experimental.api/control_robot_numpy.py</code></td>
+<td>articulation control with the 6.1 API</td>
+</tr>
+<tr>
+<td><code>api/isaacsim.ros2.bridge/subscriber.py</code></td>
+<td>rclpy inside Isaac Sim</td>
+</tr>
+<tr>
+<td><code>tutorials/getting_started/getting_started_robot.py</code></td>
+<td>loading and moving a robot</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="check-your-result">Check your result<a class="headerlink" href="#check-your-result" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Do this</th>
+<th>You should see</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>USD snippet in Script Editor + Play</td>
+<td>cube falls and rests at z = 0.25</td>
+</tr>
+<tr>
+<td>Core API snippet in Script Editor + Play</td>
+<td>same</td>
+</tr>
+<tr>
+<td><code>m4_run_snippet.py … --headless --test</code></td>
+<td><code>[m4] PASS: cube fell …</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="exercises">Exercises<a class="headerlink" href="#exercises" title="Permanent link">#</a></h2>
+<ol>
+<li>Extend the core-API snippet to create 10 cubes in a row with <strong>one</strong> <code>Cube(...)</code> call (pass a list of paths and positions).</li>
+<li>Turn <code>m4_snippet_core_api.py</code> into a standalone script that prints the cube height every 10 frames.</li>
+<li>Read <code>standalone_examples/api/isaacsim.core.experimental.api/add_cubes.py</code> and explain <code>RigidPrim.set_velocities</code>.</li>
+</ol>
+<h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">#</a></h2>
+<ol>
+<li>
+<p>What must be the first Isaac Sim import in a standalone script?
+ <br />
+<details><summary>Answer</summary>`from isaacsim import SimulationApp`, then create it.</details>
+</p>
+</li>
+<li>
+<p>4.x <code>DynamicCuboid</code> in 6.1?
+ <br />
+<details><summary>Answer</summary>`Cube` + `RigidPrim` + `GeomPrim(apply_collision_apis=True)`.</details>
+</p>
+</li>
+<li>
+<p>Which layer's code survived 4.2 → 6.1 unchanged?
+ <br />
+<details><summary>Answer</summary>Raw OpenUSD (`pxr`) code.</details>
+</p>
+</li>
+</ol><label class="done"><input type="checkbox" data-slug="m4-2"> Mark this lesson as done</label><div class="pn"><a class="prev" href="m4-1.html"><small>Previous</small>4.1 Driving from /cmd_vel</a><a class="next" href="m4-3.html"><small>Next</small>4.3 Camera images for Isaac ROS</a></div></article><aside class="toc"><p>On this page</p><ul><li class="l2"><a href="#concepts">Concepts</a></li><li class="l2"><a href="#part-1-script-editor-unchanged">Part 1: Script Editor (unchanged)</a></li><li class="l2"><a href="#part-2-usd-api-workflow-course-code-works-as-is">Part 2: USD API workflow (course code works as-is ✅)</a></li><li class="l2"><a href="#part-3-isaac-sim-core-api-workflow-rewritten-for-61">Part 3: Isaac Sim Core API workflow (🔄 rewritten for 6.1)</a></li><li class="l2"><a href="#part-4-standalone-python-bonus-not-in-the-course">Part 4: Standalone Python (bonus, not in the course)</a></li><li class="l2"><a href="#check-your-result">Check your result</a></li><li class="l2"><a href="#exercises">Exercises</a></li><li class="l2"><a href="#quiz">Quiz</a></li></ul></aside></main>
+<script src="static/site.js"></script>
+</body></html>

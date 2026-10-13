@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2.3 Adding sensors · Isaac Sim 6.1 tutorial</title>
+<link rel="icon" href="static/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/site.css"><link rel="stylesheet" href="static/code.css">
+</head><body data-slug="m2-3">
+<button class="menu" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">☰</button>
+<nav class="side" id="side"><a class="brand" href="index.html"><span>Isaac Sim 6.1</span><small>Getting Started · learning path</small></a>
+<div class="search"><input id="q" type="search" placeholder="Search lessons…  ( / )" autocomplete="off"><div id="results"></div></div>
+<div class="progress"><div class="bar"><i id="pbar"></i></div><span id="ptext"></span></div>
+<p class="grp">Start</p><ul>
+<li><a href="index.html">Course home</a></li>
+<li><a href="whats-different.html">What changed in 6.1</a></li>
+<li><a href="setup-ros2.html">Set up ROS 2 Jazzy</a></li>
+</ul>
+<p class="grp">Module 1 · First robot</p><ul>
+<li><a href="m1.html">Module 1 project</a></li>
+<li><a href="m1-1.html"><b class="tick" data-slug="m1-1"></b>1.1 Building a simple robot</a></li>
+<li><a href="m1-2.html"><b class="tick" data-slug="m1-2"></b>1.2 Controlling the robot</a></li>
+<li><a href="m1-3.html"><b class="tick" data-slug="m1-3"></b>1.3 Adding sensors</a></li>
+<li><a href="m1-4.html"><b class="tick" data-slug="m1-4"></b>1.4 ROS 2 and RViz</a></li>
+</ul>
+<p class="grp">Module 2 · URDF &amp; Carter</p><ul>
+<li><a href="m2.html">Module 2 project</a></li>
+<li><a href="m2-1.html"><b class="tick" data-slug="m2-1"></b>2.1 Importing URDF</a></li>
+<li><a href="m2-2.html"><b class="tick" data-slug="m2-2"></b>2.2 Preparing the simulation</a></li>
+<li><a class="on" href="m2-3.html"><b class="tick" data-slug="m2-3"></b>2.3 Adding sensors</a></li>
+<li><a href="m2-4.html"><b class="tick" data-slug="m2-4"></b>2.4 Nova Carter</a></li>
+</ul>
+<p class="grp">Module 3 · Synthetic data</p><ul>
+<li><a href="m3.html">Module 3 project</a></li>
+<li><a href="m3-1.html"><b class="tick" data-slug="m3-1"></b>3 Generate a dataset</a></li>
+</ul>
+<p class="grp">Module 4 · Software-in-the-loop</p><ul>
+<li><a href="m4.html">Module 4 project</a></li>
+<li><a href="m4-1.html"><b class="tick" data-slug="m4-1"></b>4.1 Driving from /cmd_vel</a></li>
+<li><a href="m4-2.html"><b class="tick" data-slug="m4-2"></b>4.2 Python scripting</a></li>
+<li><a href="m4-3.html"><b class="tick" data-slug="m4-3"></b>4.3 Camera images for Isaac ROS</a></li>
+</ul>
+<p class="grp">Module 5 · Hardware-in-the-loop</p><ul>
+<li><a href="m5.html">5 Hardware-in-the-loop</a></li>
+</ul>
+<p class="grp">Materials</p><ul>
+<li><a href="videos.html">All videos</a></li>
+<li><a href="diagrams.html">All diagrams</a></li>
+<li><a href="scripts.html">Checkpoint scripts</a></li>
+</ul>
+<p class="grp">Project</p><ul><li><a href="https://github.com/saeedahmadicp/isaac-sim-6-getting-started" target="_blank" rel="noopener">View on GitHub ↗</a></li></ul>
+</nav>
+<main><article><h1 id="lesson-23-adding-sensors-to-carter-isaac-sim-61">Lesson 2.3: Adding Sensors to Carter (Isaac Sim 6.1)<a class="headerlink" href="#lesson-23-adding-sensors-to-carter-isaac-sim-61" title="Permanent link">#</a></h1>
+<p>Course page: <em>Ingesting Robot Assets → Adding Sensors</em> (<code>…/03-adding-sensors.html</code>)</p>
+<p><strong>Goal:</strong> add an RGB camera and a lidar to the imported Carter and see obstacles with both.</p>
+<p>Start from your Carter scene from lesson 2.2 (<code>learning_resource/output/carter_scene.usd</code>).</p>
+<figure class="video"><video controls preload="metadata" src="../videos/2.3_adding_sensors.mp4"></video><figcaption>🎬 Narrated walkthrough · lesson ⏱ 30 min · <a href="../videos/subtitles/2.3_adding_sensors.srt">caption text (.srt)</a> · <a href="../videos/2.3_adding_sensors.mp4" download>download .mp4</a></figcaption></figure>
+<p><strong>You will learn to</strong></p>
+<ul>
+<li>Apply the module-1 sensor rules to an imported robot</li>
+<li>Edit a referenced asset (and know when your edits land in which file)</li>
+</ul>
+<figure class="diagram"><a href="../diagrams/m2-carter-sensors.png" target="_blank" title="open full size"><img alt="Sensors on the imported Carter" src="../diagrams/m2-carter-sensors.png" loading="lazy"></a><figcaption>Sensors on the imported Carter — <a href="../diagrams/m2-carter-sensors.html">interactive HTML</a></figcaption></figure>
+<h2 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">#</a></h2>
+<p><strong>Where do edits go?</strong> Adding a prim under a <em>referenced</em> robot writes an override into your <strong>scene</strong>
+file, not into <code>carter.usda</code>. Usually that's what you want (the sensor belongs to this experiment). To make
+the sensor part of the robot asset, open <code>carter.usda</code> itself and add it there.</p>
+<p><strong>Sensor frames.</strong> Camera prims look down their local −Z with +Y up; the course's rotation <code>(90, −90, 0)</code>
+turns that into "look along the robot's +X". If an image is sideways, it's always this rotation.</p>
+<hr />
+<h2 id="rgb-camera">RGB camera<a class="headerlink" href="#rgb-camera" title="Permanent link">#</a></h2>
+<ol>
+<li>Move the viewport close to Carter.</li>
+<li><strong>Create &gt; Camera</strong>. In the Stage panel, drag it under <strong>carter &gt; Geometry &gt; chassis_link</strong>.<blockquote class="change">
+<p>🔄 6.1 path: <code>carter/Geometry/chassis_link</code> (4.5: <code>Carter/chassis_link</code>).
+If the reference won't accept children, that's because you're editing a referenced asset. Put the
+camera in the same spot by opening <code>carter.usda</code> itself (<strong>File &gt; Open</strong>) and saving it there.
+Or keep the camera outside the robot and attach it with a fixed joint, as in lesson 1.3.</p>
+</blockquote>
+</li>
+<li>Rename it <strong>RGB_Sensor</strong>. Translate <strong>(0.1, 0.0, 0.33)</strong>, Rotate <strong>(90, −90, 0)</strong>.
+   Turn off snapping (magnet icon, left toolbar) if the values jump.</li>
+<li>Viewport camera menu → <strong>Cameras &gt; RGB_Sensor</strong> to check the view. Switch back to <strong>Perspective</strong>.</li>
+<li><strong>Play</strong>, drive with <strong>W A S D</strong>, and confirm the camera moves with Carter. <strong>Stop</strong>.</li>
+</ol>
+<h2 id="lidar">Lidar<a class="headerlink" href="#lidar" title="Permanent link">#</a></h2>
+<blockquote class="change">
+<p>🔄 Course: <strong>Create &gt; Isaac &gt; Sensors &gt; PhysX Lidar &gt; Rotating</strong> (4.2 path, PhysX lidar).
+6.1: use the <strong>RTX</strong> lidar. Same reasons as lesson 1.3.</p>
+</blockquote>
+<ol>
+<li>Select <strong>chassis_link</strong> → <strong>Create &gt; Sensors &gt; RTX Lidar &gt; NVIDIA &gt; Example Rotary 2D</strong>
+   (for a 3D scan, use <em>Example Rotary</em> or a real model, e.g. <em>Ouster</em>, <em>HESAI</em>, <em>SICK</em>).</li>
+<li>Make sure it's under <strong>chassis_link</strong>. Translate <strong>(−0.05, 0.0, 0.42)</strong>.</li>
+<li>To <em>see</em> the beams, use the <code>draw-point-cloud</code> writer snippet from
+   <a href="m1-3.html#part-3-2d-lidar-rtx">lesson 1.3, Part 3</a>, or publish to
+   ROS 2 and view it in RViz (<a href="m1-4.html">lesson 1.4</a>).</li>
+</ol>
+<h2 id="obstacles">Obstacles<a class="headerlink" href="#obstacles" title="Permanent link">#</a></h2>
+<ol>
+<li><strong>Create &gt; Mesh &gt; Cube / Sphere / Cylinder</strong>: place several around the grid at different
+   distances and angles.</li>
+<li><strong>Play</strong>.
+   * PhysX lidar (course): beams stay <strong>gray</strong> until the obstacles get colliders.
+   * RTX lidar (6.1): obstacles are <strong>detected right away</strong>, because RTX sees rendered geometry.</li>
+<li><strong>Stop</strong>, select all obstacles → right-click → <strong>Add &gt; Physics &gt; Rigid Body with Colliders Preset</strong>
+   (so Carter physically bumps into them).</li>
+<li><strong>Play</strong>, switch the viewport to <strong>RGB_Sensor</strong>, and drive with <strong>W A S D</strong>.</li>
+<li><strong>Stop</strong>, and switch back to <strong>Perspective</strong>. Otherwise navigating the viewport moves the camera prim.</li>
+</ol>
+<p><strong>File &gt; Save.</strong></p>
+<h2 id="check-your-result">Check your result<a class="headerlink" href="#check-your-result" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Do this</th>
+<th>You should see</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Viewport → Cameras → RGB_Sensor</td>
+<td>view from Carter's front</td>
+</tr>
+<tr>
+<td>Lidar prim path</td>
+<td><code>…/chassis_link/Example_Rotary_2D</code></td>
+</tr>
+<tr>
+<td>Drive into an obstacle with colliders</td>
+<td>Carter is stopped by it</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="exercises">Exercises<a class="headerlink" href="#exercises" title="Permanent link">#</a></h2>
+<ol>
+<li>Publish this lidar to ROS 2 (lesson 1.4 dialog) and view it in RViz while driving.</li>
+<li>Add a second camera looking backwards. Which rotation do you need?</li>
+</ol>
+<h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">#</a></h2>
+<ol>
+<li>
+<p>You added a camera under the referenced carter. Which file stores it?
+ <br />
+<details><summary>Answer</summary>Your scene file (as an override), not carter.usda.</details>
+</p>
+</li>
+<li>
+<p>Why does the RTX lidar see obstacles without colliders?
+ <br />
+<details><summary>Answer</summary>It is rendered, not physics-based.</details>
+</p>
+</li>
+</ol><label class="done"><input type="checkbox" data-slug="m2-3"> Mark this lesson as done</label><div class="pn"><a class="prev" href="m2-2.html"><small>Previous</small>2.2 Preparing the simulation</a><a class="next" href="m2-4.html"><small>Next</small>2.4 Nova Carter</a></div></article><aside class="toc"><p>On this page</p><ul><li class="l2"><a href="#concepts">Concepts</a></li><li class="l2"><a href="#rgb-camera">RGB camera</a></li><li class="l2"><a href="#lidar">Lidar</a></li><li class="l2"><a href="#obstacles">Obstacles</a></li><li class="l2"><a href="#check-your-result">Check your result</a></li><li class="l2"><a href="#exercises">Exercises</a></li><li class="l2"><a href="#quiz">Quiz</a></li></ul></aside></main>
+<script src="static/site.js"></script>
+</body></html>

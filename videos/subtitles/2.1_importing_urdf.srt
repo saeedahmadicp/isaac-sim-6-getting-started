@@ -1,0 +1,100 @@
+1
+00:00:00,500 --> 00:00:03,276
+Most real robots come as URDF files.
+
+2
+00:00:03,276 --> 00:00:08,518
+In this module you import Carter, a two wheeled robot with a caster,
+
+3
+00:00:08,518 --> 00:00:13,222
+using the rewritten URDF importer in Isaac Sim six point one.
+
+4
+00:00:14,122 --> 00:00:15,577
+Here is the pipeline.
+
+5
+00:00:15,577 --> 00:00:20,429
+The importer converts the URDF into a USD file plus a payloads folder.
+
+6
+00:00:20,429 --> 00:00:26,251
+New in six point one, the physics lives in a variant set with one option per engine.
+
+7
+00:00:26,251 --> 00:00:30,965
+Until you select the physx variant, the robot has no physics at all.
+
+8
+00:00:30,965 --> 00:00:36,718
+And the importer no longer configures drives, so you set the wheel drives yourself.
+
+9
+00:00:37,618 --> 00:00:38,565
+Let's import.
+
+10
+00:00:38,565 --> 00:00:41,188
+You do not need the course download.
+
+11
+00:00:41,188 --> 00:00:46,872
+The same Carter URDF ships with Isaac Sim, and a copy is in the assets folder.
+
+12
+00:00:46,872 --> 00:00:50,370
+Use File, Import, and select carter dot u r d f.
+
+13
+00:00:50,370 --> 00:00:56,200
+In the options panel, set the base type to mobile, because Carter drives around.
+
+14
+00:00:56,200 --> 00:00:57,147
+Click import.
+
+15
+00:00:57,147 --> 00:01:00,135
+The converted robot opens as a new stage.
+
+16
+00:01:01,035 --> 00:01:02,892
+Expand it in the stage panel.
+
+17
+00:01:02,892 --> 00:01:07,374
+Links live under Geometry, with chassis link as the articulation root.
+
+18
+00:01:07,374 --> 00:01:12,688
+Joints live under Physics: the two driven wheels and the two passive caster joints.
+
+19
+00:01:12,688 --> 00:01:16,082
+And on the top prim there is the physics variant set.
+
+20
+00:01:16,982 --> 00:01:18,869
+Two steps make it usable.
+
+21
+00:01:18,869 --> 00:01:24,076
+Select carter, open variants in the property panel, and choose physx.
+
+22
+00:01:24,076 --> 00:01:30,416
+Give the two wheel joints a velocity drive: stiffness zero and damping ten thousand.
+
+23
+00:01:30,416 --> 00:01:35,699
+Leave the caster joints passive, with zero stiffness and zero damping.
+
+24
+00:01:35,699 --> 00:01:36,077
+Save.
+
+25
+00:01:36,077 --> 00:01:38,794
+Your Carter is now a drivable robot.
+

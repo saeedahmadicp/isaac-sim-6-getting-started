@@ -1,0 +1,132 @@
+1
+00:00:00,500 --> 00:00:04,065
+In this lesson the lidar data leaves Isaac Sim.
+
+2
+00:00:04,065 --> 00:00:08,389
+You publish it as a ROS 2 laser scan and draw it in RViz.
+
+3
+00:00:09,289 --> 00:00:10,426
+Good news first.
+
+4
+00:00:10,426 --> 00:00:18,174
+Isaac Sim six point one ships its own ROS 2 Jazzy libraries, so you no longer source ROS before launching it.
+
+5
+00:00:18,174 --> 00:00:22,297
+The reference setup is Ubuntu twenty four point zero four,
+
+6
+00:00:22,297 --> 00:00:27,841
+which pairs with ROS 2 Jazzy; on Ubuntu twenty two point zero four use Humble.
+
+7
+00:00:27,841 --> 00:00:32,106
+Install system ROS only for the command line tools and RViz.
+
+8
+00:00:32,106 --> 00:00:36,300
+The setup file in the course folder has the exact commands.
+
+9
+00:00:37,200 --> 00:00:38,855
+This is the data path.
+
+10
+00:00:38,855 --> 00:00:43,294
+Each frame the RTX lidar is rendered into a render product.
+
+11
+00:00:43,294 --> 00:00:50,142
+The ROS 2 RTX lidar helper node turns it into a laser scan message on the scan lidar topic,
+
+12
+00:00:50,142 --> 00:00:52,249
+with the frame id sim lidar.
+
+13
+00:00:52,249 --> 00:00:56,086
+RViz subscribes to that topic and draws the points.
+
+14
+00:00:56,986 --> 00:00:59,497
+Building it takes one dialog.
+
+15
+00:00:59,497 --> 00:01:05,903
+Stop the simulation and open Tools, Robotics, ROS 2 OmniGraphs, RTX lidar.
+
+16
+00:01:05,903 --> 00:01:11,876
+Set the frame id to sim lidar and the laser scan topic to scan lidar.
+
+17
+00:01:11,876 --> 00:01:15,425
+Pick your lidar prim and tick laser scan.
+
+18
+00:01:15,425 --> 00:01:17,503
+Click OK and press play.
+
+19
+00:01:17,503 --> 00:01:19,321
+The topic now exists.
+
+20
+00:01:20,221 --> 00:01:22,081
+Now look at it from ROS.
+
+21
+00:01:22,081 --> 00:01:25,105
+Open a terminal and source ROS 2 Jazzy.
+
+22
+00:01:25,105 --> 00:01:27,586
+Run ros2 topic hz on scan lidar.
+
+23
+00:01:27,586 --> 00:01:31,075
+You should see about ten messages per second.
+
+24
+00:01:31,075 --> 00:01:31,927
+Start RViz.
+
+25
+00:01:31,927 --> 00:01:34,486
+Set the fixed frame to sim lidar.
+
+26
+00:01:34,486 --> 00:01:40,921
+Note: the course text says to use the topic name here, but it must be the frame id.
+
+27
+00:01:40,921 --> 00:01:46,735
+Then add a laser scan display by topic, and the obstacles appear as points.
+
+28
+00:01:47,635 --> 00:01:50,110
+If nothing arrives, check four things.
+
+29
+00:01:50,110 --> 00:01:51,803
+Is the simulation playing?
+
+30
+00:01:51,803 --> 00:01:54,734
+Do both terminals use the same ROS domain id?
+
+31
+00:01:54,734 --> 00:01:59,423
+Is the lidar under the chassis body rather than the fixed jointed mount?
+
+32
+00:01:59,423 --> 00:02:04,959
+And if you wrote your own subscriber, use the sensor data quality of service profile.
+
+33
+00:02:04,959 --> 00:02:11,407
+The checkpoint script tests all of this and expects the forward beam to read two and a half meters.
+

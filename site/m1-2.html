@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1.2 Controlling the robot · Isaac Sim 6.1 tutorial</title>
+<link rel="icon" href="static/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/site.css"><link rel="stylesheet" href="static/code.css">
+</head><body data-slug="m1-2">
+<button class="menu" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">☰</button>
+<nav class="side" id="side"><a class="brand" href="index.html"><span>Isaac Sim 6.1</span><small>Getting Started · learning path</small></a>
+<div class="search"><input id="q" type="search" placeholder="Search lessons…  ( / )" autocomplete="off"><div id="results"></div></div>
+<div class="progress"><div class="bar"><i id="pbar"></i></div><span id="ptext"></span></div>
+<p class="grp">Start</p><ul>
+<li><a href="index.html">Course home</a></li>
+<li><a href="whats-different.html">What changed in 6.1</a></li>
+<li><a href="setup-ros2.html">Set up ROS 2 Jazzy</a></li>
+</ul>
+<p class="grp">Module 1 · First robot</p><ul>
+<li><a href="m1.html">Module 1 project</a></li>
+<li><a href="m1-1.html"><b class="tick" data-slug="m1-1"></b>1.1 Building a simple robot</a></li>
+<li><a class="on" href="m1-2.html"><b class="tick" data-slug="m1-2"></b>1.2 Controlling the robot</a></li>
+<li><a href="m1-3.html"><b class="tick" data-slug="m1-3"></b>1.3 Adding sensors</a></li>
+<li><a href="m1-4.html"><b class="tick" data-slug="m1-4"></b>1.4 ROS 2 and RViz</a></li>
+</ul>
+<p class="grp">Module 2 · URDF &amp; Carter</p><ul>
+<li><a href="m2.html">Module 2 project</a></li>
+<li><a href="m2-1.html"><b class="tick" data-slug="m2-1"></b>2.1 Importing URDF</a></li>
+<li><a href="m2-2.html"><b class="tick" data-slug="m2-2"></b>2.2 Preparing the simulation</a></li>
+<li><a href="m2-3.html"><b class="tick" data-slug="m2-3"></b>2.3 Adding sensors</a></li>
+<li><a href="m2-4.html"><b class="tick" data-slug="m2-4"></b>2.4 Nova Carter</a></li>
+</ul>
+<p class="grp">Module 3 · Synthetic data</p><ul>
+<li><a href="m3.html">Module 3 project</a></li>
+<li><a href="m3-1.html"><b class="tick" data-slug="m3-1"></b>3 Generate a dataset</a></li>
+</ul>
+<p class="grp">Module 4 · Software-in-the-loop</p><ul>
+<li><a href="m4.html">Module 4 project</a></li>
+<li><a href="m4-1.html"><b class="tick" data-slug="m4-1"></b>4.1 Driving from /cmd_vel</a></li>
+<li><a href="m4-2.html"><b class="tick" data-slug="m4-2"></b>4.2 Python scripting</a></li>
+<li><a href="m4-3.html"><b class="tick" data-slug="m4-3"></b>4.3 Camera images for Isaac ROS</a></li>
+</ul>
+<p class="grp">Module 5 · Hardware-in-the-loop</p><ul>
+<li><a href="m5.html">5 Hardware-in-the-loop</a></li>
+</ul>
+<p class="grp">Materials</p><ul>
+<li><a href="videos.html">All videos</a></li>
+<li><a href="diagrams.html">All diagrams</a></li>
+<li><a href="scripts.html">Checkpoint scripts</a></li>
+</ul>
+<p class="grp">Project</p><ul><li><a href="https://github.com/saeedahmadicp/isaac-sim-6-getting-started" target="_blank" rel="noopener">View on GitHub ↗</a></li></ul>
+</nav>
+<main><article><h1 id="lesson-12-controlling-the-robot-isaac-sim-61">Lesson 1.2: Controlling the Robot (Isaac Sim 6.1)<a class="headerlink" href="#lesson-12-controlling-the-robot-isaac-sim-61" title="Permanent link">#</a></h1>
+<p>Course page: <em>Building Your First Robot → Controlling the Robot</em> (<code>…/02-controlling-the-robot.html</code>)</p>
+<p><strong>Goal:</strong> replace the fixed drive velocities with a <strong>Differential Controller</strong> Action Graph, first
+driven from the Property panel and then from <strong>W A S D</strong>.</p>
+<p><strong>Checkpoint script:</strong> <code>scripts/m2_import_carter.py</code> builds this exact graph in code (on Carter, lesson 2.2).
+The menu tool used below is the same in 4.5 and 6.1.</p>
+<figure class="video"><video controls preload="metadata" src="../videos/1.2_controlling_the_robot.mp4"></video><figcaption>🎬 Narrated walkthrough · lesson ⏱ 30 min · <a href="../videos/subtitles/1.2_controlling_the_robot.srt">caption text (.srt)</a> · <a href="../videos/1.2_controlling_the_robot.mp4" download>download .mp4</a></figcaption></figure>
+<p><strong>You will learn to</strong></p>
+<ul>
+<li>Read an <strong>Action Graph</strong> (OmniGraph): execution vs data connections</li>
+<li>Use the <strong>Differential Controller</strong> tool to generate a graph</li>
+<li>Map keyboard input to robot velocity</li>
+</ul>
+<figure class="diagram"><a href="../diagrams/m1-diff-controller.png" target="_blank" title="open full size"><img alt="The Differential Controller Action Graph" src="../diagrams/m1-diff-controller.png" loading="lazy"></a><figcaption>The Differential Controller Action Graph — <a href="../diagrams/m1-diff-controller.html">interactive HTML</a></figcaption></figure>
+<h2 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">#</a></h2>
+<p><strong>OmniGraph / Action Graphs.</strong> Visual programs stored in the stage. <em>Execution</em> wires (white) say
+<em>when</em> a node runs; <em>data</em> wires carry values. <code>On Playback Tick</code> fires once per simulated frame, so
+anything connected to it runs every frame while the timeline plays — and never while stopped.</p>
+<p><strong>Differential drive kinematics.</strong> For wheel radius <em>r</em> and track width <em>d</em>, a body velocity
+(<em>v</em> forward, <em>ω</em> turning) becomes wheel speeds</p>
+<div class="hl"><pre><span></span><code>ω_left  = (v − ω·d/2) / r
+ω_right = (v + ω·d/2) / r
+</code></pre></div>
+
+<p>That is all the <code>Differential Controller</code> node computes. Wrong <em>r</em> or <em>d</em> doesn't break the robot — it
+just makes it drive at the wrong speed or turn by the wrong angle.</p>
+<p><strong>Articulation Controller.</strong> Takes per-joint commands (position, velocity or effort arrays) plus joint
+names and writes them as drive targets on the articulation. It needs the articulation root to find joints.</p>
+<hr />
+<h2 id="part-1-differential-controller">Part 1: Differential Controller<a class="headerlink" href="#part-1-differential-controller" title="Permanent link">#</a></h2>
+<ol>
+<li>Open your robot from lesson 1.1 (or <code>learning_resource/output/simple_robot.usd</code>).</li>
+<li>Right-click <strong>SimpleRobot</strong> → <strong>Add &gt; Physics &gt; Articulation Root</strong>.
+   The controller looks up joints through the articulation, so this has to happen first.</li>
+<li>(Optional) Set the two rear drives' <em>Target Velocity</em> back to <strong>0</strong>, so only the controller moves the robot.</li>
+<li><strong>Tools &gt; Robotics &gt; OmniGraph Controllers &gt; Differential Controller</strong><blockquote class="change">
+<p>🔄 Same path as 4.5. In 4.2 it was <em>Isaac Utils &gt; Common Omnigraphs</em>.</p>
+</blockquote>
+</li>
+<li>
+<p>Fill in the dialog (6.1 field names):</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>graph path</td>
+<td>leave default <code>/Graphs/differential_controller</code></td>
+</tr>
+<tr>
+<td>Robot Prim</td>
+<td><strong>SimpleRobot</strong> (click <em>Add</em>/select in the picker)</td>
+</tr>
+<tr>
+<td>wheel radius</td>
+<td><strong>0.375</strong> (half the 0.75 m wheel)</td>
+</tr>
+<tr>
+<td>distance between wheels</td>
+<td><strong>1.5</strong></td>
+</tr>
+<tr>
+<td>Left Joint Name</td>
+<td><strong>Rear_Left_Joint</strong></td>
+</tr>
+<tr>
+<td>Right Joint Name</td>
+<td><strong>Rear_Right_Joint</strong></td>
+</tr>
+<tr>
+<td>Left/Right Joint Index</td>
+<td>leave −1 (names are used)</td>
+</tr>
+<tr>
+<td>Use Keyboard Control (WASD)</td>
+<td><strong>off</strong> for Part 1</td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<p>Click <strong>OK</strong>. The Stage panel now has <strong>Graphs &gt; differential_controller</strong>. Right-click it →
+   <strong>Open Graph</strong> to see the nodes:</p>
+<ul>
+<li><strong>On Playback Tick</strong>: fires every frame</li>
+<li><strong>Differential Controller</strong>: (linear, angular) velocity → left/right wheel speeds</li>
+<li><strong>Articulation Controller</strong>: applies the wheel speeds to the joints</li>
+<li><strong>ArrayNames</strong> (a <em>Make Array</em> node): the two joint names as tokens. Add inputs to drive more joints
+7. <strong>Play</strong>. Nothing moves, because <em>Desired Linear Velocity</em> = 0.
+8. Select the <strong>Differential Controller</strong> node and set <em>Linear Velocity</em> = <strong>1</strong> (forward),
+   <strong>−1</strong> (back), or <em>Angular Velocity</em> = <strong>1</strong> (turn). Keep values small.
+   The robot may hop a bit, because there are no friction materials yet (same as in the course).</li>
+</ul>
+</li>
+</ol>
+<h2 id="part-2-keyboard-control">Part 2: Keyboard control<a class="headerlink" href="#part-2-keyboard-control" title="Permanent link">#</a></h2>
+<p>Before rebuilding the graph, try a short prediction experiment. Keep the physical robot unchanged,
+set linear velocity to zero, and command angular velocity 1 rad/s. Then double only the controller's
+wheel-distance value from 1.5 to 3.0. Will it ask the wheels to turn faster or slower?</p>
+<details>
+<summary>Hint and explanation</summary>
+<p>In the formula above, the turning term is proportional to the configured wheel distance. Doubling
+that value doubles the requested wheel speeds for a pure turn. The physical track has not changed,
+so ideal rolling predicts a faster turn; friction and slip affect the measured result. Restore 1.5
+before continuing.</p>
+</details>
+<ol>
+<li><strong>Stop</strong>. Delete the graph from Part 1 (right-click <em>differential_controller</em> → Delete).</li>
+<li><strong>Tools &gt; Robotics &gt; OmniGraph Controllers &gt; Differential Controller</strong> again, with the same values
+   as above, but tick <strong>Use Keyboard Control (WASD)</strong>.</li>
+<li>Open the new graph. On the left you'll see four <strong>Read Keyboard State</strong> nodes (W, A, S, D).
+   Each goes through <em>To Double</em> and <em>Add/Multiply</em>, and is then scaled by the two <strong>Constant Double</strong>
+   nodes (<code>ScaleLinear</code>, <code>ScaleAngular</code>) before reaching the controller's linear/angular inputs.</li>
+<li><strong>Play</strong>, click into the viewport, and drive with <strong>W A S D</strong>.</li>
+<li>Too fast or too slow? Change <strong>ScaleLinear</strong> / <strong>ScaleAngular</strong> (the speed each key gives).</li>
+<li><strong>File &gt; Save</strong>.</li>
+</ol>
+<blockquote class="change">
+<p>🔄 <strong>6.1 detail:</strong> the keyboard nodes are <code>omni.graph.nodes.ReadKeyboardState</code>. If an old 4.x graph
+uses deprecated node names, <code>isaacsim.core.deprecation_manager</code> migrates them when you open the file.</p>
+</blockquote>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"Robot Prim" can't be picked / controller does nothing</td>
+<td>Add <strong>Articulation Root</strong> to <em>SimpleRobot</em> first</td>
+</tr>
+<tr>
+<td>Robot turns when it should go straight</td>
+<td>Left/right joint names swapped</td>
+</tr>
+<tr>
+<td>Keys do nothing</td>
+<td>Click inside the viewport so it has keyboard focus, and make sure the simulation is <strong>playing</strong></td>
+</tr>
+<tr>
+<td>Robot wanders back and forth</td>
+<td>Old fixed drive velocities (50) are still set. Set them to 0</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="check-your-result">Check your result<a class="headerlink" href="#check-your-result" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Do this</th>
+<th>You should see</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Play with Linear Velocity 0</td>
+<td>robot stands still</td>
+</tr>
+<tr>
+<td>Linear Velocity 1</td>
+<td>drives forward ≈ 1 m/s</td>
+</tr>
+<tr>
+<td>Angular Velocity 1</td>
+<td>turns left (counter-clockwise from above)</td>
+</tr>
+<tr>
+<td>Keyboard graph, hold W</td>
+<td>drives forward; A/D turn</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="exercises">Exercises<a class="headerlink" href="#exercises" title="Permanent link">#</a></h2>
+<ol>
+<li>Keep the wheel-distance setting correct and halve only the configured wheel radius. Predict the change in requested wheel speed for straight driving, test briefly, then restore 0.375 m.</li>
+<li>Make <strong>Shift+W</strong> a faster forward key (the keyboard nodes accept a modifier).</li>
+<li>Add the front joints to <code>ArrayNames</code> (4 names) and feed the controller output twice — what has to change in the graph?</li>
+</ol>
+<h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">#</a></h2>
+<ol>
+<li>
+<p>Why does nothing happen in the graph while the simulation is stopped?
+ <br />
+<details><summary>Answer</summary>Everything hangs off On Playback Tick, which only fires while the timeline plays.</details>
+</p>
+</li>
+<li>
+<p>What does the Articulation Controller need in order to find the joints?
+ <br />
+<details><summary>Answer</summary>An articulation root on the robot (and the joint names).</details>
+</p>
+</li>
+<li>
+<p>v = 1 m/s, ω = 0, r = 0.375 m — wheel speed?
+ <br />
+<details><summary>Answer</summary>1 / 0.375 ≈ 2.67 rad/s on both wheels.</details>
+</p>
+</li>
+</ol><label class="done"><input type="checkbox" data-slug="m1-2"> Mark this lesson as done</label><div class="pn"><a class="prev" href="m1-1.html"><small>Previous</small>1.1 Building a simple robot</a><a class="next" href="m1-3.html"><small>Next</small>1.3 Adding sensors</a></div></article><aside class="toc"><p>On this page</p><ul><li class="l2"><a href="#concepts">Concepts</a></li><li class="l2"><a href="#part-1-differential-controller">Part 1: Differential Controller</a></li><li class="l2"><a href="#part-2-keyboard-control">Part 2: Keyboard control</a></li><li class="l2"><a href="#troubleshooting">Troubleshooting</a></li><li class="l2"><a href="#check-your-result">Check your result</a></li><li class="l2"><a href="#exercises">Exercises</a></li><li class="l2"><a href="#quiz">Quiz</a></li></ul></aside></main>
+<script src="static/site.js"></script>
+</body></html>

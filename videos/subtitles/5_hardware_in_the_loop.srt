@@ -1,0 +1,60 @@
+1
+00:00:00,500 --> 00:00:03,697
+In hardware in the loop, the robot's real computer,
+
+2
+00:00:03,697 --> 00:00:06,331
+an NVIDIA Jetson, runs the robot software,
+
+3
+00:00:06,331 --> 00:00:10,844
+while Isaac Sim on your workstation simulates the world and the sensors.
+
+4
+00:00:11,744 --> 00:00:15,456
+Isaac Sim publishes clock, scan and camera topics.
+
+5
+00:00:15,456 --> 00:00:20,207
+They travel over the local network as DDS traffic to the Jetson,
+
+6
+00:00:20,207 --> 00:00:24,662
+where Isaac ROS and your perception or navigation nodes run.
+
+7
+00:00:24,662 --> 00:00:27,705
+Velocity commands come back the same way.
+
+8
+00:00:28,605 --> 00:00:31,489
+Four things to check on the simulation side.
+
+9
+00:00:31,489 --> 00:00:36,339
+Both machines on the same network, with the same domain id and middleware.
+
+10
+00:00:36,339 --> 00:00:39,616
+Publish the simulation clock with the clock graph.
+
+11
+00:00:39,616 --> 00:00:43,089
+Set use sim time to true for the nodes on the Jetson.
+
+12
+00:00:43,089 --> 00:00:47,939
+And if the Jetson runs Humble, launch Isaac Sim with the Humble libraries.
+
+13
+00:00:47,939 --> 00:00:51,806
+The Jetson setup itself follows the course pages unchanged.
+
+14
+00:00:51,806 --> 00:00:53,510
+That completes the course.
+
+15
+00:00:53,510 --> 00:00:58,098
+Congratulations, and enjoy building robots in Isaac Sim six point one.
+

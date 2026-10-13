@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 4.2 — the Python layers you script against</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Geist', system-ui, sans-serif; background: #f5f5f5; color: #2d3142;
+       display: flex; justify-content: center; padding: 3rem 2rem; }
+.frame { max-width: 1280px; width: 100%; }
+.eyebrow { font-family: 'Geist Mono', monospace; font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em;
+           text-transform: uppercase; color: #4f5d75; margin-bottom: 0.5rem; }
+h1 { font-family: 'Instrument Serif', serif; font-size: 2rem; font-weight: 400; letter-spacing: -0.02em;
+     margin-bottom: 1.5rem; }
+svg { width: 100%; min-width: 900px; display: block; }
+.colophon { font-family: 'Geist Mono', monospace; font-size: 0.66rem; color: #7a8399; margin-top: 1rem;
+            border-top: 1px solid rgba(45,49,66,0.12); padding-top: 0.75rem; }
+</style>
+</head>
+<body>
+<div class="frame">
+<p class="eyebrow">Layer stack · Lesson 4.2</p>
+<h1>Lesson 4.2 — the Python layers you script against</h1>
+<svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="m4-python-layers-title m4-python-layers-desc">
+<title id="m4-python-layers-title">Lesson 4.2 — the Python layers you script against</title>
+<desc id="m4-python-layers-desc">Layer stack of Isaac Sim 6.1 scripting: your script on top of isaacsim.core.experimental, Kit and omni services, OpenUSD pxr APIs and the PhysX and RTX engines; omni.isaac.core is removed and isaacsim.core.api deprecated.</desc>
+<defs>
+<marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+<marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+<marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#f5f5f5"/>
+<path d="M 1000.0,212.0 L 880.0,212.0" fill="none" stroke="#4f5d75" stroke-width="1.4" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+<path d="M 1000.0,324.0 L 948.0,324.0 Q 940.0,324.0 940.0,316.0 L 940.0,250.8 Q 940.0,242.8 932.0,242.8 L 880.0,242.8" fill="none" stroke="#4f5d75" stroke-width="1.4" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+<rect x="893.3" y="188.0" width="93.4" height="16" rx="2" fill="#f5f5f5"/><text x="940.0" y="200.0" fill="#7a8399" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.04em">REPLACED BY</text>
+<rect x="40" y="56" width="840" height="88" rx="6" fill="#f5f5f5"/>
+<rect x="40" y="56" width="840" height="88" rx="6" fill="rgba(79,93,117,0.10)" stroke="#7a8399" stroke-width="1"/>
+<text x="460.0" y="97.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Your script</text>
+<text x="460.0" y="116.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">SimulationApp (standalone)  ·  Window &gt; Script Editor (in the GUI)</text>
+<rect x="40" y="168" width="840" height="88" rx="6" fill="#f5f5f5"/>
+<rect x="40" y="168" width="840" height="88" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1"/>
+<text x="460.0" y="209.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">isaacsim.core.experimental</text>
+<text x="460.0" y="228.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">Cube · GroundPlane · RigidPrim · GeomPrim · Articulation · sensors</text>
+<rect x="40" y="280" width="840" height="88" rx="6" fill="#f5f5f5"/>
+<rect x="40" y="280" width="840" height="88" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="460.0" y="321.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Kit / omni</text>
+<text x="460.0" y="340.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">omni.usd · omni.kit.commands · omni.timeline · omni.graph (OmniGraph)</text>
+<rect x="40" y="392" width="840" height="88" rx="6" fill="#f5f5f5"/>
+<rect x="40" y="392" width="840" height="88" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="460.0" y="433.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">OpenUSD  (pxr)</text>
+<text x="460.0" y="452.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">Usd · UsdGeom · UsdPhysics · PhysxSchema — stable across versions</text>
+<rect x="40" y="504" width="840" height="88" rx="6" fill="#f5f5f5"/>
+<rect x="40" y="504" width="840" height="88" rx="6" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)" stroke-width="1"/>
+<text x="460.0" y="545.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Engines</text>
+<text x="460.0" y="564.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">PhysX (or Newton) physics · RTX renderer · RTX sensors</text>
+<rect x="1000" y="168" width="240" height="88" rx="6" fill="#f5f5f5"/>
+<rect x="1000" y="168" width="240" height="88" rx="6" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.20)" stroke-width="1" stroke-dasharray="4,3"/>
+<text x="1120.0" y="209.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">omni.isaac.core</text>
+<text x="1120.0" y="228.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">4.x · removed</text>
+<rect x="1000" y="280" width="240" height="88" rx="6" fill="#f5f5f5"/>
+<rect x="1000" y="280" width="240" height="88" rx="6" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.20)" stroke-width="1" stroke-dasharray="4,3"/>
+<text x="1120.0" y="321.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">isaacsim.core.api</text>
+<text x="1120.0" y="340.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">5.x · deprecated</text>
+<line x1="40" y1="668" x2="1240" y2="668" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="40" y="688" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">LEGEND</text>
+<rect x="120" y="678" width="20" height="12" rx="2" fill="rgba(79,93,117,0.10)" stroke="#7a8399"/>
+<text x="148" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Input / user</text>
+<rect x="244" y="678" width="20" height="12" rx="2" fill="rgba(235,108,54,0.08)" stroke="#eb6c36"/>
+<text x="272" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Focal (key idea)</text>
+<rect x="396" y="678" width="20" height="12" rx="2" fill="#ffffff" stroke="#2d3142"/>
+<text x="424" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Step / component</text>
+<rect x="548" y="678" width="20" height="12" rx="2" fill="rgba(45,49,66,0.03)" stroke="rgba(45,49,66,0.30)"/>
+<text x="576" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">External system</text>
+<rect x="693" y="678" width="20" height="12" rx="2" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.20)" stroke-dasharray="4,3"/>
+<text x="721" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Optional / deprecated</text>
+<line x1="880" y1="684" x2="908" y2="684" stroke="#4f5d75" stroke-width="1.4" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+<text x="916" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Optional / async</text>
+</svg>
+<p class="colophon">Isaac Sim 6.1 learning resource · learning_resource/diagrams/m4-python-layers.html</p>
+</div>
+</body>
+</html>

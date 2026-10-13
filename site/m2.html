@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Module 2 project · Isaac Sim 6.1 tutorial</title>
+<link rel="icon" href="static/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/site.css"><link rel="stylesheet" href="static/code.css">
+</head><body data-slug="m2">
+<button class="menu" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">☰</button>
+<nav class="side" id="side"><a class="brand" href="index.html"><span>Isaac Sim 6.1</span><small>Getting Started · learning path</small></a>
+<div class="search"><input id="q" type="search" placeholder="Search lessons…  ( / )" autocomplete="off"><div id="results"></div></div>
+<div class="progress"><div class="bar"><i id="pbar"></i></div><span id="ptext"></span></div>
+<p class="grp">Start</p><ul>
+<li><a href="index.html">Course home</a></li>
+<li><a href="whats-different.html">What changed in 6.1</a></li>
+<li><a href="setup-ros2.html">Set up ROS 2 Jazzy</a></li>
+</ul>
+<p class="grp">Module 1 · First robot</p><ul>
+<li><a href="m1.html">Module 1 project</a></li>
+<li><a href="m1-1.html"><b class="tick" data-slug="m1-1"></b>1.1 Building a simple robot</a></li>
+<li><a href="m1-2.html"><b class="tick" data-slug="m1-2"></b>1.2 Controlling the robot</a></li>
+<li><a href="m1-3.html"><b class="tick" data-slug="m1-3"></b>1.3 Adding sensors</a></li>
+<li><a href="m1-4.html"><b class="tick" data-slug="m1-4"></b>1.4 ROS 2 and RViz</a></li>
+</ul>
+<p class="grp">Module 2 · URDF &amp; Carter</p><ul>
+<li><a class="on" href="m2.html">Module 2 project</a></li>
+<li><a href="m2-1.html"><b class="tick" data-slug="m2-1"></b>2.1 Importing URDF</a></li>
+<li><a href="m2-2.html"><b class="tick" data-slug="m2-2"></b>2.2 Preparing the simulation</a></li>
+<li><a href="m2-3.html"><b class="tick" data-slug="m2-3"></b>2.3 Adding sensors</a></li>
+<li><a href="m2-4.html"><b class="tick" data-slug="m2-4"></b>2.4 Nova Carter</a></li>
+</ul>
+<p class="grp">Module 3 · Synthetic data</p><ul>
+<li><a href="m3.html">Module 3 project</a></li>
+<li><a href="m3-1.html"><b class="tick" data-slug="m3-1"></b>3 Generate a dataset</a></li>
+</ul>
+<p class="grp">Module 4 · Software-in-the-loop</p><ul>
+<li><a href="m4.html">Module 4 project</a></li>
+<li><a href="m4-1.html"><b class="tick" data-slug="m4-1"></b>4.1 Driving from /cmd_vel</a></li>
+<li><a href="m4-2.html"><b class="tick" data-slug="m4-2"></b>4.2 Python scripting</a></li>
+<li><a href="m4-3.html"><b class="tick" data-slug="m4-3"></b>4.3 Camera images for Isaac ROS</a></li>
+</ul>
+<p class="grp">Module 5 · Hardware-in-the-loop</p><ul>
+<li><a href="m5.html">5 Hardware-in-the-loop</a></li>
+</ul>
+<p class="grp">Materials</p><ul>
+<li><a href="videos.html">All videos</a></li>
+<li><a href="diagrams.html">All diagrams</a></li>
+<li><a href="scripts.html">Checkpoint scripts</a></li>
+</ul>
+<p class="grp">Project</p><ul><li><a href="https://github.com/saeedahmadicp/isaac-sim-6-getting-started" target="_blank" rel="noopener">View on GitHub ↗</a></li></ul>
+</nav>
+<main><article><h1 id="module-2-ingesting-robot-assets-project">Module 2 — Ingesting Robot Assets (project)<a class="headerlink" href="#module-2-ingesting-robot-assets-project" title="Permanent link">#</a></h1>
+<p><strong>Project goal:</strong> take a robot that only exists as a URDF file (Carter), turn it into a drivable,
+sensor-equipped Isaac Sim robot — then compare it with NVIDIA's production Nova Carter.</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>#</th>
+<th>Lesson</th>
+<th>Video</th>
+<th>Diagram(s)</th>
+<th>Checkpoint</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2.1</td>
+<td><a href="m2-1.html">Importing URDF</a></td>
+<td><a href="../videos/2.1_importing_urdf.mp4">▶ 2.1</a></td>
+<td><a href="../diagrams/m2-urdf-pipeline.png">pipeline</a> · <a href="../diagrams/m2-carter-structure.png">asset structure</a></td>
+<td><code>m2_import_carter.py</code></td>
+</tr>
+<tr>
+<td>2.2</td>
+<td><a href="m2-2.html">Preparing the simulation</a></td>
+<td><a href="../videos/2.2_preparing_the_simulation.mp4">▶ 2.2</a></td>
+<td><a href="../diagrams/m2-carter-drive.png">controller numbers</a></td>
+<td><code>m2_import_carter.py</code></td>
+</tr>
+<tr>
+<td>2.3</td>
+<td><a href="m2-3.html">Adding sensors</a></td>
+<td><a href="../videos/2.3_adding_sensors.mp4">▶ 2.3</a></td>
+<td><a href="../diagrams/m2-carter-sensors.png">sensor layout</a></td>
+<td>—</td>
+</tr>
+<tr>
+<td>2.4</td>
+<td><a href="m2-4.html">Nova Carter</a></td>
+<td><a href="../videos/2.4_nova_carter.mp4">▶ 2.4</a></td>
+<td><a href="../diagrams/m2-nova-carter.png">sensor suite</a></td>
+<td>—</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="project-milestones">Project milestones<a class="headerlink" href="#project-milestones" title="Permanent link">#</a></h2>
+<ul>
+<li>[ ] <code>carter.usda</code> imported, <strong>physx</strong> variant selected, wheel drives set (2.1)</li>
+<li>[ ] Carter in a Flat Grid scene, driven with W A S D, ≤ 0.5 m/s (2.2) — <code>m2_import_carter.py --headless --test</code> passes</li>
+<li>[ ] RGB_Sensor + RTX lidar on <code>chassis_link</code>, obstacles detected (2.3)</li>
+<li>[ ] Nova Carter loaded and its sensors identified (2.4)</li>
+</ul>
+<p><strong>Stretch project:</strong> import a different URDF (e.g. <code>exts/isaacsim.robot_motion.cumotion/robot_configurations/ur10/robot.urdf</code>
+with <em>Base Type = Fixed</em>) and move one joint with a position drive.</p>
+<h2 id="choose-where-to-go-next">Choose where to go next<a class="headerlink" href="#choose-where-to-go-next" title="Permanent link">#</a></h2>
+<p>Compare one joint and one sensor on your imported Carter with Nova Carter. Describe which settings
+you had to supply yourself and which arrived with the prepared asset.</p>
+<p>For perception data, continue to <a href="m3.html">Module 3</a>. To drive the prepared robot
+from ROS 2 and explore Python scripting, continue to <a href="m4.html">Module 4</a>.</p><div class="pn"><a class="prev" href="m1-4.html"><small>Previous</small>1.4 ROS 2 and RViz</a><a class="next" href="m2-1.html"><small>Next</small>2.1 Importing URDF</a></div></article></main>
+<script src="static/site.js"></script>
+</body></html>

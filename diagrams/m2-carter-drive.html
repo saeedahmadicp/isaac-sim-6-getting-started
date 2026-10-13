@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 2.2 — where the controller numbers come from</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Geist', system-ui, sans-serif; background: #f5f5f5; color: #2d3142;
+       display: flex; justify-content: center; padding: 3rem 2rem; }
+.frame { max-width: 1280px; width: 100%; }
+.eyebrow { font-family: 'Geist Mono', monospace; font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em;
+           text-transform: uppercase; color: #4f5d75; margin-bottom: 0.5rem; }
+h1 { font-family: 'Instrument Serif', serif; font-size: 2rem; font-weight: 400; letter-spacing: -0.02em;
+     margin-bottom: 1.5rem; }
+svg { width: 100%; min-width: 900px; display: block; }
+.colophon { font-family: 'Geist Mono', monospace; font-size: 0.66rem; color: #7a8399; margin-top: 1rem;
+            border-top: 1px solid rgba(45,49,66,0.12); padding-top: 0.75rem; }
+</style>
+</head>
+<body>
+<div class="frame">
+<p class="eyebrow">Data flow · Lesson 2.2</p>
+<h1>Lesson 2.2 — where the controller numbers come from</h1>
+<svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="m2-carter-drive-title m2-carter-drive-desc">
+<title id="m2-carter-drive-title">Lesson 2.2 — where the controller numbers come from</title>
+<desc id="m2-carter-drive-desc">The Differential Controller parameters for Carter come straight from the URDF: wheel radius 0.24 m from the wheel cylinder and wheel distance 0.6284 m from the joint offsets; keyboard input then drives left_wheel and right_wheel through the articulation controller, clamped to 0.5 m/s.</desc>
+<defs>
+<marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+<marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+<marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#f5f5f5"/>
+<path d="M 280.0,168.0 L 312.0,168.0 Q 320.0,168.0 320.0,176.0 L 320.0,241.6 Q 320.0,249.6 328.0,249.6 L 360.0,249.6" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 280.0,384.0 L 312.0,384.0 Q 320.0,384.0 320.0,376.0 L 320.0,302.4 Q 320.0,294.4 328.0,294.4 L 360.0,294.4" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 500.0,456.0 L 500.0,328.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 640.0,272.0 L 720.0,272.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 960.0,272.0 L 1000.0,272.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<rect x="40" y="120" width="240" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="40" y="120" width="240" height="96" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+<text x="160.0" y="157.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Wheel cylinder</text>
+<text x="160.0" y="176.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">radius 0.240</text>
+<text x="160.0" y="192.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">carter.urdf</text>
+<rect x="40" y="336" width="240" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="40" y="336" width="240" height="96" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+<text x="160.0" y="373.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Wheel joint origins</text>
+<text x="160.0" y="392.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">y = ±0.3142</text>
+<text x="160.0" y="408.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">carter.urdf</text>
+<rect x="360" y="216" width="280" height="112" rx="6" fill="#f5f5f5"/>
+<rect x="360" y="216" width="280" height="112" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1"/>
+<text x="500.0" y="261.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Differential Controller</text>
+<text x="500.0" y="280.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">wheelRadius 0.24</text>
+<text x="500.0" y="296.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">wheelDistance 0.6284</text>
+<rect x="400" y="456" width="200" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="400" y="456" width="200" height="96" rx="6" fill="rgba(79,93,117,0.10)" stroke="#7a8399" stroke-width="1"/>
+<text x="500.0" y="501.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">W A S D</text>
+<text x="500.0" y="520.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">keyboard graph</text>
+<rect x="720" y="216" width="240" height="112" rx="6" fill="#f5f5f5"/>
+<rect x="720" y="216" width="240" height="112" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="840.0" y="261.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Articulation Ctrl</text>
+<text x="840.0" y="280.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">left_wheel</text>
+<text x="840.0" y="296.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">right_wheel</text>
+<rect x="1000" y="216" width="232" height="112" rx="6" fill="#f5f5f5"/>
+<rect x="1000" y="216" width="232" height="112" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="1116.0" y="261.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Carter drives</text>
+<text x="1116.0" y="280.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">≤ 0.5 m/s</text>
+<text x="1116.0" y="296.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">≤ 1.0 rad/s</text>
+<line x1="40" y1="668" x2="1240" y2="668" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="40" y="688" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">LEGEND</text>
+<rect x="120" y="678" width="20" height="12" rx="2" fill="rgba(45,49,66,0.05)" stroke="#4f5d75"/>
+<text x="148" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">File / state</text>
+<rect x="244" y="678" width="20" height="12" rx="2" fill="rgba(235,108,54,0.08)" stroke="#eb6c36"/>
+<text x="272" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Focal (key idea)</text>
+<rect x="396" y="678" width="20" height="12" rx="2" fill="rgba(79,93,117,0.10)" stroke="#7a8399"/>
+<text x="424" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Input / user</text>
+<rect x="520" y="678" width="20" height="12" rx="2" fill="#ffffff" stroke="#2d3142"/>
+<text x="548" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Step / component</text>
+<line x1="672" y1="684" x2="700" y2="684" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<text x="708" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Flow</text>
+</svg>
+<p class="colophon">Isaac Sim 6.1 learning resource · learning_resource/diagrams/m2-carter-drive.html</p>
+</div>
+</body>
+</html>

@@ -1,0 +1,112 @@
+1
+00:00:00,500 --> 00:00:05,157
+Now the robot gets eyes: an RGB camera and a two dimensional lidar.
+
+2
+00:00:05,157 --> 00:00:12,386
+This is the lesson where Isaac Sim six point one differs most from the course, so watch for the warning.
+
+3
+00:00:13,286 --> 00:00:15,117
+The camera follows the course.
+
+4
+00:00:15,117 --> 00:00:18,901
+Create an Xform called Front Sensor at the front of the robot,
+
+5
+00:00:18,901 --> 00:00:22,807
+make it a rigid body, and fix it to the cube with a fixed joint.
+
+6
+00:00:22,807 --> 00:00:28,422
+Add a camera under the mount and rotate it minus ninety degrees about Y so it looks forward.
+
+7
+00:00:28,422 --> 00:00:32,451
+Use the camera menu at the top of the viewport to look through it.
+
+8
+00:00:32,451 --> 00:00:39,042
+And open a second viewport from Window, Viewports, so you can watch the scene and the robot's view together.
+
+9
+00:00:39,942 --> 00:00:41,593
+The lidar is different.
+
+10
+00:00:41,593 --> 00:00:46,471
+The course used a PhysX lidar, which is deprecated in six point one.
+
+11
+00:00:46,471 --> 00:00:48,839
+Its replacement is the RTX lidar.
+
+12
+00:00:48,839 --> 00:00:57,448
+While testing this lesson we found a trap: an RTX lidar placed on the fixed jointed sensor body produces no data at all,
+
+13
+00:00:57,448 --> 00:00:58,453
+with no error.
+
+14
+00:00:58,453 --> 00:01:05,699
+Placed directly under the chassis body it works, which is also how NVIDIA's own Nova Carter is built.
+
+15
+00:01:06,599 --> 00:01:09,209
+So here is the six point one recipe.
+
+16
+00:01:09,209 --> 00:01:11,675
+Select the cube, the chassis body.
+
+17
+00:01:11,675 --> 00:01:16,750
+Create an RTX lidar using the NVIDIA example rotary 2 D configuration.
+
+18
+00:01:16,750 --> 00:01:18,635
+It appears under the cube.
+
+19
+00:01:18,635 --> 00:01:22,478
+Set its translate to zero point four five, zero, one.
+
+20
+00:01:22,478 --> 00:01:29,584
+These are cube local units, so that means zero point nine meters forward and above the wheel tops.
+
+21
+00:01:29,584 --> 00:01:33,282
+Any lower and the scan hits the robot's own wheels.
+
+22
+00:01:33,282 --> 00:01:35,892
+Then scatter a few obstacles around.
+
+23
+00:01:35,892 --> 00:01:40,532
+The RTX lidar sees any rendered surface, even without colliders.
+
+24
+00:01:41,432 --> 00:01:42,807
+One more difference.
+
+25
+00:01:42,807 --> 00:01:45,625
+The RTX lidar has no draw lines checkbox.
+
+26
+00:01:45,625 --> 00:01:48,993
+To see its beams, either stream the scan to RViz,
+
+27
+00:01:48,993 --> 00:01:54,972
+which is the next lesson, or attach the draw point cloud writer from the script editor,
+
+28
+00:01:54,972 --> 00:01:56,897
+as shown in the lesson file.
+

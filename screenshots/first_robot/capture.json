@@ -1,0 +1,39 @@
+{
+  "stage": "learning_resource/output/simple_robot.usd",
+  "frames": [
+    {
+      "file": "assembled.png",
+      "mean_rgb": 150.05,
+      "std_rgb": 22.05,
+      "body_position": [
+        0.0,
+        0.0,
+        0.375
+      ]
+    },
+    {
+      "file": "driving.png",
+      "mean_rgb": 149.39,
+      "std_rgb": 23.0,
+      "body_position": [
+        0.9588142037391663,
+        8.841280941851437e-05,
+        0.37444499135017395
+      ]
+    },
+    {
+      "file": "wheel-layout.png",
+      "mean_rgb": 138.52,
+      "std_rgb": 26.45,
+      "body_position": [
+        0.9588142037391663,
+        8.841280941851437e-05,
+        0.37444499135017395
+      ]
+    }
+  ],
+  "updates": 180,
+  "timeline_seconds": 2.9999999999999942,
+  "displacement_x_m": 0.9588142037391663,
+  "presentation_changes": "Camera, lights, chassis/wheel display colours only; physics unchanged."
+}

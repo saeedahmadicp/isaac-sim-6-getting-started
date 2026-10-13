@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lesson 1.2 — the Differential Controller graph</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Geist', system-ui, sans-serif; background: #f5f5f5; color: #2d3142;
+       display: flex; justify-content: center; padding: 3rem 2rem; }
+.frame { max-width: 1280px; width: 100%; }
+.eyebrow { font-family: 'Geist Mono', monospace; font-size: 0.66rem; font-weight: 500; letter-spacing: 0.18em;
+           text-transform: uppercase; color: #4f5d75; margin-bottom: 0.5rem; }
+h1 { font-family: 'Instrument Serif', serif; font-size: 2rem; font-weight: 400; letter-spacing: -0.02em;
+     margin-bottom: 1.5rem; }
+svg { width: 100%; min-width: 900px; display: block; }
+.colophon { font-family: 'Geist Mono', monospace; font-size: 0.66rem; color: #7a8399; margin-top: 1rem;
+            border-top: 1px solid rgba(45,49,66,0.12); padding-top: 0.75rem; }
+</style>
+</head>
+<body>
+<div class="frame">
+<p class="eyebrow">Data flow · Lesson 1.2</p>
+<h1>Lesson 1.2 — the Differential Controller graph</h1>
+<svg viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="m1-diff-controller-title m1-diff-controller-desc">
+<title id="m1-diff-controller-title">Lesson 1.2 — the Differential Controller graph</title>
+<desc id="m1-diff-controller-desc">Action Graph built by Tools &gt; Robotics &gt; OmniGraph Controllers &gt; Differential Controller: keyboard keys become linear and angular velocity, the controller turns them into wheel speeds and the articulation controller drives the rear joints every frame.</desc>
+<defs>
+<marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+<marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+<marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/></marker>
+</defs>
+<rect width="100%" height="100%" fill="#f5f5f5"/>
+<path d="M 216.0,168.0 L 256.0,168.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 464.0,168.0 L 504.0,168.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 744.0,168.0 L 784.0,168.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 1008.0,168.0 L 1048.0,168.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 624.0,360.0 L 624.0,216.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 744.0,408.0 L 832.0,408.0 Q 840.0,408.0 840.0,400.0 L 840.0,216.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<path d="M 1048.0,408.0 L 960.0,408.0 Q 952.0,408.0 952.0,400.0 L 952.0,216.0" fill="none" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<rect x="632.0" y="280.0" width="41.6" height="16" rx="2" fill="#f5f5f5"/><text x="652.8" y="292.0" fill="#7a8399" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.04em">EXEC</text>
+<rect x="848.0" y="304.0" width="41.6" height="16" rx="2" fill="#f5f5f5"/><text x="868.8" y="316.0" fill="#7a8399" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.04em">EXEC</text>
+<rect x="960.0" y="304.0" width="93.4" height="16" rx="2" fill="#f5f5f5"/><text x="1006.7" y="316.0" fill="#7a8399" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.04em">JOINT NAMES</text>
+<rect x="40" y="120" width="176" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="40" y="120" width="176" height="96" rx="6" fill="rgba(79,93,117,0.10)" stroke="#7a8399" stroke-width="1"/>
+<text x="128.0" y="165.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Keyboard</text>
+<text x="128.0" y="184.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">W A S D</text>
+<rect x="256" y="120" width="208" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="256" y="120" width="208" height="96" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="360.0" y="157.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Keys → speed</text>
+<text x="360.0" y="176.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">ToDouble · Add</text>
+<text x="360.0" y="192.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">ScaleLinear/Angular</text>
+<rect x="504" y="120" width="240" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="504" y="120" width="240" height="96" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1"/>
+<text x="624.0" y="165.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Differential Controller</text>
+<text x="624.0" y="184.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">r 0.375 · d 1.5</text>
+<rect x="784" y="120" width="224" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="784" y="120" width="224" height="96" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="896.0" y="165.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Articulation Ctrl</text>
+<text x="896.0" y="184.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">velocityCommand</text>
+<rect x="1048" y="120" width="192" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="1048" y="120" width="192" height="96" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+<text x="1144.0" y="157.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Rear joints</text>
+<text x="1144.0" y="176.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">Rear_Left_Joint</text>
+<text x="1144.0" y="192.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">Rear_Right_Joint</text>
+<rect x="504" y="360" width="240" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="504" y="360" width="240" height="96" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="624.0" y="405.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">On Playback Tick</text>
+<text x="624.0" y="424.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">fires every frame</text>
+<rect x="1048" y="360" width="192" height="96" rx="6" fill="#f5f5f5"/>
+<rect x="1048" y="360" width="192" height="96" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+<text x="1144.0" y="405.0" fill="#2d3142" font-size="16" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">ArrayNames</text>
+<text x="1144.0" y="424.0" fill="#4f5d75" font-size="12" font-family="'Geist Mono', monospace" text-anchor="middle">Make Array (token[])</text>
+<line x1="40" y1="668" x2="1240" y2="668" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+<text x="40" y="688" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">LEGEND</text>
+<rect x="120" y="678" width="20" height="12" rx="2" fill="rgba(79,93,117,0.10)" stroke="#7a8399"/>
+<text x="148" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Input / user</text>
+<rect x="244" y="678" width="20" height="12" rx="2" fill="#ffffff" stroke="#2d3142"/>
+<text x="272" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Step / component</text>
+<rect x="396" y="678" width="20" height="12" rx="2" fill="rgba(235,108,54,0.08)" stroke="#eb6c36"/>
+<text x="424" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Focal (key idea)</text>
+<rect x="548" y="678" width="20" height="12" rx="2" fill="rgba(45,49,66,0.05)" stroke="#4f5d75"/>
+<text x="576" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">File / state</text>
+<line x1="672" y1="684" x2="700" y2="684" stroke="#4f5d75" stroke-width="1.4" marker-end="url(#arrow)"/>
+<text x="708" y="688" fill="#4f5d75" font-size="10" font-family="'Geist', sans-serif">Flow</text>
+</svg>
+<p class="colophon">Isaac Sim 6.1 learning resource · learning_resource/diagrams/m1-diff-controller.html</p>
+</div>
+</body>
+</html>

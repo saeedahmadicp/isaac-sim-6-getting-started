@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4.1 Driving from /cmd_vel · Isaac Sim 6.1 tutorial</title>
+<link rel="icon" href="static/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/site.css"><link rel="stylesheet" href="static/code.css">
+</head><body data-slug="m4-1">
+<button class="menu" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">☰</button>
+<nav class="side" id="side"><a class="brand" href="index.html"><span>Isaac Sim 6.1</span><small>Getting Started · learning path</small></a>
+<div class="search"><input id="q" type="search" placeholder="Search lessons…  ( / )" autocomplete="off"><div id="results"></div></div>
+<div class="progress"><div class="bar"><i id="pbar"></i></div><span id="ptext"></span></div>
+<p class="grp">Start</p><ul>
+<li><a href="index.html">Course home</a></li>
+<li><a href="whats-different.html">What changed in 6.1</a></li>
+<li><a href="setup-ros2.html">Set up ROS 2 Jazzy</a></li>
+</ul>
+<p class="grp">Module 1 · First robot</p><ul>
+<li><a href="m1.html">Module 1 project</a></li>
+<li><a href="m1-1.html"><b class="tick" data-slug="m1-1"></b>1.1 Building a simple robot</a></li>
+<li><a href="m1-2.html"><b class="tick" data-slug="m1-2"></b>1.2 Controlling the robot</a></li>
+<li><a href="m1-3.html"><b class="tick" data-slug="m1-3"></b>1.3 Adding sensors</a></li>
+<li><a href="m1-4.html"><b class="tick" data-slug="m1-4"></b>1.4 ROS 2 and RViz</a></li>
+</ul>
+<p class="grp">Module 2 · URDF &amp; Carter</p><ul>
+<li><a href="m2.html">Module 2 project</a></li>
+<li><a href="m2-1.html"><b class="tick" data-slug="m2-1"></b>2.1 Importing URDF</a></li>
+<li><a href="m2-2.html"><b class="tick" data-slug="m2-2"></b>2.2 Preparing the simulation</a></li>
+<li><a href="m2-3.html"><b class="tick" data-slug="m2-3"></b>2.3 Adding sensors</a></li>
+<li><a href="m2-4.html"><b class="tick" data-slug="m2-4"></b>2.4 Nova Carter</a></li>
+</ul>
+<p class="grp">Module 3 · Synthetic data</p><ul>
+<li><a href="m3.html">Module 3 project</a></li>
+<li><a href="m3-1.html"><b class="tick" data-slug="m3-1"></b>3 Generate a dataset</a></li>
+</ul>
+<p class="grp">Module 4 · Software-in-the-loop</p><ul>
+<li><a href="m4.html">Module 4 project</a></li>
+<li><a class="on" href="m4-1.html"><b class="tick" data-slug="m4-1"></b>4.1 Driving from /cmd_vel</a></li>
+<li><a href="m4-2.html"><b class="tick" data-slug="m4-2"></b>4.2 Python scripting</a></li>
+<li><a href="m4-3.html"><b class="tick" data-slug="m4-3"></b>4.3 Camera images for Isaac ROS</a></li>
+</ul>
+<p class="grp">Module 5 · Hardware-in-the-loop</p><ul>
+<li><a href="m5.html">5 Hardware-in-the-loop</a></li>
+</ul>
+<p class="grp">Materials</p><ul>
+<li><a href="videos.html">All videos</a></li>
+<li><a href="diagrams.html">All diagrams</a></li>
+<li><a href="scripts.html">Checkpoint scripts</a></li>
+</ul>
+<p class="grp">Project</p><ul><li><a href="https://github.com/saeedahmadicp/isaac-sim-6-getting-started" target="_blank" rel="noopener">View on GitHub ↗</a></li></ul>
+</nav>
+<main><article><h1 id="lesson-41-using-omnigraph-to-drive-a-robot-from-ros-2-isaac-sim-61">Lesson 4.1: Using OmniGraph to Drive a Robot from ROS 2 (Isaac Sim 6.1)<a class="headerlink" href="#lesson-41-using-omnigraph-to-drive-a-robot-from-ros-2-isaac-sim-61" title="Permanent link">#</a></h1>
+<p>Course page: <em>Developing Robots With SIL → Using OmniGraph to Drive a Robot in Isaac Sim</em>
+(<code>…/developing-robots-with-sil-in-isaac-sim/03-using-omnigraph-to-drive-a-robot-in-isaac-sim.html</code>)</p>
+<p>The concept lessons before it (<em>Intelligent Robots</em>, <em>Software-in-the-Loop</em>) apply to any version.
+Read them on the course site.</p>
+<p><strong>Goal:</strong> Nova Carter in the Simple Room, driven by ROS 2 <code>geometry_msgs/Twist</code> messages on <code>/cmd_vel</code>
+(from <code>ros2 topic pub</code> or <code>teleop_twist_keyboard</code>).</p>
+<p><strong>Checkpoint script:</strong> <code>scripts/m4_nova_carter_cmd_vel.py</code>
+<strong>Expected result:</strong> publishing <code>linear.x = 0.5</code> on <code>/cmd_vel</code> moves Nova Carter more than 1 m in
+about 3.5 s (the checkpoint publishes real ROS 2 messages and checks this).</p>
+<figure class="video"><video controls preload="metadata" src="../videos/4.1_omnigraph_cmd_vel.mp4"></video><figcaption>🎬 Narrated walkthrough · lesson ⏱ 45 min · <a href="../videos/subtitles/4.1_omnigraph_cmd_vel.srt">caption text (.srt)</a> · <a href="../videos/4.1_omnigraph_cmd_vel.mp4" download>download .mp4</a></figcaption></figure>
+<p><strong>You will learn to</strong></p>
+<ul>
+<li>Build a ROS 2 <strong>subscriber</strong> Action Graph by hand</li>
+<li>Drive a simulated robot from standard ROS tools (<code>ros2 topic pub</code>, teleop)</li>
+<li>Explain software-in-the-loop (SIL)</li>
+</ul>
+<figure class="diagram"><a href="../diagrams/m4-cmd-vel.png" target="_blank" title="open full size"><img alt="Driving Nova Carter from /cmd_vel" src="../diagrams/m4-cmd-vel.png" loading="lazy"></a><figcaption>Driving Nova Carter from /cmd_vel — <a href="../diagrams/m4-cmd-vel.html">interactive HTML</a></figcaption></figure>
+<h2 id="concepts">Concepts<a class="headerlink" href="#concepts" title="Permanent link">#</a></h2>
+<p><strong>Software-in-the-loop.</strong> The robot software runs unchanged; only its inputs (sensors) and outputs
+(actuators) are connected to a simulator instead of hardware. <code>/cmd_vel</code> (<code>geometry_msgs/Twist</code>) is the
+standard ROS interface for "drive with this velocity", so anything that drives a real mobile base
+(teleop, Nav2, your planner) can drive the simulated one.</p>
+<p><strong>Twist.</strong> <code>linear.x</code> = forward m/s, <code>angular.z</code> = yaw rate rad/s; the other four fields are unused for a
+differential-drive robot — hence the two <em>Break 3-Vector</em> nodes picking <code>x</code> and <code>z</code>.</p>
+<hr />
+<h2 id="part-1-scene">Part 1: Scene<a class="headerlink" href="#part-1-scene" title="Permanent link">#</a></h2>
+<ol>
+<li><code>./isaac-sim.sh</code> → <strong>File &gt; New</strong>.</li>
+<li>🔄 Environment: <strong>Create &gt; Environments &gt; Simple Room</strong>
+   (or <strong>Window &gt; Browsers &gt; Isaac Sim Assets</strong> → <em>Environments</em> → <code>simple_room.usd</code> → right-click → <em>Add at current selection</em>).
+   Zero its Translate.</li>
+<li>🔄 Robot: <strong>Create &gt; Robots &gt; Nova Carter with Sensors</strong>. Move it next to the table and raise it slightly.</li>
+<li><strong>Play</strong> and check it drops onto the floor. <strong>Stop</strong>.</li>
+</ol>
+<h2 id="part-2-action-graph">Part 2: Action Graph<a class="headerlink" href="#part-2-action-graph" title="Permanent link">#</a></h2>
+<ol>
+<li>Right-click <strong>nova_carter</strong> → <strong>Create &gt; Visual Scripting &gt; Action Graph</strong>, then open it
+   (<strong>Window &gt; Graph Editors &gt; Action Graph</strong>, or right-click the graph → <em>Open Graph</em>).</li>
+<li>Add these nodes (search box in the graph editor; ROS nodes are in the <em>Isaac Ros2</em> category):</li>
+</ol>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Node</th>
+<th>6.1 type id</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>On Playback Tick</td>
+<td><code>omni.graph.action.OnPlaybackTick</code></td>
+</tr>
+<tr>
+<td>ROS2 Context</td>
+<td><code>isaacsim.ros2.bridge.ROS2Context</code></td>
+</tr>
+<tr>
+<td>ROS2 Subscribe Twist</td>
+<td><code>isaacsim.ros2.bridge.ROS2SubscribeTwist</code></td>
+</tr>
+<tr>
+<td>Scale To/From Stage Units</td>
+<td><code>isaacsim.core.nodes.OgnIsaacScaleToFromStageUnit</code> (optional, stage is already in metres)</td>
+</tr>
+<tr>
+<td>Break 3-Vector ×2</td>
+<td><code>omni.graph.nodes.BreakVector3</code></td>
+</tr>
+<tr>
+<td>Differential Controller</td>
+<td><code>isaacsim.robot.wheeled_robots.DifferentialController</code></td>
+</tr>
+<tr>
+<td>Articulation Controller</td>
+<td><code>isaacsim.core.nodes.IsaacArticulationController</code></td>
+</tr>
+<tr>
+<td>Make Array + Constant Token ×2</td>
+<td>joint names (or type them straight into the Articulation Controller's <em>jointNames</em>)</td>
+</tr>
+</tbody>
+</table></div>
+<ol start="3">
+<li>Wire it up. The course only shows this in a picture, so here it is in text:</li>
+</ol>
+<p><code>On Playback Tick.tick ───────────────► ROS2 Subscribe Twist.execIn
+   ROS2 Context.context ────────────────► ROS2 Subscribe Twist.context
+   ROS2 Subscribe Twist.execOut ────────► Differential Controller.execIn
+   ROS2 Subscribe Twist.linearVelocity ─► [Scale To/From Stage Units] ─► Break 3-Vector #1.tuple
+   ROS2 Subscribe Twist.angularVelocity ► Break 3-Vector #2.tuple
+   Break 3-Vector #1.x ─────────────────► Differential Controller.linearVelocity
+   Break 3-Vector #2.z ─────────────────► Differential Controller.angularVelocity
+   On Playback Tick.tick ───────────────► Articulation Controller.execIn
+   Differential Controller.velocityCommand ► Articulation Controller.velocityCommand
+   Constant Token "joint_wheel_left"  ─┐
+   Constant Token "joint_wheel_right" ─┴► Make Array ─► Articulation Controller.jointNames</code></p>
+<ol start="4">
+<li>Properties:</li>
+</ol>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Node</th>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ROS2 Subscribe Twist</td>
+<td>topicName</td>
+<td><code>cmd_vel</code></td>
+</tr>
+<tr>
+<td>Differential Controller</td>
+<td>maxLinearSpeed / maxAngularSpeed</td>
+<td><strong>2.0</strong> / <strong>3.0</strong></td>
+</tr>
+<tr>
+<td></td>
+<td>wheelDistance / wheelRadius</td>
+<td><strong>0.413</strong> / <strong>0.14</strong></td>
+</tr>
+<tr>
+<td>Articulation Controller</td>
+<td>targetPrim</td>
+<td><em>Add Target</em> → <strong>nova_carter &gt; chassis_link</strong> (the articulation root)</td>
+</tr>
+<tr>
+<td>Constant Token 1 / 2</td>
+<td>value</td>
+<td><code>joint_wheel_left</code> / <code>joint_wheel_right</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="part-3-drive-it-from-ros-2">Part 3: Drive it from ROS 2<a class="headerlink" href="#part-3-drive-it-from-ros-2" title="Permanent link">#</a></h2>
+<blockquote class="change">
+<p>🔄 Course: Humble, <code>source /opt/ros/humble/setup.bash</code> before launching Isaac Sim, and a <em>ROS1 vs ROS2
+bridge</em> fallback. 6.1: no sourcing needed for Isaac Sim (bundled Jazzy), and ROS 1 is gone.
+Install system <strong>Jazzy</strong> only for the CLI: <a href="setup-ros2.html"><code>01_setup_ros2_jazzy.md</code></a>.</p>
+</blockquote>
+<ol>
+<li><strong>Play</strong> in Isaac Sim.</li>
+<li>Terminal:
+   <code>bash
+   source /opt/ros/jazzy/setup.bash
+   ros2 topic list                         # /cmd_vel, /parameter_events, /rosout
+   ros2 topic pub --once /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.2}}"     # forward
+   ros2 topic pub --once /cmd_vel geometry_msgs/msg/Twist "{}"                      # stop</code></li>
+<li>Keyboard teleop (<code>sudo apt install ros-jazzy-teleop-twist-keyboard</code>):
+   <code>bash
+   ros2 run teleop_twist_keyboard teleop_twist_keyboard</code>
+   <code>i</code> forward · <code>,</code> back · <code>j</code> rotate left · <code>l</code> rotate right · <code>k</code> stop.</li>
+</ol>
+<h2 id="checkpoint">Checkpoint<a class="headerlink" href="#checkpoint" title="Permanent link">#</a></h2>
+<div class="hl"><pre><span></span><code>./python.sh<span class="w"> </span>learning_resource/scripts/m4_nova_carter_cmd_vel.py<span class="w">            </span><span class="c1"># builds the scene + graph, keeps playing</span>
+./python.sh<span class="w"> </span>learning_resource/scripts/m4_nova_carter_cmd_vel.py<span class="w"> </span>--headless<span class="w"> </span>--test
+</code></pre></div>
+
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/cmd_vel</code> not listed</td>
+<td>Not playing, or <code>ROS_DOMAIN_ID</code> / RMW differ between terminals (<code>export RMW_IMPLEMENTATION=rmw_fastrtps_cpp</code>)</td>
+</tr>
+<tr>
+<td>Messages arrive but the robot doesn't move</td>
+<td>Articulation Controller target isn't <strong>chassis_link</strong>, or the joint names are misspelled</td>
+</tr>
+<tr>
+<td>Robot moves only once per message</td>
+<td>Expected with <code>--once</code>. Teleop republishes continuously</td>
+</tr>
+<tr>
+<td>Robot drives in a circle</td>
+<td>Left/right joint names swapped</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="check-your-result">Check your result<a class="headerlink" href="#check-your-result" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Do this</th>
+<th>You should see</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ros2 topic list</code> while playing</td>
+<td><code>/cmd_vel</code></td>
+</tr>
+<tr>
+<td><code>ros2 topic pub --once /cmd_vel … x: 0.2</code></td>
+<td>Carter rolls forward</td>
+</tr>
+<tr>
+<td><code>m4_nova_carter_cmd_vel.py --headless --test</code></td>
+<td><code>[m4] PASS: Nova Carter follows /cmd_vel</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="exercises">Exercises<a class="headerlink" href="#exercises" title="Permanent link">#</a></h2>
+<ol>
+<li>Add an <strong>Odometry</strong> publisher (Tools &gt; Robotics &gt; ROS 2 OmniGraphs &gt; Odometry Publisher) and watch <code>/odom</code> while driving.</li>
+<li>Publish <code>/cmd_vel</code> at 10 Hz with <code>ros2 topic pub -r 10 …</code> and stop the publisher. Does Carter keep driving? What would a real base do (watchdog)?</li>
+</ol>
+<h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">#</a></h2>
+<ol>
+<li>
+<p>Which two Twist fields does a differential-drive robot use?
+ <br />
+<details><summary>Answer</summary>linear.x and angular.z.</details>
+</p>
+</li>
+<li>
+<p>What is the Articulation Controller's target for Nova Carter?
+ <br />
+<details><summary>Answer</summary>`chassis_link`, the articulation root.</details>
+</p>
+</li>
+</ol><label class="done"><input type="checkbox" data-slug="m4-1"> Mark this lesson as done</label><div class="pn"><a class="prev" href="m4.html"><small>Previous</small>Module 4 project</a><a class="next" href="m4-2.html"><small>Next</small>4.2 Python scripting</a></div></article><aside class="toc"><p>On this page</p><ul><li class="l2"><a href="#concepts">Concepts</a></li><li class="l2"><a href="#part-1-scene">Part 1: Scene</a></li><li class="l2"><a href="#part-2-action-graph">Part 2: Action Graph</a></li><li class="l2"><a href="#part-3-drive-it-from-ros-2">Part 3: Drive it from ROS 2</a></li><li class="l2"><a href="#checkpoint">Checkpoint</a></li><li class="l2"><a href="#troubleshooting">Troubleshooting</a></li><li class="l2"><a href="#check-your-result">Check your result</a></li><li class="l2"><a href="#exercises">Exercises</a></li><li class="l2"><a href="#quiz">Quiz</a></li></ul></aside></main>
+<script src="static/site.js"></script>
+</body></html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1.1 Building a simple robot · Isaac Sim 6.1 tutorial</title>
+<link rel="icon" href="static/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="static/site.css"><link rel="stylesheet" href="static/code.css">
+</head><body data-slug="m1-1">
+<button class="menu" onclick="document.body.classList.toggle('nav-open')" aria-label="Menu">☰</button>
+<nav class="side" id="side"><a class="brand" href="index.html"><span>Isaac Sim 6.1</span><small>Getting Started · learning path</small></a>
+<div class="search"><input id="q" type="search" placeholder="Search lessons…  ( / )" autocomplete="off"><div id="results"></div></div>
+<div class="progress"><div class="bar"><i id="pbar"></i></div><span id="ptext"></span></div>
+<p class="grp">Start</p><ul>
+<li><a href="index.html">Course home</a></li>
+<li><a href="whats-different.html">What changed in 6.1</a></li>
+<li><a href="setup-ros2.html">Set up ROS 2 Jazzy</a></li>
+</ul>
+<p class="grp">Module 1 · First robot</p><ul>
+<li><a href="m1.html">Module 1 project</a></li>
+<li><a class="on" href="m1-1.html"><b class="tick" data-slug="m1-1"></b>1.1 Building a simple robot</a></li>
+<li><a href="m1-2.html"><b class="tick" data-slug="m1-2"></b>1.2 Controlling the robot</a></li>
+<li><a href="m1-3.html"><b class="tick" data-slug="m1-3"></b>1.3 Adding sensors</a></li>
+<li><a href="m1-4.html"><b class="tick" data-slug="m1-4"></b>1.4 ROS 2 and RViz</a></li>
+</ul>
+<p class="grp">Module 2 · URDF &amp; Carter</p><ul>
+<li><a href="m2.html">Module 2 project</a></li>
+<li><a href="m2-1.html"><b class="tick" data-slug="m2-1"></b>2.1 Importing URDF</a></li>
+<li><a href="m2-2.html"><b class="tick" data-slug="m2-2"></b>2.2 Preparing the simulation</a></li>
+<li><a href="m2-3.html"><b class="tick" data-slug="m2-3"></b>2.3 Adding sensors</a></li>
+<li><a href="m2-4.html"><b class="tick" data-slug="m2-4"></b>2.4 Nova Carter</a></li>
+</ul>
+<p class="grp">Module 3 · Synthetic data</p><ul>
+<li><a href="m3.html">Module 3 project</a></li>
+<li><a href="m3-1.html"><b class="tick" data-slug="m3-1"></b>3 Generate a dataset</a></li>
+</ul>
+<p class="grp">Module 4 · Software-in-the-loop</p><ul>
+<li><a href="m4.html">Module 4 project</a></li>
+<li><a href="m4-1.html"><b class="tick" data-slug="m4-1"></b>4.1 Driving from /cmd_vel</a></li>
+<li><a href="m4-2.html"><b class="tick" data-slug="m4-2"></b>4.2 Python scripting</a></li>
+<li><a href="m4-3.html"><b class="tick" data-slug="m4-3"></b>4.3 Camera images for Isaac ROS</a></li>
+</ul>
+<p class="grp">Module 5 · Hardware-in-the-loop</p><ul>
+<li><a href="m5.html">5 Hardware-in-the-loop</a></li>
+</ul>
+<p class="grp">Materials</p><ul>
+<li><a href="videos.html">All videos</a></li>
+<li><a href="diagrams.html">All diagrams</a></li>
+<li><a href="scripts.html">Checkpoint scripts</a></li>
+</ul>
+<p class="grp">Project</p><ul><li><a href="https://github.com/saeedahmadicp/isaac-sim-6-getting-started" target="_blank" rel="noopener">View on GitHub ↗</a></li></ul>
+</nav>
+<main><article><h1 id="lesson-11-building-a-simple-robot-isaac-sim-61">Lesson 1.1: Building a Simple Robot (Isaac Sim 6.1)<a class="headerlink" href="#lesson-11-building-a-simple-robot-isaac-sim-61" title="Permanent link">#</a></h1>
+<p>Your first robot starts as five separate shapes. By the end of this lesson, its wheels will stay
+attached, support the chassis, and drive it across the floor. Along the way, you will deliberately
+make a cube fall and a robot fall apart so you can see what each physics component contributes.</p>
+<p><strong>Your finish line:</strong> save a four-wheeled robot that drives forward when you press Play.
+<strong>Before you begin:</strong> launch Isaac Sim and start a new scene. No ROS 2 setup or Python coding is needed
+for the GUI exercise. Allow 45–60 minutes, plus first-launch loading time.</p>
+<p><strong>Expected result:</strong> with the rear drives at 50 °/s the robot moves about <strong>0.96 m in 3 simulated
+seconds</strong> (50 °/s × 0.375 m ≈ 0.33 m/s). The checkpoint script measures exactly this.</p>
+<figure class="diagram"><a href="../screenshots/first_robot/assembled.png" target="_blank" title="open full size"><img alt="The completed four-wheeled robot, with a blue chassis and dark wheels" src="../screenshots/first_robot/assembled.png" loading="lazy"></a><figcaption>Your destination: a frame rendered from the checkpoint scene in Isaac Sim 6.1.
+Camera, lighting, and display colours were adjusted for readability; geometry and physics were unchanged.</figcaption></figure>
+<figure class="video"><video controls preload="metadata" src="../videos/1.1_building_a_simple_robot.mp4"></video><figcaption>🎬 Narrated walkthrough · lesson ⏱ 45–60 min · <a href="../videos/subtitles/1.1_building_a_simple_robot.srt">caption text (.srt)</a> · <a href="../videos/1.1_building_a_simple_robot.mp4" download>download .mp4</a></figcaption></figure>
+<p><strong>You will learn to</strong></p>
+<ul>
+<li>Navigate the viewport and read the Stage / Property panels</li>
+<li>Tell <strong>visual meshes</strong> from <strong>physics</strong> (rigid bodies, colliders, physics scene)</li>
+<li>Connect bodies with <strong>revolute joints</strong> and drive them with <strong>angular drives</strong></li>
+<li>Group bodies into an <strong>articulation</strong> that controllers can address</li>
+</ul>
+<figure class="diagram"><a href="../diagrams/m1-build-ladder.png" target="_blank" title="open full size"><img alt="The six-step ladder from mesh to driving robot" src="../diagrams/m1-build-ladder.png" loading="lazy"></a><figcaption>The six-step ladder from mesh to driving robot — <a href="../diagrams/m1-build-ladder.html">interactive HTML</a></figcaption></figure>
+<p>You only need three ideas to begin: the Stage panel lists the objects, the Property panel changes the
+selected object, and Play starts the simulation. The rest will make sense as you build.</p>
+<h2 id="part-1-launch-and-navigate">Part 1: Launch and navigate<a class="headerlink" href="#part-1-launch-and-navigate" title="Permanent link">#</a></h2>
+<div class="hl"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/isaacsim<span class="w">   </span><span class="c1"># your Isaac Sim installation folder (contains isaac-sim.sh and python.sh)</span>
+./isaac-sim.sh
+</code></pre></div>
+
+<blockquote class="change">
+<p>🔄 <strong>6.1:</strong> there is no <code>isaac-sim.selector.sh</code> and no Start button. The ROS 2 bridge
+loads by itself with bundled Jazzy libraries, so leave it on (the course says to disable it in 4.5).</p>
+</blockquote>
+<p>The first launch takes a few minutes while shaders compile. Later launches are faster.</p>
+<p>Viewport navigation hasn't changed:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Input</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fly</td>
+<td>hold <strong>RMB</strong> + <code>W A S D</code>, <code>Q</code>/<code>E</code> down/up</td>
+</tr>
+<tr>
+<td>Look around</td>
+<td>hold <strong>RMB</strong> and drag</td>
+</tr>
+<tr>
+<td>Zoom</td>
+<td>mouse wheel, or <strong>Alt + RMB</strong></td>
+</tr>
+<tr>
+<td>Pan</td>
+<td>hold <strong>MMB</strong> and drag</td>
+</tr>
+<tr>
+<td>Frame selection</td>
+<td><code>F</code></td>
+</tr>
+</tbody>
+</table></div>
+<p>The default stage has <strong>World</strong> and <strong>defaultLight</strong> in the <em>Stage</em> panel (top right). The <em>Property</em>
+panel (bottom right) shows whatever you select.</p>
+<h2 id="part-2-make-a-cube-fall-then-catch-it">Part 2: Make a cube fall, then catch it<a class="headerlink" href="#part-2-make-a-cube-fall-then-catch-it" title="Permanent link">#</a></h2>
+<p><strong>Predict first:</strong> if you draw a cube and press Play, will it fall? Try it before adding physics.
+Keep the simulation stopped while editing; after each experiment, press Stop to reset the scene.</p>
+<ol>
+<li><strong>Create &gt; Mesh &gt; Cube</strong>.</li>
+<li>Press <strong>Play</strong> (▶ on the left toolbar, or <code>Space</code>). The cube stays still. Press <strong>Stop</strong>.</li>
+<li><strong>Create &gt; Physics &gt; Physics Scene</strong>. The default is Earth gravity along −Z (see the axis gizmo,
+   bottom left).</li>
+<li>Press <strong>Play</strong>. Still nothing. <strong>Stop</strong> before adding the rigid body.</li>
+<li>Right-click <strong>Cube</strong> in the Stage panel → <strong>Add &gt; Physics &gt; Rigid Body with Colliders Preset</strong>.</li>
+<li>Viewport toolbar <strong>eye icon (Show by type) &gt; Physics &gt; Colliders &gt; Selected</strong>. A green collision
+   outline appears.</li>
+<li><strong>Play</strong>. The cube falls because it now has a rigid body, but there is no floor to catch it. <strong>Stop</strong>.</li>
+<li><strong>Create &gt; Physics &gt; Ground Plane</strong>. Expand <strong>GroundPlane</strong> to see <code>CollisionMesh</code> and <code>CollisionPlane</code>.</li>
+<li>Select the cube and set <em>Property &gt; Transform &gt; Translate Z</em> = <strong>1</strong>.</li>
+<li><strong>Play</strong>. The cube lands on the ground. <strong>Stop</strong> (■) resets it.</li>
+<li>(Optional) Select <em>PhysicsScene</em> and change <em>Gravity Direction</em>, then play.</li>
+<li><strong>File &gt; Save As…</strong> → e.g. <code>learning_resource/output/my_simple_robot.usd</code>.</li>
+</ol>
+<p><strong>What changed?</strong> A visible mesh gives the cube its appearance. A rigid body gives it simulated
+motion; a collider gives it a shape that can hit the ground. The physics scene supplies gravity and
+simulation settings. Adding one does not replace the others.</p>
+<p><strong>Check before continuing:</strong> the cube falls onto the ground and Stop returns it to its starting pose.</p>
+<h2 id="part-3-turn-the-cube-into-a-chassis">Part 3: Turn the cube into a chassis<a class="headerlink" href="#part-3-turn-the-cube-into-a-chassis" title="Permanent link">#</a></h2>
+<p>The Stage is a tree of <em>prims</em>, the objects and containers in a USD scene. An <code>Xform</code> is a container
+with a position, rotation, and scale. Group the robot's parts beneath one so you can place them together.</p>
+<ol>
+<li>Select the cube and set Translate <strong>(0, 0, 0)</strong>, Scale <strong>(2, 1, 0.5)</strong>.</li>
+<li>Right-click empty space in the Stage panel → <strong>Create &gt; Xform</strong>. Double-click it and rename it to <strong>SimpleRobot</strong>.</li>
+<li>Drag <strong>Cube</strong> onto <strong>SimpleRobot</strong>, so the cube becomes its child.</li>
+<li>Select <strong>SimpleRobot</strong> and set Translate Z = <strong>1</strong>. The cube moves with it (the Xform is a container).</li>
+<li>Set <strong>SimpleRobot</strong> Translate Z back to <strong>0</strong> for now. You lift the whole robot in Part 5.</li>
+</ol>
+<h2 id="part-4-add-wheels-and-discover-what-is-missing">Part 4: Add wheels and discover what is missing<a class="headerlink" href="#part-4-add-wheels-and-discover-what-is-missing" title="Permanent link">#</a></h2>
+<figure class="diagram"><a href="../diagrams/m1-robot-structure.png" target="_blank" title="open full size"><img alt="SimpleRobot from above: chassis, wheels and joints" src="../diagrams/m1-robot-structure.png" loading="lazy"></a><figcaption>Use this map to distinguish front/rear and left/right while naming the parts.</figcaption></figure>
+<ol>
+<li>Right-click <strong>SimpleRobot</strong> → <strong>Create &gt; Mesh &gt; Cylinder</strong>.</li>
+<li>
+<p>Set the cylinder's transform:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Rotate</th>
+<th>Scale</th>
+<th>Translate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>X <strong>90</strong></td>
+<td><strong>0.75, 0.75, 0.25</strong></td>
+<td><strong>0.5, 0.75, 0</strong></td>
+</tr>
+</tbody>
+</table></div>
+</li>
+<li>
+<p>Rename it <strong>Front_Left_Wheel</strong>.</p>
+</li>
+<li>
+<p>Duplicate it three times (<strong>Ctrl+D</strong>) and rename and position the copies:</p>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Translate</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Front_Left_Wheel</td>
+<td>0.5, <strong>0.75</strong>, 0</td>
+</tr>
+<tr>
+<td>Front_Right_Wheel</td>
+<td>0.5, <strong>−0.75</strong>, 0</td>
+</tr>
+<tr>
+<td>Rear_Left_Wheel</td>
+<td><strong>−0.5</strong>, 0.75, 0</td>
+</tr>
+<tr>
+<td>Rear_Right_Wheel</td>
+<td><strong>−0.5</strong>, −0.75, 0</td>
+</tr>
+</tbody>
+</table></div>
+<p>Wheel diameter = 0.75 m, so the radius is <strong>0.375 m</strong>. That is larger than half the
+0.5 m chassis height: the wheels should touch the ground while the chassis stays above it.</p>
+</li>
+<li>
+<p>Make sure all four wheels <strong>and</strong> the Cube are children of SimpleRobot.</p>
+</li>
+<li>Select the 4 wheels → right-click → <strong>Add &gt; Physics &gt; Rigid Body with Colliders Preset</strong>.
+   Do the same for <strong>Cube</strong> if you started a fresh stage.</li>
+<li>Before pressing <strong>Play</strong>, predict whether the wheels will stay attached. Try it: the pieces are
+    separate rigid bodies, with no joints to connect them. <strong>Stop</strong>, then <strong>File &gt; Save</strong>.</li>
+</ol>
+<p>You have a robot-shaped collection of objects. Next you will give the connections a physical meaning.</p>
+<figure class="diagram"><a href="../screenshots/first_robot/wheel-layout.png" target="_blank" title="open full size"><img alt="Top view of the four wheel positions around the chassis" src="../screenshots/first_robot/wheel-layout.png" loading="lazy"></a><figcaption>Compare your layout with this capture from the completed checkpoint. The robot's +X/front points up;
+left wheels are on the left. At this stage your own wheels still need joints.</figcaption></figure>
+<h2 id="part-5-keep-the-wheels-attached-while-letting-them-turn">Part 5: Keep the wheels attached while letting them turn<a class="headerlink" href="#part-5-keep-the-wheels-attached-while-letting-them-turn" title="Permanent link">#</a></h2>
+<p>A revolute joint connects two bodies while allowing rotation around one axis. For a wheel, that axis
+must follow its axle. Here it is Y. The wheel was rotated 90° about X, so its local joint frame needs
+a −90° correction to align with the chassis frame.</p>
+<p>For <strong>each</strong> wheel:</p>
+<ol>
+<li>Click <strong>Cube</strong>, then <strong>Ctrl+click</strong> the wheel (body 0 = Cube, body 1 = wheel; order matters).</li>
+<li>Right-click → <strong>Create &gt; Physics &gt; Joint &gt; Revolute Joint</strong>.</li>
+<li>
+<p>On the new joint, set:</p>
+<ul>
+<li><strong>Axis</strong> = <strong>Y</strong></li>
+<li><strong>Local Rotation 0</strong> = <strong>0, 0, 0</strong></li>
+<li><strong>Local Rotation 1</strong> = <strong>−90, 0, 0</strong></li>
+</ul>
+</li>
+<li>
+<p>Deselect and reselect the joint. The red (X) arrows of both frames line up and the blue (Z) arrows
+   match. Arrow direction doesn't matter.</p>
+</li>
+<li>Rename it <strong>Front_Left_Joint</strong>, <strong>Front_Right_Joint</strong>, <strong>Rear_Left_Joint</strong>, <strong>Rear_Right_Joint</strong>.
+   In 6.1 the joint is created <em>under the wheel</em>. You can drag it under SimpleRobot to keep the tree tidy.</li>
+</ol>
+<p>Finally, select <strong>SimpleRobot</strong> and set Translate Z = <strong>0.375</strong>, so the wheels rest on the ground plane.</p>
+<p><strong>Check before continuing:</strong> press Play. The wheels should stay attached, and the chassis should rest
+above the floor. It does not drive yet. Stop before adding the motors.</p>
+<h2 id="part-6-give-the-rear-wheels-a-motor">Part 6: Give the rear wheels a motor<a class="headerlink" href="#part-6-give-the-rear-wheels-a-motor" title="Permanent link">#</a></h2>
+<p>A joint allows motion; a drive asks for motion. With stiffness set to zero, the drive responds to a
+velocity target. Damping controls that response. The target below is in <strong>degrees per second</strong>.</p>
+<p><strong>Predict first:</strong> both rear wheels will receive +50 °/s. Will the robot move forward or spin?</p>
+<ol>
+<li>Right-click <strong>Rear_Left_Joint</strong> → <strong>Add &gt; Physics &gt; Angular Drive</strong>.</li>
+<li>Set <strong>Damping = 10000</strong>, <strong>Stiffness = 0</strong>, <strong>Target Velocity = 50</strong> (degrees per second).</li>
+<li>Repeat for <strong>Rear_Right_Joint</strong>.</li>
+<li><strong>Play</strong>. The robot drives forward along +X.</li>
+<li><strong>File &gt; Save</strong>.</li>
+</ol>
+<p><strong>Explain the result:</strong> both wheels turn in the same direction, so the robot travels forward. With
+wheel radius 0.375 m, the ideal rolling speed is <code>(50 × π / 180) × 0.375 ≈ 0.33 m/s</code>.
+This estimate assumes rolling without slip; it is a useful comparison, not an exact promise.</p>
+<p><strong>Try one change:</strong> set one rear drive to −50 °/s and leave the other at +50 °/s. Predict the motion,
+then press Play. Stop and restore both to +50 before saving.</p>
+<details>
+<summary>Why does the robot turn?</summary>
+<p>The driven wheels now try to roll in opposite directions. This produces a turning motion rather than
+both sides moving forward together. Contact friction and the passive front wheels affect the actual turn.</p>
+</details>
+<figure class="diagram"><a href="../screenshots/first_robot/driving.png" target="_blank" title="open full size"><img alt="The robot has moved forward with the same fixed camera" src="../screenshots/first_robot/driving.png" loading="lazy"></a><figcaption>After 3 simulated seconds the chassis has moved about 0.96 m along +X. Compare with
+its starting position above: the camera did not move. This was driven by the rear joint motors.</figcaption></figure>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Robot drags or bounces</td>
+<td>Wheels must reach lower than the body (check wheel scale 0.75 and Z = 0)</td>
+</tr>
+<tr>
+<td>Wheels fly off or wobble</td>
+<td>Joint <strong>Body 0 / Body 1</strong> swapped (should be Cube → wheel), or Local Rotation 1 isn't −90, 0, 0</td>
+</tr>
+<tr>
+<td>Robot spins instead of moving forward</td>
+<td>One drive has the opposite sign</td>
+</tr>
+<tr>
+<td>Something odd</td>
+<td>Disable joints one at a time (<em>Joint Enabled</em> checkbox) to find the bad one</td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="compare-with-the-checkpoint">Compare with the checkpoint<a class="headerlink" href="#compare-with-the-checkpoint" title="Permanent link">#</a></h2>
+<div class="hl"><pre><span></span><code>./python.sh<span class="w"> </span>learning_resource/scripts/m1_build_simple_robot.py<span class="w">                        </span><span class="c1"># watch it drive</span>
+./python.sh<span class="w"> </span>learning_resource/scripts/m1_build_simple_robot.py<span class="w"> </span>--headless<span class="w"> </span>--test<span class="w"> </span>--save<span class="w"> </span>learning_resource/output/simple_robot.usd
+</code></pre></div>
+
+<p>Save your own scene first. Then <strong>File &gt; Open</strong> <code>learning_resource/output/simple_robot.usd</code> and compare
+its joints with yours. The checkpoint also adds an <strong>Articulation Root</strong>, which groups the connected
+bodies and joints for the controller used in lesson 1.2. Your manual scene adds it in that next lesson.</p>
+<h2 id="check-your-result">Check your result<a class="headerlink" href="#check-your-result" title="Permanent link">#</a></h2>
+<div class="table-wrap"><table>
+<thead>
+<tr>
+<th>Do this</th>
+<th>You should see</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cube alone, Play</td>
+<td>nothing happens (no physics yet)</td>
+</tr>
+<tr>
+<td>Cube with rigid body, no ground</td>
+<td>falls forever</td>
+</tr>
+<tr>
+<td>Robot with joints, no drives</td>
+<td>rests on its wheels</td>
+</tr>
+<tr>
+<td>Rear drives at 50 °/s</td>
+<td>drives along +X at ≈ 0.33 m/s</td>
+</tr>
+<tr>
+<td><code>m1_build_simple_robot.py --headless --test</code></td>
+<td><code>[m1] PASS: robot drove forward</code></td>
+</tr>
+</tbody>
+</table></div>
+<h2 id="exercises">Exercises<a class="headerlink" href="#exercises" title="Permanent link">#</a></h2>
+<ol>
+<li>Set the rear drives to <strong>+50 / −50 °/s</strong>. What happens, and why?</li>
+<li>Change the wheel scale to 1.0 (Ø 1 m). Predict the new speed, then measure it (select Cube → Property → Rigid Body → Linear Velocity while playing).</li>
+<li>Add drives to the <strong>front</strong> joints too (4-wheel drive). Does it go faster? Why not?</li>
+<li>Swap Body 0 and Body 1 on one joint and watch what breaks — then undo it.</li>
+</ol>
+<h2 id="quiz">Quiz<a class="headerlink" href="#quiz" title="Permanent link">#</a></h2>
+<ol>
+<li>
+<p>Why does a cube with only a Rigid Body (no collider) fall through the ground?
+ <br />
+<details><summary>Answer</summary>Collisions need a collision shape on both prims; the rigid body only adds dynamics.</details>
+</p>
+</li>
+<li>
+<p>Stiffness 0, damping 10000, target velocity 50 — position or velocity drive?
+ <br />
+<details><summary>Answer</summary>Velocity drive: with zero stiffness only the velocity error produces torque.</details>
+</p>
+</li>
+<li>
+<p>In what unit is the angular drive's Target Velocity?
+ <br />
+<details><summary>Answer</summary>Degrees per second.</details>
+</p>
+</li>
+</ol>
+<h2 id="your-next-mission">Your next mission<a class="headerlink" href="#your-next-mission" title="Permanent link">#</a></h2>
+<p>You can make the robot move, but its speed is fixed in the joint properties. In
+<a href="m1-2.html">lesson 1.2</a>, connect a controller and use the keyboard to choose
+when to drive and turn. Save your scene before moving on.</p>
+<details>
+<summary>Following the original NVIDIA course?</summary>
+<p>This lesson corresponds to “Building Your First Robot → Building a Simple Robot.” See the
+<a href="https://docs.nvidia.com/learning/physical-ai/getting-started-with-isaac-sim/latest/">original learning path</a>
+and the <a href="whats-different.html">6.1 differences</a> when the video menus differ from your screen.</p>
+</details><label class="done"><input type="checkbox" data-slug="m1-1"> Mark this lesson as done</label><div class="pn"><a class="prev" href="m1.html"><small>Previous</small>Module 1 project</a><a class="next" href="m1-2.html"><small>Next</small>1.2 Controlling the robot</a></div></article><aside class="toc"><p>On this page</p><ul><li class="l2"><a href="#part-1-launch-and-navigate">Part 1: Launch and navigate</a></li><li class="l2"><a href="#part-2-make-a-cube-fall-then-catch-it">Part 2: Make a cube fall, then catch it</a></li><li class="l2"><a href="#part-3-turn-the-cube-into-a-chassis">Part 3: Turn the cube into a chassis</a></li><li class="l2"><a href="#part-4-add-wheels-and-discover-what-is-missing">Part 4: Add wheels and discover what is missing</a></li><li class="l2"><a href="#part-5-keep-the-wheels-attached-while-letting-them-turn">Part 5: Keep the wheels attached while letting them turn</a></li><li class="l2"><a href="#part-6-give-the-rear-wheels-a-motor">Part 6: Give the rear wheels a motor</a></li><li class="l2"><a href="#troubleshooting">Troubleshooting</a></li><li class="l2"><a href="#compare-with-the-checkpoint">Compare with the checkpoint</a></li><li class="l2"><a href="#check-your-result">Check your result</a></li><li class="l2"><a href="#exercises">Exercises</a></li><li class="l2"><a href="#quiz">Quiz</a></li><li class="l2"><a href="#your-next-mission">Your next mission</a></li></ul></aside></main>
+<script src="static/site.js"></script>
+</body></html>

@@ -1,0 +1,140 @@
+1
+00:00:00,500 --> 00:00:08,354
+In this lesson you build a four wheeled robot out of plain shapes: a cube for the body and four cylinders for the wheels.
+
+2
+00:00:08,354 --> 00:00:13,222
+Then you add physics, joints and motors until it drives forward on its own.
+
+3
+00:00:14,122 --> 00:00:16,210
+The lesson climbs six steps.
+
+4
+00:00:16,210 --> 00:00:18,000
+Meshes are only visuals.
+
+5
+00:00:18,000 --> 00:00:21,132
+A physics scene adds gravity and a ground.
+
+6
+00:00:21,132 --> 00:00:25,682
+Rigid bodies with colliders make the shapes fall and collide.
+
+7
+00:00:25,682 --> 00:00:28,292
+Revolute joints hold the wheels on.
+
+8
+00:00:28,292 --> 00:00:35,228
+Angular drives spin the rear wheels, and an articulation root ties everything into one robot.
+
+9
+00:00:35,228 --> 00:00:39,330
+Press play after each step and watch what physics adds.
+
+10
+00:00:40,230 --> 00:00:41,134
+Let's start.
+
+11
+00:00:41,134 --> 00:00:44,976
+Launch Isaac Sim with the isaac sim dot s h script.
+
+12
+00:00:44,976 --> 00:00:48,969
+Version six point one has no selector window anymore.
+
+13
+00:00:48,969 --> 00:00:52,057
+Create a cube from the Create, Mesh menu.
+
+14
+00:00:52,057 --> 00:00:56,125
+Press play: nothing happens, it is only a visual mesh.
+
+15
+00:00:56,125 --> 00:01:01,324
+Add a physics scene and a ground plane from the Create, Physics menu.
+
+16
+00:01:01,324 --> 00:01:05,994
+Then right click the cube and add a rigid body with colliders.
+
+17
+00:01:05,994 --> 00:01:08,782
+Now it falls and lands on the ground.
+
+18
+00:01:09,682 --> 00:01:11,673
+Here is the robot from above.
+
+19
+00:01:11,673 --> 00:01:17,921
+Scale the cube to two by one by half a meter and put it inside an Xform called SimpleRobot.
+
+20
+00:01:17,921 --> 00:01:23,894
+Add four cylinders, rotated ninety degrees about X and scaled to zero point seven five,
+
+21
+00:01:23,894 --> 00:01:31,241
+and place them at plus and minus half a meter forward and plus and minus zero point seven five to the side.
+
+22
+00:01:31,241 --> 00:01:37,215
+Each wheel gets a revolute joint, with the cube as body zero and the wheel as body one.
+
+23
+00:01:38,115 --> 00:01:39,144
+Now the joints.
+
+24
+00:01:39,144 --> 00:01:44,563
+Select the cube first, then control click a wheel, and create a revolute joint.
+
+25
+00:01:44,563 --> 00:01:47,856
+The selection order sets body zero and body one.
+
+26
+00:01:47,856 --> 00:01:54,648
+Set the axis to Y and local rotation one to minus ninety, zero, zero, so both joint frames line up.
+
+27
+00:01:54,648 --> 00:01:58,696
+Lift the whole robot by zero point three seven five meters,
+
+28
+00:01:58,696 --> 00:02:02,194
+the wheel radius, so the wheels rest on the ground.
+
+29
+00:02:02,194 --> 00:02:05,762
+Finally add an angular drive to the two rear joints,
+
+30
+00:02:05,762 --> 00:02:10,358
+with damping ten thousand and a target of fifty degrees per second.
+
+31
+00:02:10,358 --> 00:02:13,171
+Press play, and the robot drives forward.
+
+32
+00:02:14,071 --> 00:02:18,418
+To check your work, run the m1 build simple robot checkpoint script.
+
+33
+00:02:18,418 --> 00:02:25,258
+It builds exactly this robot, drives it for three seconds and checks that it moved about one meter forward.
+
+34
+00:02:25,258 --> 00:02:28,710
+You can also save its stage and open it next to yours.
+
+35
+00:02:28,710 --> 00:02:32,226
+In the next lesson you will steer it with the keyboard.
+

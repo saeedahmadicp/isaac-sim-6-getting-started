@@ -1,0 +1,88 @@
+1
+00:00:00,500 --> 00:00:08,102
+Software in the loop means your real robot software talks to the simulated robot instead of real hardware.
+
+2
+00:00:08,102 --> 00:00:12,621
+The simplest case: a ROS 2 velocity command drives Nova Carter.
+
+3
+00:00:13,521 --> 00:00:14,582
+Here is the loop.
+
+4
+00:00:14,582 --> 00:00:18,891
+Teleop twist keyboard publishes a twist message on the cmd vel topic.
+
+5
+00:00:18,891 --> 00:00:22,076
+In Isaac Sim, the subscribe twist node receives it,
+
+6
+00:00:22,076 --> 00:00:26,322
+two break vector nodes take the forward speed and the turning speed,
+
+7
+00:00:26,322 --> 00:00:29,444
+the differential controller computes wheel speeds,
+
+8
+00:00:29,444 --> 00:00:33,191
+and the articulation controller drives the two wheel joints.
+
+9
+00:00:34,091 --> 00:00:35,353
+Build it like this.
+
+10
+00:00:35,353 --> 00:00:38,208
+Create the simple room and add Nova Carter.
+
+11
+00:00:38,208 --> 00:00:41,462
+Right click the robot and create an action graph.
+
+12
+00:00:41,462 --> 00:00:44,517
+Add the nodes in the table of the lesson file.
+
+13
+00:00:44,517 --> 00:00:49,896
+The wiring is written out there in text, because the course only shows a picture.
+
+14
+00:00:49,896 --> 00:00:57,400
+Set the differential controller to wheel radius zero point one four and wheel distance zero point four one three.
+
+15
+00:00:57,400 --> 00:01:03,244
+Point the articulation controller at chassis link and give it the two wheel joint names.
+
+16
+00:01:04,144 --> 00:01:05,833
+Now drive it from ROS.
+
+17
+00:01:05,833 --> 00:01:10,903
+Press play and list topics in a terminal with ROS 2 Jazzy sourced.
+
+18
+00:01:10,903 --> 00:01:12,669
+You should see cmd vel.
+
+19
+00:01:12,669 --> 00:01:19,044
+Publish one twist message with a forward speed of zero point two, and Carter moves.
+
+20
+00:01:19,044 --> 00:01:21,579
+Then start teleop twist keyboard.
+
+21
+00:01:21,579 --> 00:01:26,956
+Use i to go forward, comma to go back, j and l to turn, and k to stop.
+
+22
+00:01:26,956 --> 00:01:35,020
+The checkpoint script for this lesson publishes real ROS messages and checks that the robot follows them.
+
