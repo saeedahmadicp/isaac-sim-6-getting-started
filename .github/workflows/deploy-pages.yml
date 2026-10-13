@@ -1,0 +1,64 @@
+# Rebuild the tutorial site from the Markdown lessons and publish it on GitHub Pages.
+# One-time setup: Settings → Pages → Build and deployment → Source: "GitHub Actions".
+name: Deploy site to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:        # allow manual runs from the Actions tab
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:                # never cancel a deployment that is already running
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: site/requirements.txt
+
+      - name: Install site builder dependencies
+        run: pip install -r site/requirements.txt
+
+      - name: Build site from Markdown
+        run: python site/_build/build_site.py
+
+      - name: Check links and anchors
+        run: python tools/check_site.py
+
+      - name: Assemble Pages artifact
+        # The pages load ../videos, ../diagrams, ../screenshots and ../scripts, so publish those too.
+        run: |
+          mkdir -p _public
+          cp -r index.html .nojekyll site videos diagrams screenshots scripts _public/
+          rm -rf _public/site/_build _public/videos/_build _public/diagrams/_build \
+                 _public/site/serve.py _public/site/requirements.txt
+          find _public -name '__pycache__' -prune -exec rm -rf {} +
+          du -sh _public
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

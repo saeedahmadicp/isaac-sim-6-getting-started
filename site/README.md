@@ -28,12 +28,19 @@ pkill -f site/serve.py           # stop it
 
 ## Publish on GitHub Pages
 
-1. Push this folder as the root of [github.com/saeedahmadicp/isaac-sim-6-getting-started](https://github.com/saeedahmadicp/isaac-sim-6-getting-started) (`index.html` at the root redirects to `site/`, and
-   `.nojekyll` makes Pages serve the files unchanged).
-2. On GitHub: **Settings → Pages → Build and deployment → Deploy from a branch → `main` / `(root)`**.
-3. The course appears at <https://saeedahmadicp.github.io/isaac-sim-6-getting-started/> a minute later.
+Publishing is automated by [`.github/workflows/deploy-pages.yml`](../.github/workflows/deploy-pages.yml):
+every push to `main` rebuilds the HTML from the Markdown, fails if any link or anchor is broken
+(`tools/check_site.py`), and deploys the site, videos, diagrams, screenshots and scripts.
 
-All links are relative, so the site works under any sub-path. Videos are 4–12 MB each, well within
+One-time setup for [github.com/saeedahmadicp/isaac-sim-6-getting-started](https://github.com/saeedahmadicp/isaac-sim-6-getting-started):
+
+1. Push this folder as the repository root.
+2. On GitHub: **Settings → Pages → Build and deployment → Source: GitHub Actions**.
+3. Open the **Actions** tab and wait for *Deploy site to GitHub Pages* to finish (re-run it from
+   there with **Run workflow** if it ran before step 2).
+
+The course is then live at <https://saeedahmadicp.github.io/isaac-sim-6-getting-started/>.
+All links are relative, so the site works under any sub-path; each video is 4–12 MB, well within
 GitHub's 100 MB file limit.
 
 ## Rebuild after editing a lesson
@@ -42,7 +49,8 @@ The Markdown lessons are the source of truth; regenerate the HTML after any edit
 
 ```bash
 uv run --no-project --with markdown --with pygments python3 site/_build/build_site.py
-# or: pip install markdown pygments && python3 site/_build/build_site.py
+# or: pip install -r site/requirements.txt && python3 site/_build/build_site.py
+python3 tools/check_site.py     # same link check the deploy workflow runs
 ```
 
 The builder lives in `_build/build_site.py` (navigation order is the `NAV` list at the top); styles and
