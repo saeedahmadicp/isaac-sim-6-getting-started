@@ -9,7 +9,7 @@ learning path to **Isaac Sim 6.1.0-rc.26**. It contains **12 practical lessons**
 hardware-in-the-loop module**. Each practical lesson has a short narrated video, guided steps,
 exercises, and a result to check.
 
-**Read it online:** [saeedahmadicp.github.io/isaac-sim-6-getting-started](https://saeedahmadicp.github.io/isaac-sim-6-getting-started/) · **Source:** [github.com/saeedahmadicp/isaac-sim-6-getting-started](https://github.com/saeedahmadicp/isaac-sim-6-getting-started)
+**Read it online:** [isaac-sim-6-getting-started](https://saeedahmadicp.github.io/isaac-sim-6-getting-started/) 
 
 <a class="cta" href="module1_first_robot/lesson1_building_a_simple_robot.md">Build your first robot →</a>
 <a class="cta ghost" href="#before-you-start">Check what you need</a>
